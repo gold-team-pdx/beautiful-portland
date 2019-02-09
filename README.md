@@ -1,4 +1,39 @@
-## Welcome to GitHub Pages
+# Beautiful Portland 
+The nonprofit Beautiful Portland needs a website to better coordinate volunteers in their mission to provide hot meals to the PDX residents who need them. Potential features would include a calendar for volunteer shift signups, a volunteer database, and blast emails.
+<!--project description get from gold team selection presentation-->
+
+## Project Sponsors
+<b>Beautiful Portland ~~- a nonprofit with a mission to distribute food to Portlanders experiencing food insecurity~~</b> 
+Jennifer Skyler
+<!--title description get from sponsor presentation-->
+
+<b>Portland State University Computers Science Department</b>   
+Warren Harrison
+
+## Project Participants
+Team Lead:
+* William Schmid
+
+Team Members:
+* David Gilmore
+* Peyton Holbert
+* Bailee Johnstone
+* Colin McCoy
+* Eduardo Robles
+* Ronnie Song
+
+## Repository
+[GitHub Link](https://github.com/gold-team-pdx/beautiful-portland)
+
+&emsp;
+
+---
+feel free to change these 
+
+---
+&emsp;
+
+>## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/gold-team-pdx/beautiful-portland/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
