@@ -7,7 +7,7 @@ The nonprofit Beautiful Portland needs a website to better coordinate volunteers
 Jennifer Skyler
 <!--title description get from sponsor presentation-->
 
-<b>Portland State University Computers Science Department</b>   
+<b>Portland State University Computer Science Department</b>   
 Warren Harrison
 
 ## Project Participants
