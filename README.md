@@ -3,7 +3,8 @@ The nonprofit Beautiful Portland needs a website to better coordinate volunteers
 <!--project description get from gold team selection presentation-->
 
 ## Project Sponsors
-<b>Beautiful Portland ~~- a nonprofit with a mission to distribute food to Portlanders experiencing food insecurity~~</b> 
+
+<b>Beautiful Portland ~~- a nonprofit with a mission to distribute food to Portlanders experiencing food insecurity~~</b>   
 Jennifer Skyler
 <!--title description get from sponsor presentation-->
 
