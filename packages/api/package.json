@@ -1,0 +1,10 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "This is where the backend of our webapp lives",
+  "repository": "https://github.com/gold-team-pdx/beautiful-portland",
+  "license": "MIT",
+  "scripts": {
+    "bootstrap": "cd ../../ ; yarn bootstrap"
+  }
+}

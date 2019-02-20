@@ -29,4 +29,20 @@ Team Members:
 ## Link
 [GitHub Repository](https://github.com/gold-team-pdx/beautiful-portland)
 
-<!--feel free to change these -->
+## pre-reqs
+
+install:
+
+- nodejs, latest
+- yarn, latest
+
+## getting started
+
+- cd `/path/to/beautiful-portland`
+- `yarn bootstrap` to install and link all dependencies and child dependencies
+
+### adding dependencies
+
+- Decide whether it should live in the top level, or in only api or ui
+- cd to packages/api or packages/ui depending on your decision
+- yarn add {package}
