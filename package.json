@@ -1,0 +1,15 @@
+{
+  "name": "beautiful-portland",
+  "version": "1.0.0",
+  "description": "A website in support of the Beautiful Portland non-profit",
+  "main": "index.js",
+  "repository": "https://github.com/gold-team-pdx/beautiful-portland.git",
+  "author": "PSU Capstone Team F (Gold Team) - William Schmid, David Gilmore, Peyton Holbert, Bailee Johnstone, Colin McCoy, Eduardo Robles, Ronnie Song",
+  "license": "MIT",
+  "scripts": {
+    "bootstrap": "yarn && lerna bootstrap && lerna link --force-local"
+  },
+  "dependencies": {
+    "lerna": "^3.13.0"
+  }
+}
