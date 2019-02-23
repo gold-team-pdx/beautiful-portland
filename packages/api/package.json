@@ -6,5 +6,8 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "cd ../../ ; yarn bootstrap"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
   }
 }
