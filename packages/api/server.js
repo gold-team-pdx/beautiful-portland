@@ -1,8 +1,9 @@
+const config = require('./config')
 const express = require('express')
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient
 const app = express()
 const port = process.env.PORT || 3000
-const uri = "mongodb+srv://admin:admin@beautiful-portland-db-w9xpb.mongodb.net/admin";
+const uri = config.mongodbURL
 
 // Console.log to show server up and running in terminal
 app.listen(port, () => console.log('Listening on port ' + port + '...'))
@@ -12,11 +13,29 @@ app.get('/beautifulportland', (req,res) => {
     res.send({express: "The force is strong with this team..."})
 })
 
-// Console.log to show Mongodb is connected
-MongoClient.connect(uri, { useNewUrlParser: true }, (err, db) => {
+// SELECT * FROM volunteers WHERE first = "Alexamder"
+const test = function(db, callback) {
+    const database = db.db("beautiful-portland")
+    const collection = database.collection("volunteers")
+    const query = {"first": "Alexander"}
+    collection.find(query).toArray(function(err,docs) {
+        if(err) {
+            console.log(err, "Test Failed!")
+            return
+        }
+        console.log("Documents: \n", docs)
+    })
+}
+
+// Console.log to show Mongodb is connected, call test function
+const client = new MongoClient(uri, { useNewUrlParser: true })
+client.connect((err, db) => {
     if (err) {
-	console.log(err, "Connection Failed");
-	return;
+	console.log(err, "Connection Failed")
+	return
     }
-    console.log("Connection Seccess!");
+    test(client, function(){
+        db.close()
+    })
+    console.log("Connection Seccess!\n")
 })
