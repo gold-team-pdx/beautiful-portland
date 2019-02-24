@@ -8,6 +8,7 @@
     "bootstrap": "cd ../../ ; yarn bootstrap"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mongodb": "^3.1.13"
   }
 }
