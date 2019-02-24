@@ -6,6 +6,21 @@
   "repository": "https://github.com/gold-team-pdx/beautiful-portland",
   "license": "MIT",
   "scripts": {
-    "bootstrap": "cd ../../ ; yarn bootstrap"
-  }
+    "bootstrap": "cd ../../ ; yarn bootstrap",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-scripts": "^2.1.5"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
