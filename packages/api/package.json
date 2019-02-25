@@ -5,7 +5,8 @@
   "repository": "https://github.com/gold-team-pdx/beautiful-portland",
   "license": "MIT",
   "scripts": {
-    "bootstrap": "cd ../../ ; yarn bootstrap"
+    "bootstrap": "cd ../../ ; yarn bootstrap",
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.16.4",

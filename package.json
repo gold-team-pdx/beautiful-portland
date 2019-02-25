@@ -7,9 +7,13 @@
   "author": "PSU Capstone Team F (Gold Team) - William Schmid, David Gilmore, Peyton Holbert, Bailee Johnstone, Colin McCoy, Eduardo Robles, Ronnie Song",
   "license": "MIT",
   "scripts": {
-    "bootstrap": "yarn && lerna bootstrap && lerna link --force-local"
+    "bootstrap": "yarn && lerna bootstrap && lerna link --force-local",
+    "start": "run-p start:ui start:api",
+    "start:api": "cd packages/api && yarn start",
+    "start:ui": "cd packages/ui && yarn start"
   },
   "dependencies": {
-    "lerna": "^3.13.0"
+    "lerna": "^3.13.0",
+    "npm-run-all": "^4.1.5"
   }
 }
