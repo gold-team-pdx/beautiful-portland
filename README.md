@@ -35,6 +35,21 @@ install:
 
 - nodejs, latest
 - yarn, latest
+- docker and docker compose, latest
+
+## installing docker
+
+### Windows/MacOS
+
+For these platforms, you should just need to install docker desktop - this should include docker compose
+
+### Linux
+
+For Linux, you'll need to install docker and docker compose separately. Beware that on Ubuntu at least, the
+default docker apt package is *not* what you want; use docker.io with apt instead (`sudo apt-get install docker.io`).
+See https://docs.docker.com/compose/install/ and https://docs.docker.com/install/linux/linux-postinstall/ for
+instructions on installing docker compose and setting docker to be runnable without root (highly recommended
+for the sake of our build tools).
 
 ## getting started
 
