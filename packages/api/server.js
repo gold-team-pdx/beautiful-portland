@@ -2,7 +2,7 @@ const config = require('./config')
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 const uri = config.mongodbURL
 
 // Console.log to show server up and running in terminal
