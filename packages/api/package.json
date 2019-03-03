@@ -6,7 +6,12 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "cd ../../ ; yarn bootstrap",
-    "start": "node server.js"
+    "node:start": "node server.js",
+    "s3:container:kill": "docker-compose rm --stop --force beautiful-portland-s3",
+    "s3:container:start": "docker-compose up -d beautiful-portland-s3",
+    "s3:start": "run-s s3:container:kill s3:container:start",
+    "services:start": "run-s s3:start",
+    "start": "run-p services:start node:start"
   },
   "dependencies": {
     "express": "^4.16.4",

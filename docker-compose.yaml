@@ -1,0 +1,17 @@
+version: '3.7'
+
+services: 
+  beautiful-portland-s3:
+    container_name: beautiful-portland-s3
+    image: minio/minio
+    restart: unless-stopped
+    ports: 
+      - "9095:9000"
+    stop_signal: SIGINT
+    environment: 
+      - MINIO_ACCESS_KEY=b@dpass
+      - MINIO_SECRET_KEY=r3alb@dpass
+    command: server /s3-data
+
+volumes: 
+  s3-data:
