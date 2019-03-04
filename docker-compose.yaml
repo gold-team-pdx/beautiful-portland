@@ -5,12 +5,15 @@ services:
     container_name: beautiful-portland-s3
     image: minio/minio
     restart: unless-stopped
+    volumes:
+      - s3-data:/s3-data
     ports: 
-      - "9095:9000"
+      - "9001:9000"
     stop_signal: SIGINT
     environment: 
       - MINIO_ACCESS_KEY=b@dpass
       - MINIO_SECRET_KEY=r3alb@dpass
+      - MINIO_HTTP_TRACE=/tmp/minio.log
     command: server /s3-data
 
 volumes: 
