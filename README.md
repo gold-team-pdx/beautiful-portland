@@ -61,3 +61,22 @@ for the sake of our build tools).
 - Decide whether it should live in the top level, or in only api or ui
 - cd to packages/api or packages/ui depending on your decision
 - yarn add {package}
+
+## yarn scripts
+
+- If you've just cloned the repo to a new development environment, or you want 
+  a completely fresh build, run `yarn build`. Beware that this will also perform
+  a `yarn clean`, wiping out any persistent data in your local s3 buckets.
+- If you just want to pull down all the dependencies, run `yarn bootstrap`. 
+- To start a local dev build, run `yarn start`.
+- To avoid consuming resources on your machine when you're done running a dev build,
+  run `yarn stop` to shut down the docker container.
+
+## docker container
+
+The local dev build includes a docker container that emulates an aws s3 bucket. 
+You can access this bucket at http://localhost:9001. The access key is `b@dpass`
+and the secret key is `r3alb@dpass`. Any files you upload to this bucket will
+persist, even if you shut down the docker container, until you run a `yarn clean`
+or `yarn build`. If you have run a `yarn clean` or you've never run `yarn build`, 
+you will need to run `yarn build` once to initialize the bucket.

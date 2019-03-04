@@ -6,15 +6,25 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "cd ../../ ; yarn bootstrap",
+    "build": "run-s s3:start s3:wait:ready",
+    "clean": "run-s s3:nuke",
     "node:start": "node server.js",
-    "s3:container:kill": "docker-compose rm --stop --force beautiful-portland-s3",
+    "s3:container:kill": "docker-compose rm --stop --force",
     "s3:container:start": "docker-compose up -d beautiful-portland-s3",
+    "s3:nuke": "docker-compose down -v",
     "s3:start": "run-s s3:container:kill s3:container:start",
+    "s3:stop": "docker-compose down",
+    "s3:wait:ready": "node scripts/initialize-s3.js",
     "services:start": "run-s s3:start",
-    "start": "run-p services:start node:start"
+    "start": "run-p services:start node:start",
+    "stop": "run-s s3:stop"
   },
   "dependencies": {
+    "@types/promise-retry": "^1.1.3",
+    "aws-sdk": "^2.413.0",
     "express": "^4.16.4",
-    "mongodb": "^3.1.13"
+    "mongodb": "^3.1.13",
+    "perish": "^1.0.2",
+    "promise-retry": "^1.1.1"
   }
 }
