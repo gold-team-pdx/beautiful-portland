@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Form, Button, Select } from 'semantic-ui-react';
+import { Form, Button, Dropdown } from 'semantic-ui-react';
 
 export default class Item extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			description: '',
-			type: 'main',
+			type: '',
 			servings: 0,
 			vegetarian: false,
 			vegan: false,
@@ -16,11 +16,10 @@ export default class Item extends Component {
 			volunteer_email: ''
 		};
 	}
-
 	clearForm = () => {
 		this.setState({
 			description: '',
-			type: 'main',
+			type: '',
 			servings: 0,
 			vegetarian: false,
 			vegan: false,
@@ -36,17 +35,12 @@ export default class Item extends Component {
 		this.clearForm();
 	};
 
-	updateCheckbox = (e) => {
-		this.setState({ [e.target.name]: e.target.checked });
+	updateCheckbox = (event, data) => {
+		this.setState({ [data.name]: data.checked });
 	};
 
-	updateSelect = (e) => {
-		console.log(e);
-		//this.setState({ type: e.target.value });
-	};
-
-	onChange = (e) => {
-		this.setState({ [e.target.name]: e.target.value });
+	onChange = (event, data) => {
+		this.setState({ [data.name]: data.value });
 	};
 
 	render() {
@@ -64,36 +58,41 @@ export default class Item extends Component {
 				<Form onSubmit={this.onSubmit}>
 					<br />
 					<Form.Input>
-						<Select placeholder="type" options={options} />
+						<Dropdown
+							name="type"
+							value={this.state.type}
+							onChange={this.onChange}
+							placeholder="type"
+							fluid
+							selection
+							options={options}
+						/>
 					</Form.Input>
 					<Form.Input
 						name="description"
 						value={this.state.description}
-						onChange={(e) => this.onChange(e)}
+						onChange={this.onChange}
 						style={{ width: '370px' }}
 						label="Item"
 						placeholder="description"
 					/>
 					<Form.Group>
 						<Form.Checkbox
-							onChange={(e) => this.updateCheckbox(e)}
+							onChange={this.updateCheckbox}
 							checked={this.state.vegan}
 							name="vegan"
-							id="vegan"
 							label="Vegan"
 						/>
 						<Form.Checkbox
-							onChange={(e) => this.updateCheckbox(e)}
+							onChange={this.updateCheckbox}
 							checked={this.state.vegetarian}
 							name="vegetarian"
-							id="vegetarian"
 							label="Vegetarian"
 						/>
 						<Form.Checkbox
-							onChange={(e) => this.updateCheckbox(e)}
+							onChange={this.updateCheckbox}
 							checked={this.state.glutenFree}
 							name="glutenFree"
-							id="glutenFree"
 							label="Gluten-free"
 						/>
 					</Form.Group>
@@ -101,7 +100,7 @@ export default class Item extends Component {
 						<Form.Input
 							name="servings"
 							value={this.state.servings}
-							onChange={(e) => this.onChange(e)}
+							onChange={this.onChange}
 							inline
 							label="Servings"
 						/>
@@ -110,7 +109,7 @@ export default class Item extends Component {
 						<Form.Input
 							name="volunteer_name"
 							value={this.state.volunteer_name}
-							onChange={(e) => this.onChange(e)}
+							onChange={this.onChange}
 							style={{ width: '370px' }}
 							label="Name"
 							placeholder="name"
@@ -118,7 +117,7 @@ export default class Item extends Component {
 						<Form.Input
 							name="volunteer_email"
 							value={this.state.volunteer_email}
-							onChange={(e) => this.onChange(e)}
+							onChange={this.onChange}
 							style={{ width: '370px' }}
 							label="Email"
 							placeholder="email"
@@ -126,7 +125,7 @@ export default class Item extends Component {
 						<Form.Input
 							name="volunteer_phone"
 							value={this.state.volunteer_phone}
-							onChange={(e) => this.onChange(e)}
+							onChange={this.onChange}
 							style={{ width: '370px' }}
 							label="Phone"
 							placeholder="phone"
