@@ -80,7 +80,7 @@ export default class Item extends Component {
 							checked={this.state.vegan}
 							name="vegan"
 							id="vegan"
-							label="vegan"
+							label="Vegan"
 						/>
 						<Form.Checkbox
 							onChange={(e) => this.updateCheckbox(e)}

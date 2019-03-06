@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import VolunteerForm from './components/Form/VolunteerForm';
+import VolunteerForm from './components/VolunteerForm';
 import { Container } from 'semantic-ui-react';
 
 class App extends Component {
