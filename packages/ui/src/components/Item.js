@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Dropdown } from 'semantic-ui-react';
+import { Form, Button, Dropdown, Segment } from 'semantic-ui-react';
 
 export default class Item extends Component {
 	constructor(props) {
@@ -16,6 +16,7 @@ export default class Item extends Component {
 			volunteer_email: ''
 		};
 	}
+
 	clearForm = () => {
 		this.setState({
 			description: '',
@@ -31,7 +32,7 @@ export default class Item extends Component {
 	};
 
 	onSubmit = () => {
-		this.props.submit(this.state);
+		this.props.onSubmit(this.state);
 		this.clearForm();
 	};
 
@@ -55,85 +56,84 @@ export default class Item extends Component {
 		];
 		return (
 			<div>
-				<Form onSubmit={this.onSubmit}>
-					<br />
-					<Form.Input>
-						<Dropdown
-							name="type"
-							value={this.state.type}
-							onChange={this.onChange}
-							placeholder="type"
-							fluid
-							selection
-							options={options}
-						/>
-					</Form.Input>
-					<Form.Input
-						name="description"
-						value={this.state.description}
-						onChange={this.onChange}
-						style={{ width: '370px' }}
-						label="Item"
-						placeholder="description"
-					/>
-					<Form.Group>
-						<Form.Checkbox
-							onChange={this.updateCheckbox}
-							checked={this.state.vegan}
-							name="vegan"
-							label="Vegan"
-						/>
-						<Form.Checkbox
-							onChange={this.updateCheckbox}
-							checked={this.state.vegetarian}
-							name="vegetarian"
-							label="Vegetarian"
-						/>
-						<Form.Checkbox
-							onChange={this.updateCheckbox}
-							checked={this.state.glutenFree}
-							name="glutenFree"
-							label="Gluten-free"
-						/>
-					</Form.Group>
-					<Form.Group>
+				<Segment>
+					<Form onSubmit={this.onSubmit}>
+						<br />
+						<Form.Input>
+							<Dropdown
+								name="type"
+								value={this.state.type}
+								onChange={this.onChange}
+								placeholder="type"
+								fluid
+								selection
+								style={{ width: '370px' }}
+								options={options}
+							/>
+						</Form.Input>
 						<Form.Input
-							name="servings"
-							value={this.state.servings}
-							onChange={this.onChange}
-							inline
-							label="Servings"
-						/>
-					</Form.Group>
-					<Form.Group widths="equal">
-						<Form.Input
-							name="volunteer_name"
-							value={this.state.volunteer_name}
+							name="description"
+							value={this.state.description}
 							onChange={this.onChange}
 							style={{ width: '370px' }}
-							label="Name"
-							placeholder="name"
+							label="Item"
+							placeholder="description"
 						/>
-						<Form.Input
-							name="volunteer_email"
-							value={this.state.volunteer_email}
-							onChange={this.onChange}
-							style={{ width: '370px' }}
-							label="Email"
-							placeholder="email"
-						/>
-						<Form.Input
-							name="volunteer_phone"
-							value={this.state.volunteer_phone}
-							onChange={this.onChange}
-							style={{ width: '370px' }}
-							label="Phone"
-							placeholder="phone"
-						/>
-					</Form.Group>
-					<p>{this.props.message}</p>
-					<Button color="green">Submit</Button>
-				</Form>
+						<Form.Group>
+							<Form.Checkbox
+								onChange={this.updateCheckbox}
+								checked={this.state.vegan}
+								name="vegan"
+								label="Vegan"
+							/>
+							<Form.Checkbox
+								onChange={this.updateCheckbox}
+								checked={this.state.vegetarian}
+								name="vegetarian"
+								label="Vegetarian"
+							/>
+							<Form.Checkbox
+								onChange={this.updateCheckbox}
+								checked={this.state.glutenFree}
+								name="glutenFree"
+								label="Gluten-free"
+							/>
+						</Form.Group>
+						<Form.Group>
+							<Form.Input
+								name="servings"
+								value={this.state.servings}
+								onChange={this.onChange}
+								inline
+								label="Servings"
+							/>
+						</Form.Group>
+						<Form.Group widths="equal">
+							<Form.Input
+								name="volunteer_name"
+								value={this.state.volunteer_name}
+								onChange={this.onChange}
+								label="Name"
+								placeholder="name"
+							/>
+							<Form.Input
+								name="volunteer_email"
+								value={this.state.volunteer_email}
+								onChange={this.onChange}
+								label="Email"
+								placeholder="email"
+							/>
+							<Form.Input
+								name="volunteer_phone"
+								value={this.state.volunteer_phone}
+								onChange={this.onChange}
+								label="Phone"
+								placeholder="phone"
+							/>
+						</Form.Group>
+						<Button color="green">Submit</Button>
+					</Form>
+				</Segment>
 			</div>
 		);
 	}
