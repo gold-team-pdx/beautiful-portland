@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Slider from './Components/Slider'
 import DonateButton from './Components/DonateButton'
+import VolunteerForm from './components/VolunteerForm';
+import { Container } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css'
 import './App.css'
 
@@ -32,6 +34,10 @@ class App extends Component {
 				<div className="DonateButton">
 					<DonateButton />
 				</div>
+				
+				{/* <Container>
+					<VolunteerForm />
+				</Container> */}
 			</div>
 		);
 	}

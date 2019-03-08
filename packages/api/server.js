@@ -1,6 +1,7 @@
 const config = require('./config')
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
+const bodyParser = require('body-parser');
 const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
@@ -12,6 +13,17 @@ app.listen(port, () => console.log('Listening on port ' + port + '...'))
 app.get('/beautifulportland', (req,res) => {
     // TODO -> get s3 images from bucket for get request. then need to grab urls to serve photos.
     res.send({express: "The force is strong with this team..."})
+})
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+
+// Catch frondend POST request
+app.post('/api/form', (req, res) => {
+    console.log(req.body);
+    res.send({
+        status: 'SUCCESS'
+    });
 })
 
 // SELECT * FROM volunteers WHERE first = "Alexamder"
