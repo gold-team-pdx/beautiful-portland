@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import Footer from "./components/Footer"
 
-import Footer from "./components/Footer";
 
-
-import VolunteerForm from './components/VolunteerForm';
-import { Container } from 'semantic-ui-react';
+import VolunteerForm from './components/VolunteerForm'
+import { Container } from 'semantic-ui-react'
 
 class App extends Component {
 	render() {
@@ -21,8 +20,8 @@ class App extends Component {
 				</Container>
        <Footer />
 			</div>
-		);
+		)
 	}
 }
 
-export default App;
+export default App

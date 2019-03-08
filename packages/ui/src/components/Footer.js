@@ -43,8 +43,8 @@ class Footer extends Component {
 
 
       </Menu>
-		);
+		)
 	}
 }
 
-export default Footer;
+export default Footer

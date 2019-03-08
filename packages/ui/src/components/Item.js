@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Form, Button, Dropdown, Segment } from 'semantic-ui-react';
+import React, { Component } from 'react'
+import { Form, Button, Dropdown, Segment } from 'semantic-ui-react'
 
 export default class Item extends Component {
 	constructor(props) {
-		super(props);
+		super(props)
 		this.state = {
 			description: '',
 			type: '',
@@ -14,7 +14,7 @@ export default class Item extends Component {
 			volunteer_name: '',
 			volunteer_phone: '',
 			volunteer_email: ''
-		};
+		}
 	}
 
 	clearForm = () => {
@@ -28,21 +28,21 @@ export default class Item extends Component {
 			volunteer_name: '',
 			volunteer_phone: '',
 			volunteer_email: ''
-		});
-	};
+		})
+	}
 
 	onSubmit = () => {
-		this.props.onSubmit(this.state);
-		this.clearForm();
-	};
+		this.props.onSubmit(this.state)
+		this.clearForm()
+	}
 
 	updateCheckbox = (event, data) => {
-		this.setState({ [data.name]: data.checked });
-	};
+		this.setState({ [data.name]: data.checked })
+	}
 
 	onChange = (event, data) => {
-		this.setState({ [data.name]: data.value });
-	};
+		this.setState({ [data.name]: data.value })
+	}
 
 	render() {
 		const options = [
@@ -53,7 +53,7 @@ export default class Item extends Component {
 			{ key: 'beverage', text: 'Beverages', value: 'beverage' },
 			{ key: 'supplies', text: 'Serving Supplies', value: 'supplies' },
 			{ key: 'donation', text: 'Donation', value: 'donation' }
-		];
+		]
 		return (
 			<div>
 				<Segment>
@@ -135,6 +135,6 @@ export default class Item extends Component {
 					</Form>
 				</Segment>
 			</div>
-		);
+		)
 	}
 }
