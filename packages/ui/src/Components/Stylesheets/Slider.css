@@ -1,0 +1,32 @@
+/* CSS for slider/slide components with transitions */
+.slider {
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    height: 600px;
+    margin: auto;
+    overflow: hidden;
+    padding-top: 10px;
+    white-space: nowrap;
+  }
+  
+  .slider-wrapper {
+    position: absolute;
+    max-height: 100%;
+    max-width: 100%;
+    height: 600px;
+    width: 100%;
+    transition: ease-in-out 3s;
+  }
+  
+  .slide {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 10px;
+    /* Web transitions for different browsers */
+    -webkit-transition: 3s;
+    -moz-transition: 3s;
+    -o-transition: 3s;
+    transition: 3s;
+  }

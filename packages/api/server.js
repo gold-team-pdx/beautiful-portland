@@ -10,6 +10,7 @@ app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
 // Practice GET request to test server
 app.get('/beautifulportland', (req,res) => {
+    // TODO -> get s3 images from bucket for get request. then need to grab urls to serve photos.
     res.send({express: "The force is strong with this team..."})
 })
 
