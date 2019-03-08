@@ -1,7 +1,7 @@
 const config = require('./config')
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
@@ -20,10 +20,15 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 // Catch frondend POST request
 app.post('/api/form', (req, res) => {
-    console.log(req.body);
+    console.log('Whole object: ')
+    console.log(req.body)
+    console.log('\nDate: ')
+    console.log(req.body.param.date)
+    console.log('\nBody: ')
+    console.log(req.body.param.body)
     res.send({
         status: 'SUCCESS'
-    });
+    })
 })
 
 // SELECT * FROM volunteers WHERE first = "Alexamder"

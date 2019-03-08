@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import Slider from './Components/Slider'
 import DonateButton from './Components/DonateButton'
-import VolunteerForm from './components/VolunteerForm';
-import { Container } from 'semantic-ui-react';
+import VolunteerForm from './components/VolunteerForm'
+import { Container } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import './App.css'
+import Footer from "./components/Footer"
 
 class App extends Component {
 	render() {
@@ -35,11 +36,16 @@ class App extends Component {
 					<DonateButton />
 				</div>
 				
-				{/* <Container>
+				{/* Will move this to a different route later, for now its here */}
+				<Container>
 					<VolunteerForm />
-				</Container> */}
+				</Container>
+				
+				<div style={{ flex:1 }}>
+       				<Footer />
+				</div>
 			</div>
-		);
+		)
 	}
 }
 

@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
 import { Form, Button, Dropdown, Segment } from 'semantic-ui-react';
 
 export default class Item extends Component {
 	constructor(props) {
 		super(props);
+=======
+import React, { Component } from 'react'
+import { Form, Button, Dropdown, Segment } from 'semantic-ui-react'
+
+export default class Item extends Component {
+	constructor(props) {
+		super(props)
+>>>>>>> da41b82b5a4fb1696847a8a328204526b7cb7074
 		this.state = {
 			description: '',
 			type: '',
@@ -14,7 +23,11 @@ export default class Item extends Component {
 			volunteer_name: '',
 			volunteer_phone: '',
 			volunteer_email: ''
+<<<<<<< HEAD
 		};
+=======
+		}
+>>>>>>> da41b82b5a4fb1696847a8a328204526b7cb7074
 	}
 
 	clearForm = () => {
@@ -28,6 +41,7 @@ export default class Item extends Component {
 			volunteer_name: '',
 			volunteer_phone: '',
 			volunteer_email: ''
+<<<<<<< HEAD
 		});
 	};
 
@@ -43,6 +57,23 @@ export default class Item extends Component {
 	onChange = (event, data) => {
 		this.setState({ [data.name]: data.value });
 	};
+=======
+		})
+	}
+
+	onSubmit = () => {
+		this.props.onSubmit(this.state)
+		this.clearForm()
+	}
+
+	updateCheckbox = (event, data) => {
+		this.setState({ [data.name]: data.checked })
+	}
+
+	onChange = (event, data) => {
+		this.setState({ [data.name]: data.value })
+	}
+>>>>>>> da41b82b5a4fb1696847a8a328204526b7cb7074
 
 	render() {
 		const options = [
@@ -53,7 +84,11 @@ export default class Item extends Component {
 			{ key: 'beverage', text: 'Beverages', value: 'beverage' },
 			{ key: 'supplies', text: 'Serving Supplies', value: 'supplies' },
 			{ key: 'donation', text: 'Donation', value: 'donation' }
+<<<<<<< HEAD
 		];
+=======
+		]
+>>>>>>> da41b82b5a4fb1696847a8a328204526b7cb7074
 		return (
 			<div>
 				<Segment>
@@ -135,6 +170,10 @@ export default class Item extends Component {
 					</Form>
 				</Segment>
 			</div>
+<<<<<<< HEAD
 		);
+=======
+		)
+>>>>>>> da41b82b5a4fb1696847a8a328204526b7cb7074
 	}
 }
