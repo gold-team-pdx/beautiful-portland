@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import Slide from './Slide'
 import Axios from 'axios'
-import PropTypes from 'prop-types'
 import './Stylesheets/Slider.css'
 
 export default class Slider extends Component {
     constructor(props) {
       super(props)
-
       this.state = {
         // Current Images come from a public S3 container
         images: [

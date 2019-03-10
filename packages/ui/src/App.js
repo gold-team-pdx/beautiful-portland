@@ -3,7 +3,7 @@ import Slider from './Components/Slider'
 import DonateButton from './Components/DonateButton'
 import VolunteerForm from './Components/VolunteerForm'
 import Footer from "./Components/Footer"
-import { Container } from 'semantic-ui-react'
+import { Container, Sticky } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import './App.css'
 
@@ -12,6 +12,7 @@ class App extends Component {
 	render() {
 		return (
 			<div className="App">
+				{/* Will move this to a different route later, for now its here */}
 				<div className="Logo">
 					<h1 className="Logo">Logo Here</h1>
 				</div>
@@ -36,13 +37,10 @@ class App extends Component {
 				<div className="DonateButton">
 					<DonateButton />
 				</div>
-				
-				{/* Will move this to a different route later, for now its here */}
-				<Container>
+				<Container style={{margin: "50px"}}>
 					<VolunteerForm />
 				</Container>
-				
-				<div style={{ flex:1 }}>
+				<div style={{ flex:1, position: "fixed", bottom: 0, width: "100%" }}>
        				<Footer />
 				</div>
 			</div>

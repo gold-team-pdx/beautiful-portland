@@ -1,5 +1,5 @@
 .App {
-    position: relative;
+    position: absolute;
     display: flex;
     flex-direction: column;
     min-height: 100vw;
@@ -33,10 +33,10 @@
 
 .MissionStatement {
     position: relative;
-    display: inherit;
+    display: inline-block;
     justify-content: center;
     text-align: center;
-    padding-top: 20px;
+    margin-top: 70px;
     margin-left: 250px;
     margin-right: 250px;
     padding-bottom: 10px;
