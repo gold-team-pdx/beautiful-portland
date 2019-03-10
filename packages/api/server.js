@@ -44,15 +44,53 @@ const test = function(db, callback) {
     })
 }
 
-// Console.log to show Mongodb is connected, call test function
 const client = new MongoClient(uri, { useNewUrlParser: true })
-client.connect((err, db) => {
+client.connect((err) => {
     if (err) {
-	console.log(err, "Connection Failed")
-	return
+        console.log(err, "Connection to db failed")
+        return
     }
-    test(client, function(){
-        db.close()
-    })
-    console.log("Connection Seccess!\n")
+})
+// Console.log to show Mongodb is connected, call test function
+// client.connect((err, db) => {
+//     if (err) {
+// 	console.log(err, "Connection Failed")
+// 	return
+//     }
+//     test(client, function(){
+//         db.close()
+//     })
+//     console.log("Connection Seccess!\n")
+// })
+
+app.get('/api/event?*', (req, res) => {
+    collection = client.db("events-form").collection("events")
+    collection.find({date: req.query.date}).toArray((err, docs) => {
+        if(err) {
+            console.log(err, "Error trying to find document")
+            res.send({
+                status: 'FAILURE'
+            })
+            return
+        } else if(docs.length === 0) {
+            console.log("Couldn't fulfill a document request")
+            res.send({
+                status: 'FAILURE'
+            })
+            return
+        }
+
+        let i = 0, response_data = []            
+        docs[0].categories.forEach(category => {
+            response_data.push({type: category.name, servings: 0})
+            category.submissions.forEach(sub => {
+                response_data[i].servings += sub.servings
+            })
+            i++
+        })
+        res.send({
+            status: 'SUCCESS',
+            event_info: JSON.stringify(response_data)
+        })
+    }) 
 })
