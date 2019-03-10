@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Slide from './Slide'
 import Axios from 'axios'
+import PropTypes from 'prop-types'
 import './Stylesheets/Slider.css'
 
 export default class Slider extends Component {
@@ -87,3 +88,4 @@ export default class Slider extends Component {
         );
     }
   }
+

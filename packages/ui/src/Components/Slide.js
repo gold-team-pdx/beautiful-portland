@@ -11,4 +11,7 @@ const Slide = ({ image }) => {
     return <div className="slide" style={styles}></div>
   }
 
+  Slide.propTypes = {
+    image: PropTypes.string
+}
   export default Slide
