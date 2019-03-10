@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Slide from './Slide'
+import Axios from 'axios'
 import './Stylesheets/Slider.css'
 
 export default class Slider extends Component {
@@ -32,6 +33,18 @@ export default class Slider extends Component {
         // TODO:
         // Get photos from S3 bucket. Need to add to endpoint 
         // to backend to grab them, then get them somehow to front end.
+        Axios.get('/api/getImages')
+        .then(function (response) {
+            // handle success
+            console.log(response);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
     }
 
     componentWillUnmount = () => {
