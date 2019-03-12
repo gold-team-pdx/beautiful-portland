@@ -24,7 +24,7 @@ app.get('/api/getImages', (req,res) => {
     let imageUrls = []
     let data = s3.listObjects({Bucket:bucket}).promise()
         data.then(data => {
-            data.Contents.forEach(item => {
+            data.Contents.forEach((item) => {
                 let key = item.Key
                 imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
                     Bucket: bucket,
