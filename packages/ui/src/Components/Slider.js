@@ -8,16 +8,7 @@ export default class Slider extends Component {
       super(props)
       this.state = {
         // Current Images come from a public S3 container
-        images: [
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/aurora.jpg",
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/canyon.jpg",
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/city.jpg",
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/desert.jpg",
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/mountains.jpg",
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/redsky.jpg",
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/sandy-shores.jpg",
-            "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/tree-of-life.jpg"
-        ],
+        images: [],
         currentImageIndex: 0,
         // Timer for transitions
         timer: null,
@@ -26,24 +17,25 @@ export default class Slider extends Component {
     }
 
     componentDidMount = () => {
-        let timer = setInterval(this.tick, 1000);
-        this.setState({timer});
-
-        // TODO:
-        // Get photos from S3 bucket. Need to add to endpoint 
-        // to backend to grab them, then get them somehow to front end.
-        Axios.get('/api/getImages')
-        .then(function (response) {
-            // handle success
-            console.log(response);
+        let timer = setInterval(this.tick, 1000)
+        let storage = window.localStorage
+        let urls = storage.getItem('urls')
+        //console.log(urls)
+        //if(!urls) {
+            Axios.get('/api/getImages')
+            .then(function (res) {
+                // handle success
+                storage.setItem('urls', res.data)
+            })
+            .catch(function (err) {
+                // handle error
+                console.log(err)
+            })
+        //}
+        this.setState({
+            images: urls,
+            timer: timer
         })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-        })
-        .then(function () {
-            // always executed
-        });
     }
 
     componentWillUnmount = () => {
@@ -74,7 +66,7 @@ export default class Slider extends Component {
             <div className="slider">
                 <div className="slider-wrapper" onClick= {this.nextSlide}>
                     {
-                        this.state.images.map((image, i) => (
+                        this.state.images && this.state.images.map((image, i) => (
                             <Slide 
                                 key={i} 
                                 image={image}

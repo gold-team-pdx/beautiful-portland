@@ -3,7 +3,7 @@ import Slider from './Components/Slider'
 import DonateButton from './Components/DonateButton'
 import VolunteerForm from './Components/VolunteerForm'
 import Footer from "./Components/Footer"
-import { Container, Sticky } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import './App.css'
 

@@ -3,7 +3,7 @@ const express = require('express')
 const MongoClient = require('mongodb').MongoClient
 const bodyParser = require('body-parser')
 const AWS = require('aws-sdk')
-const retry = require('promise-retry')
+const cookieSession = require('cookie-session')
 const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
@@ -13,17 +13,40 @@ app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
 // Get request to S3 container to get photos
 app.get('/api/getImages', (req,res) => {
-    // Currently hardcoding keys -> will figure out a better way
-    const s3 = new AWS.S3({accessKeyId: 'b@dpass', secretAccessKey: 'r3alb@dpass'});
-    const params = { 
-        Bucket: 'beautiful-portland-carousel-photos',
-        Key: 'localhost:9001/'
-    }
-    s3.getObject(params, (err, data) => {
-        if (err) console.log(err, err.stack);
-        else     console.log(data);           
+    const s3 = new AWS.S3({
+        endpoint: new AWS.Endpoint('http://localhost:9001'),
+        s3ForcePathStyle: true,
+        accessKeyId: process.env.MINIO_ACCESS_KEY, 
+        secretAccessKey: process.env.MINIO_SECRET_KEY
     })
+    const bucket = 'beautiful-portland-carousel-photos'
+    const expiration = 60 * 60
+    let imageUrls = []
+    let data = s3.listObjects({Bucket:bucket}).promise()
+        data.then(data => {
+            data.Contents.forEach(item => {
+                let key = item.Key
+                imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
+                    Bucket: bucket,
+                    Key: key,
+                    Expires: expiration
+                }))
+            })
+            res.send(imageUrls)
+        })
+        .catch(err => {
+            console.log(err)
+        })
 })
+
+app.use(cookieSession({
+    name: 'session',
+    keys: [process.env.MINIO_ACCESS_KEY, process.env.MINIO_SECRET_KEY],  
+    // Cookie Options
+    // Expires in 24 hours
+    maxAge: 60 * 60 * 1000,
+    path: '/'
+  }))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
