@@ -197,7 +197,6 @@ export default class Item extends Component {
 							</Form.Group>
 						</div>
 						<br />
-
 						<Form.Group>
 							<Form.Checkbox
 								onChange={this.updateCheckbox}
