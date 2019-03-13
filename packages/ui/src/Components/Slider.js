@@ -18,8 +18,6 @@ export default class Slider extends Component {
     constructor(props) {
       super(props)
       this.state = {
-        // Current Images come from a public S3 container. If any images 
-        // are in minio instance, they will be served instead.
         images: [],
         currentImageIndex: 0,
         // Timer for transitions
@@ -30,6 +28,8 @@ export default class Slider extends Component {
 
     componentDidMount = () => {
         let timer = setInterval(this.tick, 1000)
+        // Current Images come from a public S3 container. If any images 
+        // are in minio instance, they will be served instead.
         let storage = window.localStorage
         let urls = []
         Axios.get('/api/getImages')

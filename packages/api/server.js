@@ -3,7 +3,6 @@ const express = require('express')
 const MongoClient = require('mongodb').MongoClient
 const bodyParser = require('body-parser')
 const AWS = require('aws-sdk')
-const cookieSession = require('cookie-session')
 const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
@@ -38,15 +37,6 @@ app.get('/api/getImages', (req,res) => {
             console.log(err)
         })
 })
-
-app.use(cookieSession({
-    name: 'session',
-    keys: [process.env.MINIO_ACCESS_KEY, process.env.MINIO_SECRET_KEY],  
-    // Cookie Options
-    // Expires in 24 hours
-    maxAge: 60 * 60 * 1000,
-    path: '/'
-  }))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
