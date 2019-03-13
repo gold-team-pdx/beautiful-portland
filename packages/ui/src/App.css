@@ -1,0 +1,53 @@
+.App {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vw;
+    width: 100vw;
+    background-color: white;
+}
+
+.Logo {
+    /* This positioning needs to be changed for mobile. will do when we
+       have an actual logo */
+    position: relative;
+    transform: rotate(-10deg);
+    -webkit-transform: rotate(-10deg); 
+    -moz-transform: rotate(-10deg);
+    color: black;
+    justify-content: center;
+    right: 30px;
+    margin-left: 195px;
+    z-index: 1; 
+    font-size: 275%;
+
+}
+
+.ImageCarousel {
+    justify-content: center;
+    height: 600px;
+    margin: -80px 10px 10px 10px;
+
+
+}
+
+.MissionStatement {
+    position: relative;
+    display: inline-block;
+    justify-content: center;
+    text-align: center;
+    margin-top: 70px;
+    margin-left: 250px;
+    margin-right: 250px;
+    padding-bottom: 10px;
+
+}
+
+.DonateButton {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}

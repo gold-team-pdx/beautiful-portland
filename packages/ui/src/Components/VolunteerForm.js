@@ -20,15 +20,15 @@ export default class VolunteerForm extends Component {
 		}).catch(err => {
 			console.log(err, 'Try again.')
 		})
-	};
+  }
 	
 	componentDidMount() {
 		let path = "/api/event?date=03-08-19"
 		Axios.get(path).then((response) => {
 			console.log(response.data.data)
 		})
+  }
 
-	}
 	render() {
 		return (
 			<div>
