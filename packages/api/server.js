@@ -10,7 +10,7 @@ const uri = config.mongodbURL
 // Console.log to show server up and running in terminal
 app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
-// Get request to S3 container to get photos
+// Get request to S3 container to get photos for image carousel
 app.get('/api/getImages', (req,res) => {
     const s3 = new AWS.S3({
         endpoint: new AWS.Endpoint('http://localhost:9001'),

@@ -72,6 +72,8 @@ export default class Slider extends Component {
     }
 
     nextSlide = () => {
+        // This makes the carousel infinite. Consistently
+        // changes the index of the rest of the images
         let [first, ...rest] = this.state.images;
         let images = [...rest, first];
         return this.setState({
