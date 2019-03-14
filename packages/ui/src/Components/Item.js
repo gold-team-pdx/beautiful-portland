@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Form, Button, Dropdown, Segment } from 'semantic-ui-react'
+import { Form, Button, Dropdown, Segment } from 'semantic-ui-react'
 import './Stylesheets/Item.css'
 
 export default class Item extends Component {
@@ -19,12 +19,12 @@ export default class Item extends Component {
 			volunteer_name: '',
 			volunteer_phone: '',
 			volunteer_email: '',
-			errors:{
+			errors: {
 				type: '',
 				description: '',
-				servings: '', 
-				volunteer_name: '', 
-				volunteer_phone: '', 
+				servings: '',
+				volunteer_name: '',
+				volunteer_phone: '',
 				volunteer_email: ''
 			},
 			typeValid: false,
@@ -32,7 +32,7 @@ export default class Item extends Component {
 			servingsValid: false,
 			volunteer_nameValid: false,
 			volunteer_phoneValid: false,
-			volunteer_emailValid: false,      
+			volunteer_emailValid: false,
 			formValid: false
 		}
 	}
@@ -48,12 +48,12 @@ export default class Item extends Component {
 			volunteer_name: '',
 			volunteer_phone: '',
 			volunteer_email: '',
-			errors:{
+			errors: {
 				type: '',
 				description: '',
-				servings: '', 
-				volunteer_name: '', 
-				volunteer_phone: '', 
+				servings: '',
+				volunteer_name: '',
+				volunteer_phone: '',
 				volunteer_email: ''
 			},
 			typeValid: false,
@@ -61,7 +61,7 @@ export default class Item extends Component {
 			servingsValid: false,
 			volunteer_nameValid: false,
 			volunteer_phoneValid: false,
-			volunteer_emailValid: false,      
+			volunteer_emailValid: false,
 			formValid: false
 		})
 	}
@@ -77,9 +77,9 @@ export default class Item extends Component {
 	}
 
 	onChange = (event, data) => {
-		this.setState({ [data.name]: data.value },
-			() => {this.validateField(data.name, data.value)}
-		)
+		this.setState({ [data.name]: data.value }, () => {
+			this.validateField(data.name, data.value)
+		})
 	}
 
 	validateField(fieldName, value) {
@@ -90,57 +90,66 @@ export default class Item extends Component {
 		let volunteer_phoneValid = this.state.volunteer_phoneValid
 		let volunteer_emailValid = this.state.volunteer_emailValid
 		let descriptionValid = this.state.descriptionValid
-	
-		switch(fieldName) {
+
+		switch (fieldName) {
 			case 'type':
 				typeValid = value
 				errors.type = typeValid ? '' : ' ✗ Please select a type'
 				break
-		  	case 'description':
+			case 'description':
 				descriptionValid = value.length >= 5
 				errors.description = descriptionValid ? '' : ' ✗ Message must be longer than five characters.'
 				break
-		  	case 'servings':
-				servingsValid = value>0 && value<=150
+			case 'servings':
+				servingsValid = value > 0 && value <= 150
 				errors.servings = servingsValid ? '' : ' ✗ Please enter a vaild number between 0~150.'
 				break
-		  	case 'volunteer_name':
-				volunteer_nameValid = value.length>2
+			case 'volunteer_name':
+				volunteer_nameValid = value.length > 2
 				errors.volunteer_name = volunteer_nameValid ? '' : ' ✗ Please enter a vaild Name.'
 				break
-		  	case 'volunteer_phone':
-			  volunteer_phoneValid = value.match(/^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/i)
+			case 'volunteer_phone':
+				volunteer_phoneValid = value.match(/^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/i)
 				errors.volunteer_phone = volunteer_phoneValid ? '' : ' ✗ Please enter a vaild phone number.'
 				break
-		  	case 'volunteer_email':
+			case 'volunteer_email':
 				volunteer_emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
 				errors.volunteer_email = volunteer_emailValid ? '' : ' ✗ Please enter a valid email.'
 				break
-		  	default:
+			default:
 				break
 		}
-	
-		this.setState({
-			errors,
-			typeValid,
-			servingsValid,
-			volunteer_nameValid,
-			volunteer_phoneValid,
-			volunteer_emailValid,
-			descriptionValid
-		  },
-		  this.validateForm
+
+		this.setState(
+			{
+				errors,
+				typeValid,
+				servingsValid,
+				volunteer_nameValid,
+				volunteer_phoneValid,
+				volunteer_emailValid,
+				descriptionValid
+			},
+			this.validateForm
 		)
 	}
 
 	validateForm() {
-		this.setState({formValid: this.state.typeValid && this.state.servingsValid && this.state.volunteer_nameValid && this.state.volunteer_phoneValid && this.state.volunteer_emailValid && this.state.descriptionValid})
+		this.setState({
+			formValid:
+				this.state.typeValid &&
+				this.state.servingsValid &&
+				this.state.volunteer_nameValid &&
+				this.state.volunteer_phoneValid &&
+				this.state.volunteer_emailValid &&
+				this.state.descriptionValid
+		})
 	}
 
 	errorClass(error) {
-		return(error.length === 0 ? '' : 'has-error')
+		return error.length === 0 ? '' : 'has-error'
 	}
-	
+
 	render() {
 		const options = [
 			{ key: '', text: '', value: '' },
@@ -157,7 +166,7 @@ export default class Item extends Component {
 				<Segment>
 					<Form onSubmit={this.onSubmit}>
 						<br />
-						
+
 						<div className={`input-wrapper ${this.errorClass(this.state.errors.type)}`}>
 							<b>Please select a type:</b>
 							<Form.Group inline>
@@ -218,7 +227,7 @@ export default class Item extends Component {
 							/>
 						</Form.Group>
 						<br />
-						
+
 						<Form.Group inline>
 							<div className={`input-wrapper ${this.errorClass(this.state.errors.servings)}`}>
 								<Form.Group inline>
@@ -235,7 +244,7 @@ export default class Item extends Component {
 								</Form.Group>
 							</div>
 						</Form.Group>
-						
+
 						<Form.Group widths="equal">
 							<div className={`input-wrapper ${this.errorClass(this.state.errors.volunteer_name)}`}>
 								<Form.Input
@@ -247,7 +256,7 @@ export default class Item extends Component {
 								/>
 								<span>{this.state.errors.volunteer_name || ' ✓'}</span>
 							</div>
-							
+
 							<div className={`input-wrapper ${this.errorClass(this.state.errors.volunteer_email)}`}>
 								<Form.Input
 									name="volunteer_email"
@@ -258,7 +267,7 @@ export default class Item extends Component {
 								/>
 								<span>{this.state.errors.volunteer_email || ' ✓'}</span>
 							</div>
-							
+
 							<div className={`input-wrapper ${this.errorClass(this.state.errors.volunteer_phone)}`}>
 								<Form.Input
 									name="volunteer_phone"
@@ -270,7 +279,9 @@ export default class Item extends Component {
 								<span>{this.state.errors.volunteer_phone || ' ✓'}</span>
 							</div>
 						</Form.Group>
-						<Button color="green" disabled={!this.state.formValid}>Submit</Button>
+						<Button color="green" disabled={!this.state.formValid}>
+							Submit
+						</Button>
 					</Form>
 				</Segment>
 			</div>
