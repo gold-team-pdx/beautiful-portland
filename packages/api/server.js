@@ -24,8 +24,8 @@ app.get('/api/getImages', (req,res) => {
     const s3 = new AWS.S3({
         endpoint: new AWS.Endpoint('http://localhost:9001'),
         s3ForcePathStyle: true,
-        accessKeyId: process.env.MINIO_ACCESS_KEY, 
-        secretAccessKey: process.env.MINIO_SECRET_KEY
+        accessKeyId: 'b@dpass', 
+        secretAccessKey: 'r3alb@dpass'
     })
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
