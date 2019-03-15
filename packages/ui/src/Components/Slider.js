@@ -30,7 +30,7 @@ export default class Slider extends Component {
 
     componentDidMount = () => {
         let timer = setInterval(this.tick, 1000)
-        let storage = window.localStorage
+        let storage = window.sessionStorage
         let urls = []
         Axios.get('/api/getImages')
         .then(function (res) {
