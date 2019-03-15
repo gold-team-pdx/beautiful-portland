@@ -30,7 +30,7 @@ export default class Slider extends Component {
         let timer = setInterval(this.tick, 1000)
         // Current Images come from a public S3 container. If any images 
         // are in minio instance, they will be served instead.
-        let storage = window.localStorage
+        let storage = window.sessionStorage
         let urls = []
         Axios.get('/api/getImages')
         .then(function (res) {

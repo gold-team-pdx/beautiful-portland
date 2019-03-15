@@ -7,6 +7,15 @@ const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
 
+//Connects to MongoDB
+const client = new MongoClient(uri, { useNewUrlParser: true })
+client.connect((err) => {
+    if (err) {
+        console.log(err, "Connection to db failed")
+        return
+    }
+})
+
 // Console.log to show server up and running in terminal
 app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
@@ -19,7 +28,6 @@ app.get('/api/getImages', (req,res) => {
         secretAccessKey: process.env.MINIO_SECRET_KEY
     })
     const bucket = 'beautiful-portland-carousel-photos'
-    const expiration = 60 * 60
     let imageUrls = []
     let data = s3.listObjects({Bucket:bucket}).promise()
         data.then(data => {
@@ -28,7 +36,6 @@ app.get('/api/getImages', (req,res) => {
                 imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
                     Bucket: bucket,
                     Key: key,
-                    Expires: expiration
                 }))
             })
             res.send(imageUrls)
@@ -43,14 +50,27 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 // Catch frondend POST request
 app.post('/api/form', (req, res) => {
-    console.log('Whole object: ')
-    console.log(req.body)
-    console.log('\nDate: ')
-    console.log(req.body.param.date)
-    console.log('\nBody: ')
-    console.log(req.body.param.body)
-    res.send({
-        status: 'SUCCESS'
+    //updates Document in mongodb
+    collection = client.db("events-form").collection("events")
+    collection.updateOne(
+      {$and: [{date:req.body.date}, {"categories.name":req.body.type}]},
+      {$push: {"categories.$.submissions": {
+         "description" : req.body.description,
+         "serving" : JSON.parse(req.body.serving),
+         "vegetarian": JSON.parse(req.body.vegetarian),
+         "vegan": JSON.parse(req.body.vegan),
+         "gluten_Free": JSON.parse(req.body.gluten_Free),
+         "volunteer_name": req.body.volunteer_name,
+         "volunteer_phone": req.body.volunteer_phone,
+         "volunteer_email": req.body.volunteer_email
+        }}}, //$push
+        function(err,result){
+            if (err)
+                console.log(err,"Event Not Added")
+            else{
+                console.log("Added")
+                res.send("Updated")
+            }
     })
 })
 
@@ -68,13 +88,6 @@ const test = function(db, callback) {
     })
 }
 
-const client = new MongoClient(uri, { useNewUrlParser: true })
-client.connect((err) => {
-    if (err) {
-        console.log(err, "Connection to db failed")
-        return
-    }
-})
 // Console.log to show Mongodb is connected, call test function
 // client.connect((err, db) => {
 //     if (err) {
