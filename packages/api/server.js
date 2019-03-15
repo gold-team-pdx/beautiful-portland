@@ -7,15 +7,13 @@ const cookieSession = require('cookie-session')
 const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
-var db
 
-// Connects to Mongodb
-MongoClient.connect(uri,{useNewUrlParser: true}, function (err, client){
-    if (err)
-        throw err
-    else{
-        db = client.db("beautiful-portland")
-        console.log("Connected to MongoDB!")
+//Connects to MongoDB
+const client = new MongoClient(uri, { useNewUrlParser: true })
+client.connect((err) => {
+    if (err) {
+        console.log(err, "Connection to db failed")
+        return
     }
 })
 
@@ -65,14 +63,15 @@ app.use(bodyParser.urlencoded({extended: true}))
 // Catch frondend POST request
 app.post('/api/form', (req, res) => {
     //updates Document in mongodb
-    db.collection('event').updateOne(
+    collection = client.db("events-form").collection("events")
+    collection.updateOne(
       {$and: [{date:req.body.date}, {"categories.name":req.body.type}]},
       {$push: {"categories.$.submissions": {
          "description" : req.body.description,
-         "serving" : req.body.serving,
-         "vegetarian": req.body.vegetarian,
-         "vegan": req.body.vegan,
-         "glutenFree": req.body.glutenFree,
+         "serving" : JSON.parse(req.body.serving),
+         "vegetarian": JSON.parse(req.body.vegetarian),
+         "vegan": JSON.parse(req.body.vegan),
+         "gluten_Free": JSON.parse(req.body.gluten_Free),
          "volunteer_name": req.body.volunteer_name,
          "volunteer_phone": req.body.volunteer_phone,
          "volunteer_email": req.body.volunteer_email
@@ -101,13 +100,6 @@ const test = function(db, callback) {
     })
 }
 
-const client = new MongoClient(uri, { useNewUrlParser: true })
-client.connect((err) => {
-    if (err) {
-        console.log(err, "Connection to db failed")
-        return
-    }
-})
 // Console.log to show Mongodb is connected, call test function
 // client.connect((err, db) => {
 //     if (err) {
