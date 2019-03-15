@@ -7,6 +7,17 @@ const cookieSession = require('cookie-session')
 const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
+var db
+
+// Connects to Mongodb
+MongoClient.connect(uri,{useNewUrlParser: true}, function (err, client){
+    if (err)
+        throw err
+    else{
+        db = client.db("beautiful-portland")
+        console.log("Connected to MongoDB!")
+    }
+})
 
 // Console.log to show server up and running in terminal
 app.listen(port, () => console.log('Listening on port ' + port + '...'))
@@ -53,14 +64,26 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 // Catch frondend POST request
 app.post('/api/form', (req, res) => {
-    console.log('Whole object: ')
-    console.log(req.body)
-    console.log('\nDate: ')
-    console.log(req.body.param.date)
-    console.log('\nBody: ')
-    console.log(req.body.param.body)
-    res.send({
-        status: 'SUCCESS'
+    //updates Document in mongodb
+    db.collection('event').updateOne(
+      {$and: [{date:req.body.date}, {"categories.name":req.body.type}]},
+      {$push: {"categories.$.submissions": {
+         "description" : req.body.description,
+         "serving" : req.body.serving,
+         "vegetarian": req.body.vegetarian,
+         "vegan": req.body.vegan,
+         "glutenFree": req.body.glutenFree,
+         "volunteer_name": req.body.volunteer_name,
+         "volunteer_phone": req.body.volunteer_phone,
+         "volunteer_email": req.body.volunteer_email
+        }}}, //$push
+        function(err,result){
+            if (err)
+                console.log(err,"Event Not Added")
+            else{
+                console.log("Added")
+                res.send("Updated")
+            }
     })
 })
 
