@@ -2,7 +2,7 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    min-height: 100vw;
+    max-height: 1000px;
     width: 100vw;
     background-color: white;
 }
@@ -20,15 +20,12 @@
     margin-left: 195px;
     z-index: 1; 
     font-size: 275%;
-
 }
 
 .ImageCarousel {
     justify-content: center;
     height: 600px;
     margin: -80px 10px 10px 10px;
-
-
 }
 
 .MissionStatement {
@@ -40,7 +37,6 @@
     margin-left: 250px;
     margin-right: 250px;
     padding-bottom: 10px;
-
 }
 
 .DonateButton {
