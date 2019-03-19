@@ -35,7 +35,7 @@ export default class VolunteerForm extends Component {
 		return (
 			<div>
 				<Container>
-					<Header as="h2">Director Park Dinner Sign-Up:</Header>
+					<Header as="h2" style={{marginTop: '20px'}}>Director Park Dinner Sign-Up:</Header>
 					<Header as="h2">Name and Contact info of Volunteer Co-ordinator: </Header>
 					<Item onSubmit={this.onSubmit} />
 				</Container>
