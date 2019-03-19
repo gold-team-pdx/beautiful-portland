@@ -33,7 +33,7 @@ export default class Slider extends Component {
         let storage = window.sessionStorage
         let urls = []
         Axios.get('/api/getImages')
-        .then(function (res) {
+        .then((res) => {
             // Add pre-signed url strings to local storage
             if (res.data.length !== 0) {
                 storage.setItem('urls', JSON.stringify(res.data))
@@ -41,19 +41,18 @@ export default class Slider extends Component {
             if(storage.length > 0) {
                 urls = JSON.parse(storage.getItem('urls'))
             }
-            else {
+            if(urls.length === 0) {
                 urls = defaultImages
             }
-        })
-        .catch(function (err) {
-            // handle error
-            console.log(err)
-        }).then(
             this.setState({
                 images: urls,
                 timer: timer
             })
-        )
+        })
+        .catch(function (err) {
+            // handle error
+            console.log(err)
+        })
     }
 
     componentWillUnmount = () => {
