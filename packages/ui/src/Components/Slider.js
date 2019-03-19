@@ -35,22 +35,25 @@ export default class Slider extends Component {
         Axios.get('/api/getImages')
         .then(function (res) {
             // Add pre-signed url strings to local storage
-            storage.setItem('urls', res.data)
+            if (res.data.length !== 0) {
+                storage.setItem('urls', JSON.stringify(res.data))
+            }
+            if(storage.length > 0) {
+                urls = JSON.parse(storage.getItem('urls'))
+            }
+            else {
+                urls = defaultImages
+            }
         })
         .catch(function (err) {
             // handle error
             console.log(err)
-        })
-        if(storage.length > 0) {
-            urls = storage.getItem('urls').toString().split(',')
-        }
-        else {
-            urls = defaultImages
-        }
-        this.setState({
-            images: urls,
-            timer: timer
-        })
+        }).then(
+            this.setState({
+                images: urls,
+                timer: timer
+            })
+        )
     }
 
     componentWillUnmount = () => {
