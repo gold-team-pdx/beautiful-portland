@@ -4,8 +4,8 @@ import { Button } from 'semantic-ui-react'
 const DonateButton = () => {
     return (
         <div className='donateButton'>
-            <Button color='blue' size='massive'>
-                Donate Now!
+            <Button size='massive' color='teal'>
+                DONATE
             </Button>
         </div>
     );
