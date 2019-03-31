@@ -6,7 +6,7 @@ export default class Item extends Component {
 	constructor(props) {
 		super(props)
 		this.onChange = this.onChange.bind(this)
-		this.onleSubmit = this.onSubmit.bind(this)
+		this.onSubmit = this.onSubmit.bind(this)
 		this.validateField = this.validateField.bind(this)
 		this.errorClass = this.errorClass.bind(this)
 		this.state = {

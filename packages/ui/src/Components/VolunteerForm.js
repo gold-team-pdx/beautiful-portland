@@ -5,23 +5,15 @@ import Axios from 'axios'
 
 export default class VolunteerForm extends Component {
 	onSubmit = (data) => {
-		console.log(JSON.stringify(data, null, 3))
-		Axios.post('/api/form', {
-			param: {
-				// body: JSON.stringify(data),		//axios uses JSON as default content type
-				body: JSON.stringify(data),
-				date: '03/07/2019'
-			},
-			header: {
-				'Content-Type': 'application/json'
-			}
+		//console.log(JSON.stringify(data, null, 3))
+		data.date = '03-07-19'
+		Axios.post('/api/form', data)
+		.then((response) => {
+			console.log(response, 'Form Submitted')
 		})
-			.then((response) => {
-				console.log(response, 'Form Submitted')
-			})
-			.catch((err) => {
-				console.log(err, 'Try again.')
-			})
+		.catch((err) => {
+			console.log(err, 'Try again.')
+		})
 	}
 
 	componentDidMount() {

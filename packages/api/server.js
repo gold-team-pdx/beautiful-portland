@@ -56,10 +56,10 @@ app.post('/api/form', (req, res) => {
       {$and: [{date:req.body.date}, {"categories.name":req.body.type}]},
       {$push: {"categories.$.submissions": {
          "description" : req.body.description,
-         "serving" : JSON.parse(req.body.serving),
-         "vegetarian": JSON.parse(req.body.vegetarian),
-         "vegan": JSON.parse(req.body.vegan),
-         "gluten_Free": JSON.parse(req.body.gluten_Free),
+         "serving" : JSON.parse(req.body.servings),
+         "vegetarian": req.body.vegetarian,
+         "vegan": req.body.vegan,
+         "gluten_Free": req.body.glutenFree,
          "volunteer_name": req.body.volunteer_name,
          "volunteer_phone": req.body.volunteer_phone,
          "volunteer_email": req.body.volunteer_email
