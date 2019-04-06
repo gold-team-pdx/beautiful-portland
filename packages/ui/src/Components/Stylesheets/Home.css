@@ -16,7 +16,6 @@
     -moz-transform: rotate(-10deg);
     color: black;
     justify-content: center;
-    right: 30px;
     margin-left: 195px;
     z-index: 1; 
     font-size: 275%;
@@ -25,18 +24,26 @@
 .ImageCarousel {
     justify-content: center;
     height: 600px;
-    margin: -80px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
+}
+
+.MissionHeader {
+    justify-content: left;
+    padding-top: 100px; 
+    margin-top: 650px;
+    margin-left: 225px;
 }
 
 .MissionStatement {
     position: relative;
     display: inline-block;
-    justify-content: center;
-    text-align: center;
-    margin-top: 70px;
+    justify-content: left;
+    text-align: left;
+    margin-top: 10px;
     margin-left: 250px;
     margin-right: 250px;
-    padding-bottom: 10px;
+    margin-bottom: 30px;
+    padding-bottom: 40px;
 }
 
 .DonateButton {
@@ -44,6 +51,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    color: #a6fcd4;
+    margin-top: -200px;
+    margin-left: 20px;
     margin-bottom: 50px;
 }

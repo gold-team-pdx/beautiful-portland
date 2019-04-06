@@ -10,14 +10,17 @@ export default class Home extends Component {
 		return (
 			<div className="Home">
 				<div className="Logo">
-					<h1 className="Logo">Logo Here</h1>
+					{/* <h1 className="Logo"></h1> */}
 				</div>
 				<div className="ImageCarousel">
 					<Slider />
 				</div>
-				<div className="MissionStatement">
-					<h2> Our Mission </h2>
-					<h5>
+				<div className="DonateButton">
+					<DonateButton />
+				</div>
+				<div>
+					<h2 className="MissionHeader"> Our Mission </h2>
+					<h5 className="MissionStatement">
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis iaculis enim a
 						auctor. Nam euismod dui in mattis vehicula. Praesent condimentum semper justo tempor aliquam.
 						Aliquam ex elit, ornare sed urna at, pulvinar pretium nisl. Aliquam eu rutrum turpis. Cras
@@ -26,9 +29,6 @@ export default class Home extends Component {
 						efficitur massa sem, sed pretium nisi efficitur quis. V estibulum hendrerit nibh eu ligula
 						mattis, at sodales nisl tempus. Pellentesque at risus a augue maximus venenatis vitae quis ante.
 					</h5>
-				</div>
-				<div className="DonateButton">
-					<DonateButton />
 				</div>
 				<div style={{ flex: 1, position: 'fixed', bottom: 0, width: '100%' }}>
 					<Footer />
