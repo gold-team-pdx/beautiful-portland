@@ -84,4 +84,4 @@ you will need to run `yarn build` once to initialize the bucket.
 ## testing environment
 
 The url for our test webserver is ec2-34-220-185-151.us-west-2.compute.amazonaws.com
-
+The jenkins sever lives at ec2-54-191-41-57.us-west-2.compute.amazonaws.com:8080
