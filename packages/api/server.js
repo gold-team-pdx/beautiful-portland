@@ -24,13 +24,8 @@ app.get('/api/getImages', (req,res) => {
     const s3 = new AWS.S3({
         endpoint: new AWS.Endpoint('http://localhost:9001'),
         s3ForcePathStyle: true,
-<<<<<<< Updated upstream
         accessKeyId: 'b@dpass', 
         secretAccessKey: 'r3alb@dpass'
-=======
-        accessKeyId: process.env.MINIO_ACCESS_KEY,
-        secretAccessKey: process.env.MINIO_SECRET_KEY
->>>>>>> Stashed changes
     })
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
@@ -50,18 +45,7 @@ app.get('/api/getImages', (req,res) => {
         })
 })
 
-<<<<<<< Updated upstream
-=======
-app.use(cookieSession({
-    name: 'session',
-    keys: [process.env.MINIO_ACCESS_KEY, process.env.MINIO_SECRET_KEY],
-    // Cookie Options
-    // Expires in 24 hours
-    maxAge: 60 * 60 * 1000,
-    path: '/'
-  }))
 
->>>>>>> Stashed changes
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
