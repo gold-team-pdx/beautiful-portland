@@ -80,3 +80,8 @@ and the secret key is `r3alb@dpass`. Any files you upload to this bucket will
 persist, even if you shut down the docker container, until you run a `yarn clean`
 or `yarn build`. If you have run a `yarn clean` or you've never run `yarn build`, 
 you will need to run `yarn build` once to initialize the bucket.
+
+## testing environment
+
+The url for our test webserver is ec2-34-220-185-151.us-west-2.compute.amazonaws.com
+The url for the jenkins server is http://ec2-18-237-87-49.us-west-2.compute.amazonaws.com:8080/
