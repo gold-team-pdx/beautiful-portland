@@ -44,7 +44,7 @@ export default class Item extends Component {
 			servings: 0,
 			vegetarian: false,
 			vegan: false,
-			glutenFree: false,
+			gluten_free: false,
 			volunteer_name: '',
 			volunteer_phone: '',
 			volunteer_email: '',
