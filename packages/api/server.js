@@ -114,7 +114,6 @@ function loggedIn(req, res, next) {
 //Returns array of objects for all logged volunteer info for given date.
 //NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
 app.get('/volunteerInformation', (req, res) => {
-  console.log("volunteer info route");
   collection = client.db("events-form").collection("events")
   collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
      if(err) {
@@ -148,7 +147,6 @@ app.get('/volunteerInformation', (req, res) => {
      })
   })
 
-     //console.log(response_data)
      res.send({
          status: 'SUCCESS',
          event_info: JSON.stringify(response_data)
@@ -179,10 +177,6 @@ app.get('/api/event?*', (req, res) => {
             response_data.push({type: category.name, servings: 0})
             category.submissions.forEach(sub => {
                 response_data[i].servings += sub.servings
-                console.log(sub.description)
-                console.log(sub.volunteer_name)
-                console.log(sub.volunteer_phone)
-                console.log(sub.volunteer_email)
             })
             i++
         })
