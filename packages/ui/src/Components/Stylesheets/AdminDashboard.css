@@ -1,14 +1,14 @@
+.adminDash {
+    width: 100vw;
+} 
+
 .adminView {
     height: 100vh;
     width: 100vw;
-    margin-top: 100px;
+    margin-top: -10px;
     display: flex;
     justify-content: center;
 }
-/* .adminDash {
-    margin-top: -100px;
-    width: 100vw;
-} */
 
 .dashMenu {
     flex-grow: 0;
