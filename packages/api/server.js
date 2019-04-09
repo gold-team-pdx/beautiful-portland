@@ -24,8 +24,13 @@ app.get('/api/getImages', (req,res) => {
     const s3 = new AWS.S3({
         endpoint: new AWS.Endpoint('http://localhost:9001'),
         s3ForcePathStyle: true,
+<<<<<<< Updated upstream
         accessKeyId: 'b@dpass', 
         secretAccessKey: 'r3alb@dpass'
+=======
+        accessKeyId: process.env.MINIO_ACCESS_KEY,
+        secretAccessKey: process.env.MINIO_SECRET_KEY
+>>>>>>> Stashed changes
     })
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
@@ -45,6 +50,18 @@ app.get('/api/getImages', (req,res) => {
         })
 })
 
+<<<<<<< Updated upstream
+=======
+app.use(cookieSession({
+    name: 'session',
+    keys: [process.env.MINIO_ACCESS_KEY, process.env.MINIO_SECRET_KEY],
+    // Cookie Options
+    // Expires in 24 hours
+    maxAge: 60 * 60 * 1000,
+    path: '/'
+  }))
+
+>>>>>>> Stashed changes
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -100,6 +117,62 @@ const test = function(db, callback) {
 //     console.log("Connection Seccess!\n")
 // })
 
+//express middleware to check if admin is logged in.
+function loggedIn(req, res, next) {
+  if(req.user){
+    next();
+  } else {
+    res.redirect('/');
+  }
+}
+
+//Route returns privileged volunteer info only when admin is logged in.
+//Returns array of objects for all logged volunteer info for given date.
+//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
+app.get('/volunteerInformation', (req, res) => {
+  console.log("volunteer info route");
+  collection = client.db("events-form").collection("events")
+  collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
+     if(err) {
+       console.log(err, "Error trying to find document")
+       res.send({
+         status: 'FAILURE'
+       })
+       return
+     } else if(docs[0] == null) {
+       console.log("Couldn't fufill document request")
+       res.send({
+         status: 'FAILURE'
+       })
+       return
+     }
+
+     let response_data = []
+     docs[0].categories.forEach(category => {
+     category.submissions.forEach(sub => {
+       var eventObj = new Object()
+       eventObj.type = category.name
+       eventObj.desc = sub.description
+       eventObj.servings = sub.servings
+       eventObj.vegetarian = sub.vegetarian
+       eventObj.vegan = sub.vegan
+       eventObj.gluten_Free = sub.gluten_Free
+       eventObj.name = sub.volunteer_name
+       eventObj.phone = sub.volunteer_phone
+       eventObj.email = sub.volunteer_email
+       response_data.push(eventObj)
+     })
+  })
+
+     //console.log(response_data)
+     res.send({
+         status: 'SUCCESS',
+         event_info: JSON.stringify(response_data)
+     })
+   })
+ })
+
+
 app.get('/api/event?*', (req, res) => {
     collection = client.db("events-form").collection("events")
     collection.find({date: req.query.date}).toArray((err, docs) => {
@@ -117,11 +190,15 @@ app.get('/api/event?*', (req, res) => {
             return
         }
 
-        let i = 0, response_data = []            
+        let i = 0, response_data = []
         docs[0].categories.forEach(category => {
             response_data.push({type: category.name, servings: 0})
             category.submissions.forEach(sub => {
                 response_data[i].servings += sub.servings
+                console.log(sub.description)
+                console.log(sub.volunteer_name)
+                console.log(sub.volunteer_phone)
+                console.log(sub.volunteer_email)
             })
             i++
         })
@@ -129,5 +206,5 @@ app.get('/api/event?*', (req, res) => {
             status: 'SUCCESS',
             event_info: JSON.stringify(response_data)
         })
-    }) 
+    })
 })
