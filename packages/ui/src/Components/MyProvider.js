@@ -6,7 +6,7 @@ export default class MyProvider extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isAuthorized: true //Shared state for entire app
+      isAuthorized: false //Shared state for entire app
     }
   }
 
