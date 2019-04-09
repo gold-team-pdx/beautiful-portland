@@ -107,7 +107,7 @@ class VolunteerList extends Component {
         ]
     }
     componentDidMount = () => {
-        //Need to generate and fill volunteer list
+        //Need to generate and fill volunteer list from databases
     }
     render() {
         return (
