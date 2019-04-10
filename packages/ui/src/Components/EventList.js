@@ -1,13 +1,34 @@
 import React, { Component } from "react"
 import { Table, Container, Header } from "semantic-ui-react"
+import PropTypes from 'prop-types'
 
-class VolunteerList extends Component {
+const propTypes = {
+  date: PropTypes.string,
+  volunteers: PropTypes.array
+};
+
+const defaultProps = {
+  date: '01-01-01',
+  volunteers:[{
+    name:'n/a',
+    desc:'n/a',
+    phone:'n/a',
+    email:'n/a',
+    type:'n/a',
+    servings: 0,
+    vegan: false,
+    vegetarian:false,
+    gluten_free:false
+  }]
+};
+
+class EventList extends Component {
   render() {
       return(
       <div>
         <Container>
           <h1>Volunteers</h1>
-          <h2>Date:{this.props.date}</h2>
+          <h2>Date: {this.props.date}</h2>
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -48,4 +69,7 @@ class VolunteerList extends Component {
   }
 }
 
-export default VolunteerList
+EventList.propTypes = propTypes;
+EventList.defaultProps = defaultProps;
+
+export default EventList

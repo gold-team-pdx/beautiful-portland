@@ -1,10 +1,10 @@
 import React, { Component } from "react"
 import Item from "./Item"
 import { Header, Container } from "semantic-ui-react"
+import { MyContext } from "./MyProvider"
+import EventList from "./EventList"
 import Axios from "axios"
 import Moment from "moment"
-import { MyContext } from "./MyProvider"
-import VolunteerList from "./VolunteerList"
 
 export default class VolunteerForm extends Component {
   constructor(props) {
@@ -15,17 +15,19 @@ export default class VolunteerForm extends Component {
     }
     this.state = {
       date: params.get("date"),
-      volunteers: [{
-          name:'',
-          desc:'',
-          phone:'',
-          email:'',
-          type:'',
+      volunteers: [
+        {
+          name: "n/a",
+          desc: "n/a",
+          phone: "n/a",
+          email: "n/a",
+          type: "n/a",
           servings: 0,
           vegan: false,
-          vegetarian:false,
-          gluten_free:false
-      }]
+          vegetarian: false,
+          gluten_free: false
+        }
+      ]
     }
   }
 
@@ -39,25 +41,21 @@ export default class VolunteerForm extends Component {
         console.log(err, "Try again.")
       })
   }
- 
- 
-  async componentDidMount() {
-    let path = '/api/volunteerInformation?date=03-08-19'
-    const res = await Axios.get(path)
-    let dummy = []
-    let persons = JSON.parse(res.data['event_info'])
-    persons.map( person => (
-      dummy.push(person)
-    ))
 
-    this.setState({volunteers: dummy})
-    //console.log(dummy)
-    //console.log(responseData)
-    //this.setState({volunteers: res.data['event_info']})
-    //console.log(res.data['event_info'])
-    //this.setState({volunteers:dummy})
-    //console.log(this.state.volunteers)
-    //console.log(res.data['event_info'])
+  async componentDidMount() {
+    let path = "/api/volunteerInformation?date=" + this.state.date
+    Axios.get(path)
+      .then(res => {
+        let persons = []
+        if (res.data["event_info"]) {
+          let data = JSON.parse(res.data["event_info"])
+          data.map(person => persons.push(person))
+          this.setState({ volunteers: persons })
+        }
+      })
+      .catch(err => {
+        console.log(err, "Error Retrieving List")
+      })
   }
 
   render() {
@@ -65,14 +63,17 @@ export default class VolunteerForm extends Component {
       <MyContext.Consumer>
         {context => {
           if (context.state.isAuthorized) {
-            return(
-                      <VolunteerList date={this.state.date} volunteers={this.state.volunteers}/>
+            return (
+              <EventList
+                date={this.state.date}
+                volunteers={this.state.volunteers}
+              />
             )
           }
           return (
             <div>
               <Container>
-                <Header as="h2" style={{ marginTop: "20px" }}> Director Park Dinner Sign-Up:</Header>
+                <Header as="h2" style={{ marginTop: "20px" }}>Director Park Dinner Sign-Up:{" "}</Header>
                 <Header as="h2">Name and Contact info of Volunteer Coordinator:{" "}</Header>
                 <Header as="h2">Date: {this.state.date} </Header>
                 <Item onSubmit={this.onSubmit} />
