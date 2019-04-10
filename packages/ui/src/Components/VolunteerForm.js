@@ -17,13 +17,14 @@ export default class VolunteerForm extends Component {
       date: params.get("date"),
       volunteers: [{
           name:'',
+          desc:'',
           phone:'',
           email:'',
           type:'',
           servings: 0,
           vegan: false,
           vegetarian:false,
-          gluten_Free:false
+          gluten_free:false
       }]
     }
   }
@@ -43,7 +44,18 @@ export default class VolunteerForm extends Component {
   async componentDidMount() {
     let path = '/api/volunteerInformation?date=03-08-19'
     const res = await Axios.get(path)
-    this.setState({volunteers: res.data['event_info']})
+    let dummy = []
+    let persons = JSON.parse(res.data['event_info'])
+    persons.map( person => (
+      dummy.push(person)
+    ))
+
+    this.setState({volunteers: dummy})
+    //console.log(dummy)
+    //console.log(responseData)
+    //this.setState({volunteers: res.data['event_info']})
+    //console.log(res.data['event_info'])
+    //this.setState({volunteers:dummy})
     //console.log(this.state.volunteers)
     //console.log(res.data['event_info'])
   }

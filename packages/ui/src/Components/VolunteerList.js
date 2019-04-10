@@ -2,11 +2,7 @@ import React, { Component } from "react"
 import { Table, Container, Header } from "semantic-ui-react"
 
 class VolunteerList extends Component {
-  constructor(props){
-    super(props)
-  }
   render() {
-      console.log(this.props.volunteers)
       return(
       <div>
         <Container>
@@ -21,12 +17,12 @@ class VolunteerList extends Component {
                 <Table.HeaderCell>Servings</Table.HeaderCell>
                 <Table.HeaderCell>Vegan</Table.HeaderCell>
                 <Table.HeaderCell>Vegetarian</Table.HeaderCell>
-                <Table.HeaderCell>Gluten</Table.HeaderCell>
+                <Table.HeaderCell>Gluten-Free</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.volunteers && this.props.volunteers.map(volunteer => (
-                <Table.Row>
+              {this.props.volunteers.map(volunteer => (
+                <Table.Row key={volunteer.email}>
                   <Table.Cell>
                     <Header as="h4">
                       <Header.Content>
@@ -41,7 +37,7 @@ class VolunteerList extends Component {
                   <Table.Cell>{volunteer.servings}</Table.Cell>
                   <Table.Cell>{volunteer.vegan.toString()}</Table.Cell>
                   <Table.Cell>{volunteer.vegetarian.toString()}</Table.Cell>
-                  <Table.Cell>{volunteer['gluten_Free'].toString()}</Table.Cell>
+                  <Table.Cell>{volunteer['gluten_free'].toString()}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
