@@ -12,7 +12,9 @@ export default class AdminDashboard extends Component {
     handleItemClick = (e, { name }) => this.setState({activeItem: name})
     
     render() {
+
         const { activeItem } = this.state
+        // Add more components to be rendered here
         const itemsToRender = {'volunteerList': <VolunteerList />}
         return (
             <div className='adminDash'>

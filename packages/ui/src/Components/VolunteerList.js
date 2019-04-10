@@ -3,6 +3,8 @@ import { Table } from 'semantic-ui-react'
 
 class VolunteerList extends Component {
     state = {
+        // Default list of volunteers (TESTING ONLY)
+        // remove when backend is complete
         volunteers: [
             {
                 name: 'Bill Nye', 
@@ -121,7 +123,8 @@ class VolunteerList extends Component {
                 </Table.Header>
                 <Table.Body>
                     {
-                        this.state.volunteers.map(item =>
+                        // If not volunteers is not empty, go ahead and map it to table
+                        this.state.volunteers && this.state.volunteers.map(item =>
                             <Table.Row>
                                 <Table.Cell>{item.name}</Table.Cell>
                                 <Table.Cell>{item.email}</Table.Cell>
