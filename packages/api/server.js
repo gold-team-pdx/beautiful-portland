@@ -45,6 +45,7 @@ app.get('/api/getImages', (req,res) => {
         })
 })
 
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -56,10 +57,10 @@ app.post('/api/form', (req, res) => {
       {$and: [{date:req.body.date}, {"categories.name":req.body.type}]},
       {$push: {"categories.$.submissions": {
          "description" : req.body.description,
-         "serving" : JSON.parse(req.body.servings),
+         "servings" : JSON.parse(req.body.servings),
          "vegetarian": req.body.vegetarian,
          "vegan": req.body.vegan,
-         "gluten_Free": req.body.glutenFree,
+         "gluten_free": req.body.gluten_free,
          "volunteer_name": req.body.volunteer_name,
          "volunteer_phone": req.body.volunteer_phone,
          "volunteer_email": req.body.volunteer_email
@@ -100,6 +101,60 @@ const test = function(db, callback) {
 //     console.log("Connection Seccess!\n")
 // })
 
+//express middleware to check if admin is logged in.
+function loggedIn(req, res, next) {
+  if(req.user){
+    next();
+  } else {
+    res.redirect('/');
+  }
+}
+
+//Route returns privileged volunteer info only when admin is logged in.
+//Returns array of objects for all logged volunteer info for given date.
+//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
+app.get('/api/volunteerInformation', (req, res) => {
+  collection = client.db("events-form").collection("events")
+  collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
+     if(err) {
+       console.log(err, "Error trying to find document")
+       res.send({
+         status: 'FAILURE'
+       })
+       return
+     } else if(docs[0] == null) {
+       console.log("Couldn't fufill document request")
+       res.send({
+         status: 'FAILURE'
+       })
+       return
+     }
+
+     let response_data = []
+     docs[0].categories.forEach(category => {
+     category.submissions.forEach(sub => {
+       var eventObj = new Object()
+       eventObj.type = category.name
+       eventObj.desc = sub.description
+       eventObj.servings = sub.servings
+       eventObj.vegetarian = sub.vegetarian
+       eventObj.vegan = sub.vegan
+       eventObj.gluten_Free = sub.gluten_Free
+       eventObj.name = sub.volunteer_name
+       eventObj.phone = sub.volunteer_phone
+       eventObj.email = sub.volunteer_email
+       response_data.push(eventObj)
+     })
+  })
+
+     res.send({
+         status: 'SUCCESS',
+         event_info: JSON.stringify(response_data)
+     })
+   })
+ })
+
+
 app.get('/api/event?*', (req, res) => {
     collection = client.db("events-form").collection("events")
     collection.find({date: req.query.date}).toArray((err, docs) => {
@@ -117,7 +172,7 @@ app.get('/api/event?*', (req, res) => {
             return
         }
 
-        let i = 0, response_data = []            
+        let i = 0, response_data = []
         docs[0].categories.forEach(category => {
             response_data.push({type: category.name, servings: 0})
             category.submissions.forEach(sub => {
@@ -129,5 +184,5 @@ app.get('/api/event?*', (req, res) => {
             status: 'SUCCESS',
             event_info: JSON.stringify(response_data)
         })
-    }) 
+    })
 })

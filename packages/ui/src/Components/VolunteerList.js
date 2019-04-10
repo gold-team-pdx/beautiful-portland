@@ -2,8 +2,12 @@ import React, { Component } from "react"
 import { Table, Container, Header } from "semantic-ui-react"
 
 class VolunteerList extends Component {
+  constructor(props){
+    super(props)
+  }
   render() {
-    return (
+      console.log(this.props.volunteers)
+      return(
       <div>
         <Container>
           <h1>Volunteers</h1>
@@ -12,16 +16,16 @@ class VolunteerList extends Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Volunteer</Table.HeaderCell>
-                <Table.HeaderCell>Item</Table.HeaderCell>
+                <Table.HeaderCell>Desc</Table.HeaderCell>
                 <Table.HeaderCell>Type</Table.HeaderCell>
                 <Table.HeaderCell>Servings</Table.HeaderCell>
                 <Table.HeaderCell>Vegan</Table.HeaderCell>
-                <Table.HeaderCell>Veggie</Table.HeaderCell>
+                <Table.HeaderCell>Vegetarian</Table.HeaderCell>
                 <Table.HeaderCell>Gluten</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.volunteers.map(volunteer => (
+              {this.props.volunteers && this.props.volunteers.map(volunteer => (
                 <Table.Row>
                   <Table.Cell>
                     <Header as="h4">
@@ -37,14 +41,14 @@ class VolunteerList extends Component {
                   <Table.Cell>{volunteer.servings}</Table.Cell>
                   <Table.Cell>{volunteer.vegan.toString()}</Table.Cell>
                   <Table.Cell>{volunteer.vegetarian.toString()}</Table.Cell>
-                  <Table.Cell>{volunteer.gluten_Free.toString()}</Table.Cell>
+                  <Table.Cell>{volunteer['gluten_Free'].toString()}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
           </Table>
         </Container>
       </div>
-    )
+      )
   }
 }
 
