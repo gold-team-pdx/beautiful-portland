@@ -113,7 +113,7 @@ function loggedIn(req, res, next) {
 //Route returns privileged volunteer info only when admin is logged in.
 //Returns array of objects for all logged volunteer info for given date.
 //NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
-app.get('/volunteerInformation', (req, res) => {
+app.get('/api/volunteerInformation', (req, res) => {
   collection = client.db("events-form").collection("events")
   collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
      if(err) {
