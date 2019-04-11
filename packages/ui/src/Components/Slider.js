@@ -38,9 +38,11 @@ export default class Slider extends Component {
             if (res.data.length !== 0) {
                 storage.setItem('urls', JSON.stringify(res.data))
             }
+            // If successfully in local storage, set urls to the new images
             if(storage.length > 0) {
                 urls = JSON.parse(storage.getItem('urls'))
             }
+            // Else, set the urls to the default image urls given (TESTING ONLY)
             if(urls.length === 0) {
                 urls = defaultImages
             }
