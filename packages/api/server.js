@@ -110,9 +110,9 @@ function loggedIn(req, res, next) {
   }
 }
 
-//Route returns privileged volunteer info only when admin is logged in.
-//Returns array of objects for all logged volunteer info for given date.
-//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
+// Route returns privileged volunteer info only when admin is logged in.
+// Returns array of objects for all logged volunteer info for given date.
+// NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
 app.get('/volunteerInformation', (req, res) => {
   collection = client.db("events-form").collection("events")
   collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
@@ -184,5 +184,39 @@ app.get('/api/event?*', (req, res) => {
             status: 'SUCCESS',
             event_info: JSON.stringify(response_data)
         })
+    })
+})
+
+// Method to retrieve list of all volunteers.
+// Returns array of objects for volunteer name, email, and phone number.
+// NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
+app.get('/api/volunteerList', (req, res) => {
+  collection = client.db("volunteer_info").collection("volunteers")
+  collection.find({}, {projection: {_id: 0}}).toArray((err, docs) => {
+      if(err) {
+        console.log(err, "Error trying to find document")
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      } else if(docs[0] == null) {
+        console.log("Couldn't fufill document request")
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      }
+      let response_data = []
+      docs.map(volunteer => {
+           var volunteerObj = new Object()
+           volunteerObj.name = volunteer.volunteer_name
+           volunteerObj.phone = volunteer.volunteer_phone
+           volunteerObj.email = volunteer.volunteer_email
+           response_data.push(volunteerObj)
+       })
+      res.send({
+        status: 'SUCCESS',
+        volunteer_info: JSON.stringify(response_data)
+      })
     })
 })
