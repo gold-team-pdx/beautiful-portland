@@ -1,116 +1,30 @@
 import React, { Component } from 'react'
+import Axios from 'axios'
 import { Table } from 'semantic-ui-react'
 
 class VolunteerList extends Component {
     state = {
         // Default list of volunteers (TESTING ONLY)
         // remove when backend is complete
-        volunteers: [
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Bill Nye', 
-                email: 'thescienceguy@example.com',
-                phone: '503-555-5555'
-            }, 
-            {
-                name: 'Neil DeGrasse Tyson',
-                email: 'cosmos@example.com',
-                phone: '333-333-3333'
-            }
-        ]
+        volunteers: []
     }
+
     componentDidMount = () => {
         //Need to generate and fill volunteer list from databases
+        Axios.get('/api/volunteerList')
+        .then(res => {
+            console.log(res.data.volunteer_info)
+            let tempVolunteers = JSON.parse(res.data.volunteer_info)
+            console.log(tempVolunteers)
+            this.setState({
+                volunteers: tempVolunteers
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
+
     render() {
         return (
             <Table singleLine>

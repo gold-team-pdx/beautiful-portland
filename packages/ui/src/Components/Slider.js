@@ -51,7 +51,7 @@ export default class Slider extends Component {
                 timer: timer
             })
         })
-        .catch(function (err) {
+        .catch((err) => {
             // handle error
             console.log(err)
         })
