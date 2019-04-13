@@ -2,10 +2,25 @@ const config = require('./config')
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const AWS = require('aws-sdk')
 const app = express()
 const port = process.env.PORT || 5000
 const uri = config.mongodbURL
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(cookieParser())
+app.use(passport.initialize())
+app.use(passport.session())
 
 //Connects to MongoDB
 const client = new MongoClient(uri, { useNewUrlParser: true })
@@ -19,12 +34,74 @@ client.connect((err) => {
 // Console.log to show server up and running in terminal
 app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
+// serialize the user for the session
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+// deserialize the user
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
+
+// passport config
+passport.use(new GoogleStrategy({
+    clientID : "889266104593-7bp3o9mj4aqmlloa565iu80gliqm6ee3.apps.googleusercontent.com",
+    clientSecret: "QthIhx2SQaCJSqfVjX6jLI7P",
+    callbackURL: "http://localhost:5000/auth/google/callback"},
+    function(accessToken, refreshToken, profile, done) {
+      return done(null, profile);
+    }
+));
+
+// let google to authentication the admin
+app.get('/auth/google',
+  passport.authenticate('google', {
+    scope: ['openid', 'email', 'profile']
+}))
+
+// the callback after google authenticated the admin
+app.get('/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/login'
+  }),
+  function(req, res) {
+    req.session.token = req.user.token
+    res.redirect('http://localhost:3000/admin-dashboard');
+  }
+)
+
+// route for admin-dashboard
+app.get('/admin-dashboard', ensureAuthenticated, function(req, res) {
+    res.send(req.user)
+})
+
+// logout
+app.get('/logout', function(req, res) {
+    req.logout();
+    req.session = null;
+    res.redirect('http://localhost:3000/login');
+})
+
+//express middleware to check if admin is logged in.
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated() && req.user.emails[0].value=="ronniesong0809@gmail.com"){
+      console.log("Welcome "+ req.user.displayName)
+      console.log("Your email is "+ req.user.emails[0].value)
+      return next();
+    }else{
+      console.log("You are not admin")
+      req.logout();
+      res.redirect('/login');
+    }
+}
+
 // Get request to S3 container to get photos for image carousel
 app.get('/api/getImages', (req,res) => {
     const s3 = new AWS.S3({
         endpoint: new AWS.Endpoint('http://localhost:9001'),
         s3ForcePathStyle: true,
-        accessKeyId: 'b@dpass', 
+        accessKeyId: 'b@dpass',
         secretAccessKey: 'r3alb@dpass'
     })
     const bucket = 'beautiful-portland-carousel-photos'
@@ -45,11 +122,7 @@ app.get('/api/getImages', (req,res) => {
         })
 })
 
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
-
-// Catch frondend POST request
+// Catch frontend POST request
 app.post('/api/form', (req, res) => {
     //updates Document in mongodb
     collection = client.db("events-form").collection("events")
@@ -75,7 +148,7 @@ app.post('/api/form', (req, res) => {
     })
 })
 
-// SELECT * FROM volunteers WHERE first = "Alexamder"
+// SELECT * FROM volunteers WHERE first = "Alexander"
 const test = function(db, callback) {
     const database = db.db("beautiful-portland")
     const collection = database.collection("volunteers")
@@ -98,7 +171,7 @@ const test = function(db, callback) {
 //     test(client, function(){
 //         db.close()
 //     })
-//     console.log("Connection Seccess!\n")
+//     console.log("Connection Success!\n")
 // })
 
 //express middleware to check if admin is logged in.
@@ -123,7 +196,7 @@ app.get('/api/volunteerInformation', (req, res) => {
        })
        return
      } else if(docs[0] == null) {
-       console.log("Couldn't fufill document request")
+       console.log("Couldn't fulfill document request")
        res.send({
          status: 'FAILURE'
        })
