@@ -3,7 +3,7 @@ import Slider from './Slider'
 import DonateButton from './DonateButton'
 import Footer from './Footer'
 import 'semantic-ui-css/semantic.min.css'
-import './Stylesheets/Home.css'
+import '../Stylesheets/Home.css'
 
 export default class Home extends Component {
 	render() {
