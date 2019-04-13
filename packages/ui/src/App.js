@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import MyProvider from "./Components/MyProvider"
 import Home from './Components/Home'
 import VolunteerForm from './Components/VolunteerForm'
+import Login from './Components/Login'
 import AdminDashboard from './Components/AdminDashboard'
 import './App.css'
 
@@ -14,6 +15,7 @@ class App extends Component {
 				<div className="App">
 					<Route exact path="/" component={Home} />
 					<Route path="/volunteer-form" component={VolunteerForm} />
+					<Route path="/login" component={Login} />
 					<Route path="/admin-dashboard" component={AdminDashboard} />
 				</div>
 			</Router>
