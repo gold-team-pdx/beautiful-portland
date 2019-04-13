@@ -1,4 +1,5 @@
-const config = require('./config')
+const dbConfig = require('./config/db')
+var authConfig = require('./config/auth')
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
 const bodyParser = require('body-parser')
@@ -9,7 +10,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const AWS = require('aws-sdk')
 const app = express()
 const port = process.env.PORT || 5000
-const uri = config.mongodbURL
+const uri = dbConfig.mongodbURL
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
@@ -45,10 +46,8 @@ passport.deserializeUser(function(obj, done) {
 });
 
 // passport config
-passport.use(new GoogleStrategy({
-    clientID : "889266104593-7bp3o9mj4aqmlloa565iu80gliqm6ee3.apps.googleusercontent.com",
-    clientSecret: "QthIhx2SQaCJSqfVjX6jLI7P",
-    callbackURL: "http://localhost:5000/auth/google/callback"},
+passport.use(new GoogleStrategy(
+    authConfig.google,
     function(accessToken, refreshToken, profile, done) {
       return done(null, profile);
     }
@@ -92,7 +91,7 @@ function ensureAuthenticated(req, res, next) {
     }else{
       console.log("You are not admin")
       req.logout();
-      res.redirect('/login');
+      res.redirect('http://localhost:3000/login');
     }
 }
 
