@@ -123,7 +123,7 @@ export default class AdminDashboard extends Component {
                     </div>
                     <Header as='h1'> {this.state.message} </Header>
                     {/* Changed these to divs so we can work some CSS magic on them */}
-                    <div className='content'>
+                    <div className='adminPageContent'>
                     {
                         /* Whichever menu item is active will be the content that is shown */
                         itemsToRender[this.state.activeItem.toString()]
