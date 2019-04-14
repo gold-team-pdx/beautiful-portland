@@ -62,7 +62,7 @@ app.get('/auth/google',
 // the callback after google authenticated the admin
 app.get('/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/login'
+    failureRedirect: 'http://localhost:3000/login'
   }),
   function(req, res) {
     req.session.token = req.user.token
@@ -71,12 +71,12 @@ app.get('/auth/google/callback',
 )
 
 // route for admin-dashboard
-app.get('/admin-dashboard', ensureAuthenticated, function(req, res) {
-    res.send(req.user)
+app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
+    res.send(req.user.displayName)
 })
 
 // logout
-app.get('/logout', function(req, res) {
+app.get('/api/logout', function(req, res) {
     req.logout();
     req.session = null;
     res.redirect('http://localhost:3000/login');
@@ -85,7 +85,7 @@ app.get('/logout', function(req, res) {
 //express middleware to check if admin is logged in.
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated() && req.user.emails[0].value=="ronniesong0809@gmail.com"){
-      console.log("Welcome "+ req.user.displayName)
+      console.log("Welcome admin "+ req.user.displayName)
       console.log("Your email is "+ req.user.emails[0].value)
       return next();
     }else{

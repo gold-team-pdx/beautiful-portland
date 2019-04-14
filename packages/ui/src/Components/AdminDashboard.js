@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
+import Axios from 'axios'
 import VolunteerList from './VolunteerList'
 import './Stylesheets/AdminDashboard.css'
 
@@ -8,9 +9,21 @@ export default class AdminDashboard extends Component {
         // Default active content
         activeItem: 'viewEvents'
     }
+    async componentDidMount () {
+        //Need to generate and fill volunteer list from databases
+        Axios.get('/api/admin-dashboard')
+        .then(res => {
+            this.setState({
+                adminName: res.data
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
 
     handleItemClick = (e, { name }) => this.setState({activeItem: name})
-    
+
     render() {
 
         const { activeItem } = this.state
@@ -25,7 +38,7 @@ export default class AdminDashboard extends Component {
                         <Menu.Menu position='right'>
                             <Menu.Item>
                                 {/* We could change this to be whichever user is logged in */}
-                                Hi Jenn!
+                                Hi {this.state.adminName}
                             </Menu.Item>
                             <Menu.Item name='logout' active={activeItem === 'logout'} onClick={this.handleItemClick}>
                                 Logout
