@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import VolunteerList from './VolunteerList'
-import './Stylesheets/AdminDashboard.css'
+import '../Stylesheets/AdminDashboard.css'
 
 export default class AdminDashboard extends Component {
     state = {

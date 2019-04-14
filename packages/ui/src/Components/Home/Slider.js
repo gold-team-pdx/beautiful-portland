@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Slide from './Slide'
 import Axios from 'axios'
-import './Stylesheets/Slider.css'
+import '../Stylesheets/Slider.css'
 
 const defaultImages = [        
     "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/aurora.jpg",

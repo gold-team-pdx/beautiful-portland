@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Button, Dropdown, Segment } from 'semantic-ui-react'
-import './Stylesheets/Item.css'
+import '../Stylesheets/Item.css'
 
 export default class Item extends Component {
 	constructor(props) {
