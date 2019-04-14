@@ -16,7 +16,7 @@
     height: 100vh;
 }
 
-.content {
+.adminPageContent {
     flex-grow: 3;
     height: 100vh;
     margin-right: 40px;
