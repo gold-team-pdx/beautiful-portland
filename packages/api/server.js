@@ -72,7 +72,7 @@ app.get('/auth/google/callback',
 
 // route for admin-dashboard
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
-    res.send(req.user)
+
 })
 
 // logout
@@ -84,15 +84,32 @@ app.get('/api/logout', function(req, res) {
 
 //express middleware to check if admin is logged in.
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated() && req.user.emails[0].value=="ronniesong0809@gmail.com"){
-      console.log("Welcome admin "+ req.user.displayName)
-      console.log("Your email is "+ req.user.emails[0].value)
-      return next();
-    }else{
-      console.log("You are not admin")
-      req.logout();
-      res.redirect('http://localhost:3000/login');
-    }
+  let displayName=[], emails=[]
+  let adminIsAuthenticated = req.isAuthenticated() && req.user.emails[0].value=="ronniesong0809@gmail.com"
+  if (adminIsAuthenticated){
+    console.log("Display name: "+ req.user.displayName)
+    console.log("Email: "+ req.user.emails[0].value)
+    console.log("Authenticated: " + adminIsAuthenticated)
+    console.log("You are admin\n")
+    res.send({
+      userInfo: req.user,
+      authenticated: adminIsAuthenticated,
+      message: 'Welcome back'
+    })
+    return next();
+  }else{
+    console.log("Display name: "+ req.user.displayName)
+    console.log("Email: "+ req.user.emails[0].value)
+    console.log("Authenticated: " + adminIsAuthenticated)
+    console.log("You are not admin\n")
+    res.send({
+      userInfo: req.user,
+      authenticated: adminIsAuthenticated,
+      message: 'You need to be authenticated to access admin dashboard'
+    })
+    req.logout();
+    req.session = null;
+  }
 }
 
 // Get request to S3 container to get photos for image carousel
