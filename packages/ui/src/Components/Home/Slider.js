@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Slide from './Slide'
 import Axios from 'axios'
-import './Stylesheets/Slider.css'
+import '../Stylesheets/Slider.css'
 
-const defaultImages = [        
+const defaultImages = [
     "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/aurora.jpg",
     "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/canyon.jpg",
     "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/city.jpg",
@@ -93,8 +93,8 @@ export default class Slider extends Component {
                 <div className="slider-wrapper" onClick= {this.nextSlide}>
                     {
                         this.state.images.length && this.state.images.map((image, i) => (
-                            <Slide 
-                                key={i} 
+                            <Slide
+                                key={i}
                                 image={image}
                             />
                         ))

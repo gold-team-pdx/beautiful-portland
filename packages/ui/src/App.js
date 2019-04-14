@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import MyProvider from "./Components/MyProvider"
-import Home from './Components/Home'
-import VolunteerForm from './Components/VolunteerForm'
-import Login from './Components/Login'
-import AdminDashboard from './Components/AdminDashboard'
+import MyProvider from "./Components/Context/MyProvider"
+import Home from './Components/Home/Home'
+import VolunteerForm from './Components/Volunteer/VolunteerForm'
+import Login from './Components/Dashboard/Login'
+import AdminDashboard from './Components/Dashboard/AdminDashboard'
 import './App.css'
 
 class App extends Component {

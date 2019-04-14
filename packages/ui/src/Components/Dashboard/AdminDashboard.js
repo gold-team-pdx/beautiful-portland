@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Menu, Header, Segment, Button } from 'semantic-ui-react'
 import Axios from 'axios'
 import VolunteerList from './VolunteerList'
-import './Stylesheets/AdminDashboard.css'
+import '../Stylesheets/AdminDashboard.css'
 
 export default class AdminDashboard extends Component {
     state = {
