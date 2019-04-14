@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import Item from './Item'
 import { Header, Container } from "semantic-ui-react"
-import { MyContext } from '../Context/MyProvider'
+import { MyContext } from "../Context/MyProvider"
 import EventList from "./EventList"
 import Axios from "axios"
 import Moment from "moment"

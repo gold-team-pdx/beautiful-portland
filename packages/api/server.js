@@ -37,21 +37,21 @@ app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
 // serialize the user for the session
 passport.serializeUser(function(user, done) {
-    done(null, user);
-});
+    done(null, user)
+})
 
 // deserialize the user
 passport.deserializeUser(function(obj, done) {
-    done(null, obj);
-});
+    done(null, obj)
+})
 
 // passport config
 passport.use(new GoogleStrategy(
     authConfig.google,
     function(accessToken, refreshToken, profile, done) {
-      return done(null, profile);
+      return done(null, profile)
     }
-));
+))
 
 // let google to authentication the admin
 app.get('/auth/google',
@@ -62,37 +62,54 @@ app.get('/auth/google',
 // the callback after google authenticated the admin
 app.get('/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/login'
+    failureRedirect: 'http://localhost:3000/login'
   }),
   function(req, res) {
     req.session.token = req.user.token
-    res.redirect('http://localhost:3000/admin-dashboard');
+    res.redirect('http://localhost:3000/admin-dashboard')
   }
 )
 
 // route for admin-dashboard
-app.get('/admin-dashboard', ensureAuthenticated, function(req, res) {
-    res.send(req.user)
+app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
+
 })
 
 // logout
-app.get('/logout', function(req, res) {
-    req.logout();
-    req.session = null;
-    res.redirect('http://localhost:3000/login');
+app.get('/api/logout', function(req, res) {
+    req.logout()
+    req.session = null
+    res.redirect('http://localhost:3000/login')
 })
 
 //express middleware to check if admin is logged in.
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated() && req.user.emails[0].value=="ronniesong0809@gmail.com"){
-      console.log("Welcome "+ req.user.displayName)
-      console.log("Your email is "+ req.user.emails[0].value)
-      return next();
-    }else{
-      console.log("You are not admin")
-      req.logout();
-      res.redirect('http://localhost:3000/login');
-    }
+  let displayName=[], emails=[]
+  let adminIsAuthenticated = req.isAuthenticated() && req.user.emails[0].value=="ronniesong0809@gmail.com"
+  if (adminIsAuthenticated){
+    // console.log("Display name: "+ req.user.displayName)
+    // console.log("Email: "+ req.user.emails[0].value)
+    // console.log("Authenticated: " + adminIsAuthenticated)
+    console.log("You are admin\n")
+    res.send({
+      userInfo: req.user,
+      authenticated: adminIsAuthenticated,
+      message: 'Welcome back'
+    })
+    return next()
+  }else{
+    // console.log("Display name: "+ req.user.displayName)
+    // console.log("Email: "+ req.user.emails[0].value)
+    // console.log("Authenticated: " + adminIsAuthenticated)
+    console.log("You are not admin\n")
+    res.send({
+      userInfo: req.user,
+      authenticated: adminIsAuthenticated,
+      message: 'You need to be authenticated to access admin dashboard'
+    })
+    req.logout()
+    req.session = null
+  }
 }
 
 // Get request to S3 container to get photos for image carousel
@@ -176,15 +193,15 @@ const test = function(db, callback) {
 //express middleware to check if admin is logged in.
 function loggedIn(req, res, next) {
   if(req.user){
-    next();
+    next()
   } else {
-    res.redirect('/');
+    res.redirect('/')
   }
 }
 
 //Route returns privileged volunteer info only when admin is logged in.
 //Returns array of objects for all logged volunteer info for given date.
-//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
+//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
 app.get('/api/volunteerInformation', (req, res) => {
   collection = client.db("events-form").collection("events")
   collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
@@ -261,7 +278,7 @@ app.get('/api/event?*', (req, res) => {
 
 // Method to retrieve list of all volunteers.
 // Returns array of objects for volunteer name, email, and phone number.
-// NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
+// NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
 app.get('/api/volunteerList', (req, res) => {
   collection = client.db("volunteer_info").collection("volunteers")
   collection.find({}, {projection: {_id: 0}}).toArray((err, docs) => {
