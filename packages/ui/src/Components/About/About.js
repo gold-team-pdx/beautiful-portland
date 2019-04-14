@@ -46,9 +46,9 @@ class About extends Component {
 								eget consequat ex varius sed. Quisque sed consequat odio, sit amet viverra dolor.
 							</p>
 							<p>
-								To learn more about our policies{' '}
+								To learn more about our policies visit{' '}
 								<a href="http://google.com" rel="noopener noreferrer" target="_blank">
-									visit here
+									here
 								</a>
 							</p>
 						</Accordion.Content>
@@ -68,9 +68,9 @@ class About extends Component {
 								eget consequat ex varius sed. Quisque sed consequat odio, sit amet viverra dolor.
 							</p>
 							<p>
-								To learn more about our financials{' '}
+								To learn more about our financials visit{' '}
 								<a href="http://google.com" rel="noopener noreferrer" target="_blank">
-									visit here
+									here
 								</a>
 							</p>
 						</Accordion.Content>
@@ -90,9 +90,9 @@ class About extends Component {
 								eget consequat ex varius sed. Quisque sed consequat odio, sit amet viverra dolor.
 							</p>
 							<p>
-								To learn more about our history{' '}
+								To learn more about our history visit{' '}
 								<a href="http://google.com" rel="noopener noreferrer" target="_blank">
-									visit here
+									here
 								</a>
 							</p>
 						</Accordion.Content>
