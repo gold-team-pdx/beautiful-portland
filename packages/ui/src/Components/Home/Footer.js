@@ -21,7 +21,13 @@ class Footer extends Component {
 					margin: 0 //clear semantic-ui style
 				}}
 			>
-				<Menu.Item name="About" active={activeItem === 'About'} onClick={this.handleItemClick}>
+				<Menu.Item
+					name="About"
+					as={NavLink}
+					active={activeItem === 'About'}
+					onClick={this.handleItemClick}
+					to="/about"
+				>
 					About
 				</Menu.Item>
 				<Menu.Item
