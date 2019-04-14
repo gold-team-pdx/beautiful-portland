@@ -6,7 +6,9 @@ export default class Login extends Component {
 		return (
 			<div style={{position:"absolute",top:"50%",left:"40%"}}>
 				<Container>
-					<Button size='massive' color='google plus'><Icon name='google' /><a href="http://localhost:5000/auth/google" style={{color:"white"}}>Admin Login</a></Button>
+					<a href="http://localhost:5000/auth/google" style={{color:"white"}}>
+						<Button size='massive' color='google plus'><Icon name='google' />Admin Login</Button>
+					</a>
 				</Container>
 			</div>
 		)
