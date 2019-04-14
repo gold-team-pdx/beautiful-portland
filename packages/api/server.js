@@ -84,8 +84,7 @@ app.get('/api/logout', function(req, res) {
 
 //express middleware to check if admin is logged in.
 function ensureAuthenticated(req, res, next) {
-  let displayName=[], emails=[]
-  let adminIsAuthenticated = req.isAuthenticated() && req.user.emails[0].value=="ronniesong0809@gmail.com"
+  let adminIsAuthenticated = req.isAuthenticated() && req.user.emails[0].value==authConfig.adminAccount
   if (adminIsAuthenticated){
     // console.log("Display name: "+ req.user.displayName)
     // console.log("Email: "+ req.user.emails[0].value)
