@@ -72,7 +72,7 @@ app.get('/auth/google/callback',
 
 // route for admin-dashboard
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
-    res.send(req.user.displayName)
+    res.send(req.user)
 })
 
 // logout

@@ -14,7 +14,7 @@ export default class AdminDashboard extends Component {
         Axios.get('/api/admin-dashboard')
         .then(res => {
             this.setState({
-                adminName: res.data
+                adminName: res.data.displayName
             })
         })
         .catch((err) => {
