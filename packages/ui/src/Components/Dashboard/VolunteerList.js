@@ -30,9 +30,9 @@ class VolunteerList extends Component {
             <Table singleLine>
                 <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell> Name  </Table.HeaderCell>
-                      <Table.HeaderCell> Email </Table.HeaderCell>
-                      <Table.HeaderCell> Phone </Table.HeaderCell>
+                      <Table.HeaderCell> Name  </Table.HeaderCell>  
+                      <Table.HeaderCell> Email </Table.HeaderCell> 
+                      <Table.HeaderCell> Phone </Table.HeaderCell> 
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -47,7 +47,7 @@ class VolunteerList extends Component {
                         )
                     }
                 </Table.Body>
-            </Table>
+            </Table>    
         )
     }
 }
