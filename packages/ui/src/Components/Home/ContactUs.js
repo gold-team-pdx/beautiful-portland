@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Segment, Grid, Header, Container } from 'semantic-ui-react';
-import './Stylesheets/contact.css'
+import { Grid, Header} from 'semantic-ui-react';
+import '../Stylesheets/contact.css'
 import 'semantic-ui-css/semantic.min.css';
 
 export default class ContactUs extends Component {
@@ -17,8 +17,8 @@ export default class ContactUs extends Component {
        </Grid.Column>
 
         <Grid.Column  width={10} className="bigGrid">
-        <Header></Header>
-         <Header verticalAlign="middle" as="h1" color="blue" className="email" >EMAIL</Header>
+         <div verticalAlign="middle" class="ui hidden divider"></div>
+         <Header  as="h1" color="blue" className="email" >EMAIL</Header>
          <Header as="h1" color="blue" className="address">beautifulportland@gmail.com</Header>
          <Header as="h1" color="blue" className="email">PHONE</Header>
          <Header as="h1" color="blue" className="address">555-555-5555</Header>

@@ -6,7 +6,7 @@ import About from './Components/About/About'
 import VolunteerForm from './Components/Volunteer/VolunteerForm'
 import Login from './Components/Dashboard/Login'
 import AdminDashboard from './Components/Dashboard/AdminDashboard'
-import ContactUs from './Components/ContactUs.js'
+import ContactUs from './Components/Home/ContactUs.js'
 import './App.css'
 
 class App extends Component {
