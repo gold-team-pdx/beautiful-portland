@@ -24,7 +24,7 @@ app.get('/api/getImages', (req,res) => {
     const s3 = new AWS.S3({
         endpoint: new AWS.Endpoint('http://localhost:9001'),
         s3ForcePathStyle: true,
-        accessKeyId: 'b@dpass', 
+        accessKeyId: 'b@dpass',
         secretAccessKey: 'r3alb@dpass'
     })
     const bucket = 'beautiful-portland-carousel-photos'
@@ -112,7 +112,7 @@ function loggedIn(req, res, next) {
 
 //Route returns privileged volunteer info only when admin is logged in.
 //Returns array of objects for all logged volunteer info for given date.
-//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP. 
+//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
 app.get('/volunteerInformation', (req, res) => {
   collection = client.db("events-form").collection("events")
   collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
@@ -139,7 +139,7 @@ app.get('/volunteerInformation', (req, res) => {
        eventObj.servings = sub.servings
        eventObj.vegetarian = sub.vegetarian
        eventObj.vegan = sub.vegan
-       eventObj.gluten_Free = sub.gluten_Free
+       eventObj.gluten_free = sub.gluten_free
        eventObj.name = sub.volunteer_name
        eventObj.phone = sub.volunteer_phone
        eventObj.email = sub.volunteer_email

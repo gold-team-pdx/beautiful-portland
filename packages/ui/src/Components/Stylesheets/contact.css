@@ -1,0 +1,32 @@
+.smallGrid {
+  background-color: #75e8ed;
+}
+
+.outer {
+  background-color: #75e8ed;
+}
+
+.con {
+  font-size: 6vw !important;
+  font-color: white;
+}
+
+.us {
+  font-size: 6vw !important;
+}
+
+.email {
+  font-size: 10vw !important;
+}
+
+.address {
+  font-size: 4vw !important;
+}
+
+.bigGrid {
+  background-color: #d3fffe;
+}
+
+.footer {
+  color: #75e8ed !important;
+}
