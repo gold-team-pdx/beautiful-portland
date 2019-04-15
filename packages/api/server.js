@@ -290,7 +290,8 @@ app.get('/api/event?*', (req, res) => {
         })
         res.send({
             status: 'SUCCESS',
-            event_info: JSON.stringify(response_data)
+            event_info: JSON.stringify(response_data),
+            max_servings: docs[0].max_servings
         })
     })
 })
