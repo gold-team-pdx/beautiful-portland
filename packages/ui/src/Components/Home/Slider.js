@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Slide from './Slide'
 import Axios from 'axios'
-import './Stylesheets/Slider.css'
+import '../Stylesheets/Slider.css'
 
-const defaultImages = [        
+const defaultImages = [
     "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/aurora.jpg",
     "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/canyon.jpg",
     "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/city.jpg",
@@ -38,9 +38,11 @@ export default class Slider extends Component {
             if (res.data.length !== 0) {
                 storage.setItem('urls', JSON.stringify(res.data))
             }
+            // If successfully in local storage, set urls to the new images
             if(storage.length > 0) {
                 urls = JSON.parse(storage.getItem('urls'))
             }
+            // Else, set the urls to the default image urls given (TESTING ONLY)
             if(urls.length === 0) {
                 urls = defaultImages
             }
@@ -49,7 +51,7 @@ export default class Slider extends Component {
                 timer: timer
             })
         })
-        .catch(function (err) {
+        .catch((err) => {
             // handle error
             console.log(err)
         })
@@ -91,8 +93,8 @@ export default class Slider extends Component {
                 <div className="slider-wrapper" onClick= {this.nextSlide}>
                     {
                         this.state.images.length && this.state.images.map((image, i) => (
-                            <Slide 
-                                key={i} 
+                            <Slide
+                                key={i}
                                 image={image}
                             />
                         ))

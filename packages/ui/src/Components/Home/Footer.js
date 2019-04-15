@@ -23,9 +23,11 @@ class Footer extends Component {
 				}}
 			>
 				<Menu.Item
-				  name="About"
+					name="About"
+					as={NavLink}
 					active={activeItem === 'About'}
 					onClick={this.handleItemClick}
+					to="/about"
 				>
 					About
 				</Menu.Item>

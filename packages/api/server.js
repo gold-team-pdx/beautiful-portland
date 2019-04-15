@@ -1,11 +1,27 @@
-const config = require('./config')
+const dbConfig = require('./config/db')
+var authConfig = require('./config/auth')
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const AWS = require('aws-sdk')
 const app = express()
 const port = process.env.PORT || 5000
-const uri = config.mongodbURL
+const uri = dbConfig.mongodbURL
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(cookieParser())
+app.use(passport.initialize())
+app.use(passport.session())
 
 //Connects to MongoDB
 const client = new MongoClient(uri, { useNewUrlParser: true })
@@ -18,6 +34,82 @@ client.connect((err) => {
 
 // Console.log to show server up and running in terminal
 app.listen(port, () => console.log('Listening on port ' + port + '...'))
+
+// serialize the user for the session
+passport.serializeUser(function(user, done) {
+    done(null, user)
+})
+
+// deserialize the user
+passport.deserializeUser(function(obj, done) {
+    done(null, obj)
+})
+
+// passport config
+passport.use(new GoogleStrategy(
+    authConfig.google,
+    function(accessToken, refreshToken, profile, done) {
+      return done(null, profile)
+    }
+))
+
+// let google to authentication the admin
+app.get('/auth/google',
+  passport.authenticate('google', {
+    scope: ['openid', 'email', 'profile']
+}))
+
+// the callback after google authenticated the admin
+app.get('/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: 'http://localhost:3000/login'
+  }),
+  function(req, res) {
+    req.session.token = req.user.token
+    res.redirect('http://localhost:3000/admin-dashboard')
+  }
+)
+
+// route for admin-dashboard
+app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
+
+})
+
+// logout
+app.get('/api/logout', function(req, res) {
+    req.logout()
+    req.session = null
+    res.redirect('http://localhost:3000/login')
+})
+
+//express middleware to check if admin is logged in.
+function ensureAuthenticated(req, res, next) {
+  let adminIsAuthenticated = req.isAuthenticated() && req.user.emails[0].value==authConfig.adminAccount
+  if (adminIsAuthenticated){
+    // console.log("Display name: "+ req.user.displayName)
+    // console.log("Email: "+ req.user.emails[0].value)
+    // console.log("Authenticated: " + adminIsAuthenticated)
+    console.log("You are admin\n")
+    res.send({
+      userInfo: req.user,
+      authenticated: adminIsAuthenticated,
+      message: 'Welcome back'
+    })
+    return next()
+  }else{
+    // console.log("Display name: "+ req.user.displayName)
+    // console.log("Email: "+ req.user.emails[0].value)
+    // console.log("Authenticated: " + adminIsAuthenticated)
+    console.log("You are not admin\n")
+    res.send({
+      userInfo: req.user,
+      authenticated: adminIsAuthenticated,
+      message: 'You need to be authenticated to access admin dashboard'
+    })
+    req.logout()
+    req.session = null
+  }
+}
 
 // Get request to S3 container to get photos for image carousel
 app.get('/api/getImages', (req,res) => {
@@ -45,11 +137,7 @@ app.get('/api/getImages', (req,res) => {
         })
 })
 
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
-
-// Catch frondend POST request
+// Catch frontend POST request
 app.post('/api/form', (req, res) => {
     //updates Document in mongodb
     collection = client.db("events-form").collection("events")
@@ -65,17 +153,37 @@ app.post('/api/form', (req, res) => {
          "volunteer_phone": req.body.volunteer_phone,
          "volunteer_email": req.body.volunteer_email
         }}}, //$push
-        function(err,result){
+        function(err,resu){
             if (err)
                 console.log(err,"Event Not Added")
             else{
-                console.log("Added")
-                res.send("Updated")
+                if(resu.result.nModified == 1){
+                    console.log("Event Modified -- Added New Submission")
+                    collection = client.db("volunteer_info").collection("volunteers")
+                    collection.updateOne(
+                        {"volunteer_email" : req.body.volunteer_email},
+                        {$set: {"volunteer_email" : req.body.volunteer_email,
+                                "volunteer_name" : req.body.volunteer_name,
+                                "volunteer_phone" : req.body.volunteer_phone}},
+                        {upsert : true},
+                        function(err, result){
+                            if(err)
+                                console.log(err, "Volunteer Not Updated")
+                            else{
+                                console.log("Volunteer Added or Updated")
+                                res.send("All Collections Updated")
+                            }
+                        }
+                    )
+                }else{
+                    console.log("Error: Event Not Updated -- No matching date or type found -- Volunteer also not updated")
+                    res.send("No Collections Updated")
+                }
             }
     })
 })
 
-// SELECT * FROM volunteers WHERE first = "Alexamder"
+// SELECT * FROM volunteers WHERE first = "Alexander"
 const test = function(db, callback) {
     const database = db.db("beautiful-portland")
     const collection = database.collection("volunteers")
@@ -98,22 +206,22 @@ const test = function(db, callback) {
 //     test(client, function(){
 //         db.close()
 //     })
-//     console.log("Connection Seccess!\n")
+//     console.log("Connection Success!\n")
 // })
 
 //express middleware to check if admin is logged in.
 function loggedIn(req, res, next) {
   if(req.user){
-    next();
+    next()
   } else {
-    res.redirect('/');
+    res.redirect('/')
   }
 }
 
 //Route returns privileged volunteer info only when admin is logged in.
 //Returns array of objects for all logged volunteer info for given date.
 //NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
-app.get('/volunteerInformation', (req, res) => {
+app.get('/api/volunteerInformation', (req, res) => {
   collection = client.db("events-form").collection("events")
   collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
      if(err) {
@@ -123,7 +231,7 @@ app.get('/volunteerInformation', (req, res) => {
        })
        return
      } else if(docs[0] == null) {
-       console.log("Couldn't fufill document request")
+       console.log("Couldn't fulfill document request")
        res.send({
          status: 'FAILURE'
        })
@@ -184,5 +292,39 @@ app.get('/api/event?*', (req, res) => {
             status: 'SUCCESS',
             event_info: JSON.stringify(response_data)
         })
+    })
+})
+
+// Method to retrieve list of all volunteers.
+// Returns array of objects for volunteer name, email, and phone number.
+// NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
+app.get('/api/volunteerList', (req, res) => {
+  collection = client.db("volunteer_info").collection("volunteers")
+  collection.find({}, {projection: {_id: 0}}).toArray((err, docs) => {
+      if(err) {
+        console.log(err, "Error trying to find document")
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      } else if(docs[0] == null) {
+        console.log("Couldn't fufill document request")
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      }
+      let response_data = []
+      docs.map(volunteer => {
+           var volunteerObj = new Object()
+           volunteerObj.name = volunteer.volunteer_name
+           volunteerObj.phone = volunteer.volunteer_phone
+           volunteerObj.email = volunteer.volunteer_email
+           response_data.push(volunteerObj)
+       })
+      res.send({
+        status: 'SUCCESS',
+        volunteer_info: JSON.stringify(response_data)
+      })
     })
 })
