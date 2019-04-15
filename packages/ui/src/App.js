@@ -6,6 +6,7 @@ import About from './Components/About/About'
 import VolunteerForm from './Components/Volunteer/VolunteerForm'
 import Login from './Components/Dashboard/Login'
 import AdminDashboard from './Components/Dashboard/AdminDashboard'
+import ContactUs from './Components/Home/ContactUs.js'
 import './App.css'
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
 						<Route path="/volunteer-form" component={VolunteerForm} />
 						<Route path="/login" component={Login} />
 						<Route path="/admin-dashboard" component={AdminDashboard} />
+						<Route path="/ContactUs" component={ContactUs} />
 					</div>
 				</Router>
 			</MyProvider>
