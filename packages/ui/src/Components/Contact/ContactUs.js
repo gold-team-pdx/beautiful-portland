@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Segment, Grid, Header, Container } from 'semantic-ui-react';
-import './Stylesheets/contact.css'
+import '../Stylesheets/contact.css'
 import 'semantic-ui-css/semantic.min.css';
 
 export default class ContactUs extends Component {
