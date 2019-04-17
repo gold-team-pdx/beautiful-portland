@@ -1,28 +1,41 @@
 import React, { Component } from "react"
 import { Table, Container, Header } from "semantic-ui-react"
-import PropTypes from 'prop-types'
-
-const propTypes = {
-  date: PropTypes.string,
-  volunteers: PropTypes.array
-};
-
-const defaultProps = {
-  date: '01-01-01',
-  volunteers:[{
-    name:'n/a',
-    desc:'n/a',
-    phone:'n/a',
-    email:'n/a',
-    type:'n/a',
-    servings: 0,
-    vegan: false,
-    vegetarian:false,
-    gluten_free:false
-  }]
-};
+import Axios from "axios"
 
 class EventList extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      volunteers: [{
+        name:'n/a',
+        desc:'n/a',
+        phone:'n/a',
+        email:'n/a',
+        type:'n/a',
+        servings: 0,
+        vegan: false,
+        vegetarian:false,
+        gluten_free:false
+      }]
+    }
+  }
+
+  async componentDidMount() {
+    let path = "/api/volunteerInformation?date=" + this.props.date
+    Axios.get(path)
+      .then(res => {
+        let persons = []
+        if (res.data["event_info"]) {
+          let data = JSON.parse(res.data["event_info"])
+          data.map(person => persons.push(person))
+          this.setState({ volunteers: persons })
+        }
+      })
+      .catch(err => {
+        console.log(err, "Error Retrieving List")
+      })
+  }
+
   render() {
       return(
       <div>
@@ -42,8 +55,8 @@ class EventList extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.volunteers.map(volunteer => (
-                <Table.Row key={volunteer.email}>
+              {this.state.volunteers.map(volunteer => (
+                <Table.Row key={volunteer.email + volunteer.desc}>
                   <Table.Cell>
                     <Header as="h4">
                       <Header.Content>
@@ -68,8 +81,5 @@ class EventList extends Component {
       )
   }
 }
-
-EventList.propTypes = propTypes;
-EventList.defaultProps = defaultProps;
 
 export default EventList

@@ -54,9 +54,9 @@ export default class AdminDashboard extends Component {
                     <Header as='h3' textAlign='center' >{this.state.message}
                     <br />
                     <Button.Group>
-                        <Button positive><a href='/' style={{color:"white"}}>Home</a></Button>
+                        <a href='/' style={{color:"white"}}><Button positive>Home</Button></a>
                         <Button.Or />
-                        <Button primary><a href='/login' style={{color:"white"}}>Login</a></Button>
+                        <a href='/login' style={{color:"white"}}><Button primary>Login</Button></a>
                     </Button.Group>
                     </Header>
                 </Segment>
