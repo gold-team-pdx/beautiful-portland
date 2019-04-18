@@ -12,6 +12,10 @@ const app = express()
 const port = process.env.PORT || 5000
 const uri = dbConfig.mongodbURL
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(session({
@@ -62,11 +66,11 @@ app.get('/auth/google',
 // the callback after google authenticated the admin
 app.get('/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: 'http://localhost:3000/login'
+    failureRedirect: `${process.env.UI_SERVER}/login`
   }),
   function(req, res) {
     req.session.token = req.user.token
-    res.redirect('http://localhost:3000/admin-dashboard')
+    res.redirect(`${process.env.UI_SERVER}/admin-dashboard`)
   }
 )
 
@@ -79,7 +83,7 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 app.get('/api/logout', function(req, res) {
     req.logout()
     req.session = null
-    res.redirect('http://localhost:3000/login')
+    res.redirect(`${process.env.UI_SERVER}/login`)
 })
 
 //express middleware to check if admin is logged in.
@@ -114,10 +118,10 @@ function ensureAuthenticated(req, res, next) {
 // Get request to S3 container to get photos for image carousel
 app.get('/api/getImages', (req,res) => {
     const s3 = new AWS.S3({
-        endpoint: new AWS.Endpoint('http://localhost:9001'),
+        endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
         s3ForcePathStyle: true,
-        accessKeyId: 'b@dpass',
-        secretAccessKey: 'r3alb@dpass'
+        accessKeyId: process.env.S3_ACCESS_KEY,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
     })
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
