@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Menu, Header, Segment, Button } from 'semantic-ui-react'
 import Axios from 'axios'
 import VolunteerList from './VolunteerList'
+import EditCarouselImages from './EditCarouselImages'
+import ViewAllImages from './ViewAllImages'
 import '../Stylesheets/AdminDashboard.css'
 
 export default class AdminDashboard extends Component {
@@ -32,7 +34,11 @@ export default class AdminDashboard extends Component {
     render() {
         const { activeItem } = this.state
         // Add more components to be rendered here
-        const itemsToRender = {'volunteerList': <VolunteerList />}
+        const itemsToRender = {
+            'volunteerList': <VolunteerList />, 
+            'editCarouselImages': <EditCarouselImages />, 
+            'viewAllImages': <ViewAllImages />,
+        }
         if (!this.state.authenticated){
             return(
                 <div>
@@ -101,11 +107,11 @@ export default class AdminDashboard extends Component {
                                 Images
                             </Menu.Item>
                             <Menu.Menu>
-                                <Menu.Item name='addImages' active={activeItem === 'addImages'} onClick={this.handleItemClick}>
-                                    Add Image
+                                <Menu.Item name='addImages' active={activeItem === 'editCarouselImages'} onClick={this.handleItemClick}>
+                                    Edit Front Page Images
                                 </Menu.Item>
-                                <Menu.Item name='removeImages' active={activeItem === 'removeImages'} onClick={this.handleItemClick}>
-                                    Remove Image
+                                <Menu.Item name='removeImages' active={activeItem === 'viewAllImages'} onClick={this.handleItemClick}>
+                                    View All Images
                                 </Menu.Item>
                             </Menu.Menu>
                             <Menu.Item name='stories'>
