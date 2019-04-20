@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Segment, Grid, Header, Container } from 'semantic-ui-react';
+import { Grid, Header} from 'semantic-ui-react';
 import '../Stylesheets/contact.css'
 import 'semantic-ui-css/semantic.min.css';
 

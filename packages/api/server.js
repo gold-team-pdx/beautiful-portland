@@ -1,13 +1,13 @@
 const dbConfig = require('./config/db')
 var authConfig = require('./config/auth')
 const express = require('express')
+const AWS = require('aws-sdk')
 const MongoClient = require('mongodb').MongoClient
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
-const AWS = require('aws-sdk')
 const app = express()
 const port = process.env.PORT || 5000
 const uri = dbConfig.mongodbURL
@@ -115,31 +115,7 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-// Get request to S3 container to get photos for image carousel
-app.get('/api/getImages', (req,res) => {
-    const s3 = new AWS.S3({
-        endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-        s3ForcePathStyle: true,
-        accessKeyId: process.env.S3_ACCESS_KEY,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-    })
-    const bucket = 'beautiful-portland-carousel-photos'
-    let imageUrls = []
-    let data = s3.listObjects({Bucket:bucket}).promise()
-        data.then(data => {
-            data.Contents.forEach((item) => {
-                let key = item.Key
-                imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
-                    Bucket: bucket,
-                    Key: key,
-                }))
-            })
-            res.send(imageUrls)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-})
+
 
 // Catch frontend POST request
 app.post('/api/form', (req, res) => {
@@ -332,4 +308,59 @@ app.get('/api/volunteerList', (req, res) => {
         volunteer_info: JSON.stringify(response_data)
       })
     })
+})
+
+// Get request to S3 container to get photos for image carousel
+app.get('/api/getImages', (req,res) => {
+  const s3 = new AWS.S3({
+      endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+      s3ForcePathStyle: true,
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+  })
+  const bucket = 'beautiful-portland-carousel-photos'
+  let imageUrls = []
+  let data = s3.listObjects({Bucket:bucket}).promise()
+      data.then(data => {
+          data.Contents.forEach((item) => {
+              let key = item.Key
+              imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
+                  Bucket: bucket,
+                  Key: key,
+              }))
+          })
+          res.send(imageUrls)
+      })
+      .catch(err => {
+          console.log(err)
+      })
+})
+
+app.post('/api/removeImageFromBucket', (req,res) => {
+  const s3 = new AWS.S3({
+      endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+      s3ForcePathStyle: true,
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+  })
+  const bucket = 'beautiful-portland-carousel-photos'
+  const url = req.body.urlToRemove.toString()
+  const params = {
+      Bucket: bucket,
+      Key: url
+  }
+  console.log(url)
+  try {
+      s3.headObject(params).promise()
+      console.log("File Found in S3")
+      try {
+          s3.deleteObject(params).promise()
+          console.log("file deleted Successfully")
+      }
+      catch (err) {
+           console.log("ERROR in file Deleting : " + JSON.stringify(err))
+      }
+  } catch (err) {
+          console.log("File not Found ERROR : " + err.code)
+  }
 })

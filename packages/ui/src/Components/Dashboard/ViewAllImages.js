@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Card } from 'semantic-ui-react'
+import { Card, Button, Image, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
+import '../Stylesheets/ViewAllImages.css'
 
 export default class ViewAllImages extends Component {
     state = {
@@ -38,13 +39,45 @@ export default class ViewAllImages extends Component {
         let storage = window.localStorage
         storage.removeItem('urls')
     }
+    removePhoto = (item) => {
+        let imageToDelete = this.state.images.indexOf(item)
+        console.log(item)
+        let resetImages = this.state.images.slice(imageToDelete + 1)
+        resetImages = this.state.images.slice(0, imageToDelete).concat(resetImages)
+        console.log(resetImages)
+        this.setState({
+            images: resetImages
+        })
+        Axios.post('/api/removeImageFromBucket', {
+            urlToRemove: item
+        })
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
     render() {
         return (
-            <div>
-                <Card.Group itemsPerRow = {5}>
+            <div id="photoView">
+                <Button className='addPhotos' icon size='massive' labelPosition='left' fluid>
+                    <Icon name='add' />
+                    Add Photos
+                </Button>
+                <Card.Group className="cardGroup" itemsPerRow = {5}>
                     {
                         this.state.images.length && this.state.images.map(item => (
-                            <Card raised image={item} />
+                            <Card raised>
+                                <Card.Content>
+                                    <Image key={item} src={item}></Image>
+                                </Card.Content>
+                                <Card.Content extra className="removeButton">
+                                    <Button size='mini' color='red' fluid attached="bottom" onClick={e => this.removePhoto(item)}>
+                                        Remove
+                                    </Button>
+                                </Card.Content>
+                            </Card>
                         ))
                     }
                 </Card.Group>

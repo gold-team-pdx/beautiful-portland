@@ -110,7 +110,7 @@ export default class AdminDashboard extends Component {
                                 <Menu.Item name='addImages' active={activeItem === 'editCarouselImages'} onClick={this.handleItemClick}>
                                     Edit Front Page Images
                                 </Menu.Item>
-                                <Menu.Item name='removeImages' active={activeItem === 'viewAllImages'} onClick={this.handleItemClick}>
+                                <Menu.Item name='viewAllImages' active={activeItem === 'viewAllImages'} onClick={this.handleItemClick}>
                                     View All Images
                                 </Menu.Item>
                             </Menu.Menu>
@@ -127,7 +127,7 @@ export default class AdminDashboard extends Component {
                             </Menu.Menu>
                         </Menu>
                     </div>
-                    <Header as='h1'> {this.state.message} </Header>
+                    {/* <Header as='h1'> {this.state.message} </Header> */}
                     {/* Changed these to divs so we can work some CSS magic on them */}
                     <div className='adminPageContent'>
                     {
