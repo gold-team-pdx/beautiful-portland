@@ -75,8 +75,34 @@ getVolunteerList = function(req, res) {
           status: 'SUCCESS',
           volunteer_info: JSON.stringify(response_data)
         })
-      })
-  }
+    })
+}
+
+deleteEvent = function(req, res) {
+    client = this.dbClient
+    collection = client.db("events-form").collection("events")
+    collection.findOneAndDelete({date: req.body.date}, (err, doc) => {
+       if(err) {
+         console.log(err, "Error trying to find event to delete")
+         res.send({
+           status: 'FAILURE'
+         })
+         return
+       } else if (doc.value === null) {
+           console.log("No event to delete with that date")
+           res.send({
+               status: 'FAILURE'
+           })
+        } else {
+         console.log("Event deleted")
+         res.send({
+           status: 'SUCCESS'
+         })
+         return
+       }
+  })
+}
 
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
+module.exports.deleteEvent = deleteEvent
