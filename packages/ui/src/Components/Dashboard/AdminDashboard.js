@@ -45,7 +45,7 @@ export default class AdminDashboard extends Component {
                 <div>
                 <Menu size='huge' inverted color='teal'>
                     <Menu.Item>
-                        <Image src={logo} size='mini'/>
+                        <Image src={logo} size='small'/>
                     </Menu.Item>
                     <Menu.Menu position='right'>
                         <Menu.Item>
@@ -75,7 +75,7 @@ export default class AdminDashboard extends Component {
             <div className='adminDash'>
                     <Menu size='huge' inverted color='teal'>
                         <Menu.Item>
-                            Logo Here?
+                            <Image src={logo} size='small'/>   
                         </Menu.Item>
                         <Menu.Menu position='right'>
                             <Menu.Item>

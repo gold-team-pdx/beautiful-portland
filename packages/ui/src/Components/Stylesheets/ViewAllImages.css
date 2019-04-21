@@ -14,8 +14,16 @@
     margin-bottom: 2%;
 }
 
+.ui.card.notClicked{
+    box-shadow: none !important;
+    animation: none !important;
+    position: static;
+}
 .ui.card.clicked {
     border-style: solid;
     border-color: red;
-    border-width: 8px;
+    border-width: 3%;
+    box-shadow: none !important;
+    animation: none !important;
+
 }
