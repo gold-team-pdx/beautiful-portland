@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Menu, Header, Segment, Button } from 'semantic-ui-react'
+import { Menu, Header, Segment, Button, Image } from 'semantic-ui-react'
 import Axios from 'axios'
 import VolunteerList from './VolunteerList'
 import EditCarouselImages from './EditCarouselImages'
 import ViewAllImages from './ViewAllImages'
 import '../Stylesheets/AdminDashboard.css'
+import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 
 export default class AdminDashboard extends Component {
     state = {
@@ -44,7 +45,7 @@ export default class AdminDashboard extends Component {
                 <div>
                 <Menu size='huge' inverted color='teal'>
                     <Menu.Item>
-                        Logo Here?
+                        <Image src={logo} size='mini'/>
                     </Menu.Item>
                     <Menu.Menu position='right'>
                         <Menu.Item>

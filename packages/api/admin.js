@@ -88,17 +88,26 @@ getVolunteerList = function(req, res) {
     })
     const bucket = 'beautiful-portland-carousel-photos'
     // Get presigned url and parse for file name
-    const url = req.body.urlToRemove
-    let file = url.split('/').pop().split('?').splice(0, 1).toString()
+    const urls = req.body.urlsToRemove
+    let files = []
+    urls.forEach(url => {
+      let file = url.split('/').pop().split('?').splice(0, 1).toString()
+      files.push({Key: file});
+    })
+    console.log(files)
+    //const url = req.body.urlToRemove
     const params = {
       Bucket: bucket,
-      Key: file
+      Delete: {
+        Objects: files
+      },
+      Quiet: true
     }
     try {
         s3.headObject(params).promise()
         console.log("File Found in S3")
         try {
-            s3.deleteObject(params).promise()
+            s3.deleteObjects(params).promise()
             console.log("file deleted Successfully")
         }
         catch (err) {
