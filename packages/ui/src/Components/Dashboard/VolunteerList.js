@@ -39,7 +39,7 @@ class VolunteerList extends Component {
                     {
                         // If not volunteers is not empty, go ahead and map it to table
                         this.state.volunteers && this.state.volunteers.map(item =>
-                            <Table.Row>
+                            <Table.Row key={item.email}>
                                 <Table.Cell>{item.name}</Table.Cell>
                                 <Table.Cell>{item.email}</Table.Cell>
                                 <Table.Cell>{item.phone}</Table.Cell>

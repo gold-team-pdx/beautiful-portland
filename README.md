@@ -83,5 +83,6 @@ you will need to run `yarn build` once to initialize the bucket.
 
 ## testing environment
 
-The url for our test webserver is http://ec2-34-220-185-151.us-west-2.compute.amazonaws.com. 
-The jenkins sever lives at http://ec2-54-191-41-57.us-west-2.compute.amazonaws.com:8080
+The test api endpoint is http://ec2-34-220-185-151.us-west-2.compute.amazonaws.com. 
+The jenkins sever lives at http://ec2-54-191-41-57.us-west-2.compute.amazonaws.com:8080.
+For the test website, go to http://beautiful-portland-s3-test.s3-website-us-west-2.amazonaws.com.

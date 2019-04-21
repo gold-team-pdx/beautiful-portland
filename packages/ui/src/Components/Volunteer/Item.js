@@ -101,8 +101,8 @@ export default class Item extends Component {
 				errors.description = descriptionValid ? '' : ' ✗ Message must be longer than five characters.'
 				break
 			case 'servings':
-				servingsValid = value > 0 && value <= 150
-				errors.servings = servingsValid ? '' : ' ✗ Please enter a vaild number between 0~150.'
+				servingsValid = value > 0 && value <= this.props.max_servings
+				errors.servings = servingsValid ? '' : ' ✗ Please enter a vaild number between 0~' + this.props.max_servings + '.'
 				break
 			case 'volunteer_name':
 				volunteer_nameValid = value.length > 2
@@ -151,17 +151,20 @@ export default class Item extends Component {
 	}
 
 	render() {
-		const options = [
-			{ key: '', text: '', value: '' },
-			{ key: 'main', text: 'Main Course', value: 'main' },
-			{ key: 'side', text: 'Side Dish', value: 'side' },
-			{ key: 'dessert', text: 'Dessert', value: 'dessert' },
-			{ key: 'takeAway', text: 'Take-Away', value: 'takeAway' },
-			{ key: 'beverage', text: 'Beverages', value: 'beverage' },
-			{ key: 'supplies', text: 'Serving Supplies', value: 'supplies' },
-			{ key: 'donation', text: 'Donation', value: 'donation' }
-		]
-		return ( 
+    let options = []
+		this.props.event_info.forEach(category => {
+			options.push({
+				key: category.type,
+				text: category.type,
+				value: category.type,
+				servings: category.servings
+			})
+		})
+		let curType = options.find((elem) => {return elem.key === this.state.type})
+		let isDisabled = curType ? curType.servings >= this.props.max_servings : false
+		
+		return (
+
 			<div>
 				<Segment>
 					<Form onSubmit={this.onSubmit}>
@@ -199,6 +202,7 @@ export default class Item extends Component {
 									style={{ width: '370px' }}
 									label="Item"
 									placeholder="description"
+									disabled={isDisabled}
 								/>
 								<div>
 									<span>{this.state.errors.description || ' ✓'}</span>
@@ -212,18 +216,21 @@ export default class Item extends Component {
 								checked={this.state.vegan}
 								name="vegan"
 								label="Vegan"
+								disabled={isDisabled}
 							/>
 							<Form.Checkbox
 								onChange={this.updateCheckbox}
 								checked={this.state.vegetarian}
 								name="vegetarian"
 								label="Vegetarian"
+								disabled={isDisabled}
 							/>
 							<Form.Checkbox
 								onChange={this.updateCheckbox}
 								checked={this.state.gluten_free}
 								name="gluten_free"
 								label="Gluten-free"
+								disabled={isDisabled}
 							/>
 						</Form.Group>
 						<br />
@@ -237,6 +244,7 @@ export default class Item extends Component {
 										onChange={this.onChange}
 										inline
 										label="Servings"
+										disabled={isDisabled}
 									/>
 									<div>
 										<span>{this.state.errors.servings || ' ✓'}</span>
@@ -253,6 +261,7 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Name"
 									placeholder=" John"
+									disabled={isDisabled}
 								/>
 								<span>{this.state.errors.volunteer_name || ' ✓'}</span>
 							</div>
@@ -264,6 +273,7 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Email"
 									placeholder=" xxxx@gmail.com"
+									disabled={isDisabled}
 								/>
 								<span>{this.state.errors.volunteer_email || ' ✓'}</span>
 							</div>
@@ -275,11 +285,12 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Phone"
 									placeholder=" xxx-xxx-xxxx"
+									disabled={isDisabled}
 								/>
 								<span>{this.state.errors.volunteer_phone || ' ✓'}</span>
 							</div>
 						</Form.Group>
-						<Button color="green" disabled={!this.state.formValid}>
+						<Button color="green" disabled={!this.state.formValid || isDisabled}>
 							Submit
 						</Button>
 					</Form>
