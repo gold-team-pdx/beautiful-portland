@@ -2,11 +2,9 @@
     height: 100vh;
     width: 100vw;
     background-image: url('../src/logoPhotos/bpdx_pdxskyline_background.png');
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-position: center bottom;
+    /* background-size: 100%; */
+    background-position: bottom left;
     background-repeat: no-repeat;
-    position: sticky;
+    /* background-attachment: fixed; */
+    object-fit: cover;
 }

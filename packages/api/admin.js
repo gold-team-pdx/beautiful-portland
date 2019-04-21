@@ -78,21 +78,22 @@ getVolunteerList = function(req, res) {
       })
   }
 
-  removePhotos = (req, res) => {
+  removePhotos = function(req, res) {
     let AWS = this.amazon
     const s3 = new AWS.S3({
       endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
       s3ForcePathStyle: true,
       accessKeyId: process.env.S3_ACCESS_KEY,
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-  })
+    })
     const bucket = 'beautiful-portland-carousel-photos'
-    const url = req.body.urlToRemove.toString()
+    // Get presigned url and parse for file name
+    const url = req.body.urlToRemove
+    let file = url.split('/').pop().split('?').splice(0, 1).toString()
     const params = {
-        Bucket: bucket,
-        Key: url
+      Bucket: bucket,
+      Key: file
     }
-    console.log(url)
     try {
         s3.headObject(params).promise()
         console.log("File Found in S3")
