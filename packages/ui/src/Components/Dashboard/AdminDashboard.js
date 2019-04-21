@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import { Menu, Header, Segment, Button } from 'semantic-ui-react'
 import Axios from 'axios'
 import VolunteerList from './VolunteerList'
+import AddEvent from './AddEvent'
 import '../Stylesheets/AdminDashboard.css'
+
 
 export default class AdminDashboard extends Component {
     state = {
@@ -32,7 +34,7 @@ export default class AdminDashboard extends Component {
     render() {
         const { activeItem } = this.state
         // Add more components to be rendered here
-        const itemsToRender = {'volunteerList': <VolunteerList />}
+        const itemsToRender = {'volunteerList': <VolunteerList />, 'addEvent': <AddEvent />}
         if (!this.state.authenticated){
             return(
                 <div>

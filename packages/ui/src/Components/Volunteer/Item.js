@@ -161,7 +161,7 @@ export default class Item extends Component {
 			{ key: 'supplies', text: 'Serving Supplies', value: 'supplies' },
 			{ key: 'donation', text: 'Donation', value: 'donation' }
 		]
-		return (
+		return ( 
 			<div>
 				<Segment>
 					<Form onSubmit={this.onSubmit}>

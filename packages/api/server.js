@@ -211,9 +211,12 @@ const test = function(db, callback) {
 
 //express middleware to check if admin is logged in.
 function loggedIn(req, res, next) {
-  if(req.user){
-    next()
+  console.log("in auth function")
+  if(req.isAuthenticated && req.user.emails[0].value==authConfig.adminAccount) {
+    console.log("in req user true")
+    return next()
   } else {
+    console.log("in not true")
     res.redirect('/')
   }
 }
@@ -221,7 +224,7 @@ function loggedIn(req, res, next) {
 //Route returns privileged volunteer info only when admin is logged in.
 //Returns array of objects for all logged volunteer info for given date.
 //NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
-app.get('/api/volunteerInformation', (req, res) => {
+app.get('/api/volunteerInformation', function(req, res, next)  {
   collection = client.db("events-form").collection("events")
   collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
      if(err) {
