@@ -98,7 +98,7 @@ updateEvent = function(req, res) {
             min_servings: category.min_servings,
             min_vegan: category.min_vegan,
             food: category.food,
-            submissions = []
+            submissions: []
         })
         category.submissions.forEach(sub => {
             if (!sub.marked_for_deletion) {
