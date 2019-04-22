@@ -78,6 +78,7 @@ getVolunteerList = function(req, res) {
     })
 }
 
+<<<<<<< HEAD
 updateEvent = function(req, res) {
     client = this.dbClient
     collection = client.db("events-form").collection("events")
@@ -140,6 +141,8 @@ updateEvent = function(req, res) {
     })
 }
 
+=======
+>>>>>>> 4d5de76944e4c3944070154979ca1a01f1015125
 deleteEvent = function(req, res) {
     client = this.dbClient
     collection = client.db("events-form").collection("events")
@@ -167,5 +170,8 @@ deleteEvent = function(req, res) {
 
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
+<<<<<<< HEAD
 module.exports.updateEvent = updateEvent
+=======
+>>>>>>> 4d5de76944e4c3944070154979ca1a01f1015125
 module.exports.deleteEvent = deleteEvent

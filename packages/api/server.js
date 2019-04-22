@@ -119,5 +119,9 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 })
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
+<<<<<<< HEAD
 app.post('/api/updateEvent'), adminHandlers.updateEvent.bind({dbClient: client})
 app.post('/api/deleteEvent', ensureAuthenticated, adminHandlers.deleteEvent.bind({dbClient: client}))
+=======
+app.post('/api/deleteEvent', adminHandlers.deleteEvent.bind({dbClient: client}))
+>>>>>>> 4d5de76944e4c3944070154979ca1a01f1015125
