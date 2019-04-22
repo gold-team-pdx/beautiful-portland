@@ -17,8 +17,8 @@ export default class AddEvent extends Component {
     this.validateField = this.validateField.bind(this)
 		this.errorClass = this.errorClass.bind(this)
     this.state = {
-      date: '',
-      time: '',
+      date: new Date(),
+      time: new Date(),
       coordinatorName: '',
       coordinatorPhone:'',
       error: {
@@ -78,8 +78,8 @@ export default class AddEvent extends Component {
 
     clearForm = () => {
       this.setState({
-        date: '',
-        time: '',
+        date: new Date(),
+        time: new Date(),
         coordinatorName: '',
         coordinatorPhone:'',
         error: {
