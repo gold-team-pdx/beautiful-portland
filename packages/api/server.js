@@ -119,9 +119,5 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 })
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
-<<<<<<< Updated upstream
-app.post('/api/deleteEvent', adminHandlers.deleteEvent.bind({dbClient: client}))
-=======
 app.post('/api/updateEvent'), adminHandlers.updateEvent.bind({dbClient: client})
 app.post('/api/deleteEvent', ensureAuthenticated, adminHandlers.deleteEvent.bind({dbClient: client}))
->>>>>>> Stashed changes

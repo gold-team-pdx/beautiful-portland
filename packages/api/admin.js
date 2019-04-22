@@ -112,7 +112,7 @@ updateEvent = function(req, res) {
                     volunteer_email: sub.volunteer_email,
                     volunteer_phone: sub.volunteer_phone
                 })
-            }   
+            }
         })
         i++
     })
