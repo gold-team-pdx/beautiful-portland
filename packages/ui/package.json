@@ -9,12 +9,15 @@
     "bootstrap": "cd ../../ ; yarn bootstrap",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "run-s build serve",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "serve -s build -l 4000"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.8.3",
+    "react-datepicker": "^2.4.0",
     "react-dom": "^16.8.3",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.5",

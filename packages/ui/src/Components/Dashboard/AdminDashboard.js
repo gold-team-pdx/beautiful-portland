@@ -4,8 +4,10 @@ import Axios from 'axios'
 import VolunteerList from './VolunteerList'
 import EditCarouselImages from './EditCarouselImages'
 import ViewAllImages from './ViewAllImages'
+import AddEvent from './AddEvent'
 import '../Stylesheets/AdminDashboard.css'
 import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
+
 
 export default class AdminDashboard extends Component {
     state = {
@@ -39,6 +41,7 @@ export default class AdminDashboard extends Component {
             'volunteerList': <VolunteerList />, 
             'editCarouselImages': <EditCarouselImages />, 
             'viewAllImages': <ViewAllImages />,
+            'addEvent': <AddEvent />
         }
         if (!this.state.authenticated){
             return(
