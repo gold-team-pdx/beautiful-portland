@@ -12,6 +12,8 @@
     "build:api": "cd packages/api && yarn build",
     "clean": "run-p clean:api",
     "clean:api": "cd packages/api && yarn clean",
+    "deploy": "run-p start:api deploy:ui",
+    "deploy:ui": "cd packages/ui && yarn deploy",
     "start": "run-p start:ui start:api",
     "start:api": "cd packages/api && yarn start",
     "start:ui": "cd packages/ui && yarn start",
