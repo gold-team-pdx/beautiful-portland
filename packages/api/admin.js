@@ -92,7 +92,10 @@ addNewDraft = function(req, res) {
   }},
   { upsert : true },
    function(err,obj) {
-     if(err) throw err
+     if(err)
+       throw err
+     else
+       res.end("Draft Saved")
    }
   )
 }
@@ -111,7 +114,10 @@ addNewPublished = function(req, res) {
     }},
     { upsert : true },
     function(err,obj) {
-      if(err) throw err
+      if(err)
+        throw err
+      else
+        res.end("Story Published")
     }
   )
 }
