@@ -9,10 +9,8 @@
     "bootstrap": "cd ../../ ; yarn bootstrap",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "run-s build serve",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "serve": "serve -s build -l 4000"
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "axios": "^0.18.0",
