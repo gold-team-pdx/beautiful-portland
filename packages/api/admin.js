@@ -97,6 +97,26 @@ addNewDraft = function(req, res) {
   )
 }
 
+addNewPublished = function(req, res) {
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.updateOne(
+    { "edited_timestamp" : req.body.edited_timestamp },
+    { $set: {
+        "edited_timestamp" : new Date(),
+        "publish_status" : req.body.publishedStatus,
+        "title" : req.body.title,
+        "hook" : req.body.subtitle,
+        "content" : req.body.content
+    }},
+    { upsert : true },
+    function(err,obj) {
+      if(err) throw err
+    }
+  )
+}
+
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
 module.exports.addNewDraft = addNewDraft
+module.exports.addNewPublished = addNewPublished

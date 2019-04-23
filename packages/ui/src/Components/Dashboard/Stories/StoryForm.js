@@ -5,7 +5,13 @@ import Axios from 'axios'
 export default class StoryForm extends Component {
   constructor(props){
     super(props)
-     this.state = {
+    this.handlePublish = this.handlePublish.bind(this)
+    this.handleSave = this.handleSave.bind(this)
+    this.clearForm = this.clearForm.bind(this)
+    this.open = this.open.bind(this)
+    this.close = this.close.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.state = {
       title: '',
       subtitle: '',
       content: '',
@@ -16,9 +22,9 @@ export default class StoryForm extends Component {
   }
 
 
-  handlePublish = (e) => {
+  handlePublish = async (e) => {
     e.preventDefault()
-    this.setState({ publishedStatus : true })
+    await this.setState({ publishedStatus : true })
     Axios.post("/api/addPublish", this.state)
       .then(response => {
         console.log(response, "Story has been published")
