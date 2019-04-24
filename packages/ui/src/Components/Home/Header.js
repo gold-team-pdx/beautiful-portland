@@ -13,7 +13,7 @@ export default class Header extends Component {
 		return (
 			<Menu
 				inverted
-				color = {"#4286f4"}
+				color = {"olive"}
 				size = "massive"
 				widths={5}
 				style={{
