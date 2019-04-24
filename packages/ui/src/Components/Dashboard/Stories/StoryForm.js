@@ -95,17 +95,17 @@ export default class StoryForm extends Component {
                    onChange={this.onChange}
          />
          </Form.Field>
-         <Grid columns='equal'>
+         <Grid stackable columns={3}>
           <Grid.Column>
-             <Button color="blue" onClick={this.handleSave}>Save</Button>
+             <Button color="blue" fluid onClick={this.handleSave}>Save</Button>
              <Confirm open={this.state.open}
                       content='Your Story was saved as a draft'
                       onCancel={this.close}
                       onConfirm={this.clearForm}
              />
           </Grid.Column>
-          <Grid.Column width={12}>
-             <Button color="green" onClick={this.handlePublish}>Publish</Button>
+          <Grid.Column >
+             <Button color="green" fluid onClick={this.handlePublish}>Publish</Button>
              <Confirm open={this.state.open}
                       content='Your Story was published'
                       onCancel={this.close}
@@ -113,7 +113,7 @@ export default class StoryForm extends Component {
              />
           </Grid.Column>
           <Grid.Column>
-            <Button color="red" floated='right' onClick={this.open}>Delete</Button>
+            <Button color="red" fluid /*floated='right'*/ onClick={this.open}>Delete</Button>
             <Confirm open={this.state.open} onCancel={this.close} onConfirm={this.clearForm} />
           </Grid.Column>
           </Grid>
