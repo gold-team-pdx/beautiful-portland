@@ -4,13 +4,14 @@ import Axios from 'axios'
 import VolunteerList from './VolunteerList'
 import AddEvent from './AddEvent'
 import NewStory from './Stories/NewStory'
+import WelcomeMessage from './WelcomeMessage'
 import '../Stylesheets/AdminDashboard.css'
 
 
 export default class AdminDashboard extends Component {
     state = {
         // Default active content
-        activeItem: 'viewEvents',
+        activeItem: 'welcomeMessage',
         adminName: "Anonymous",
         authenticated: false,
         message: "Please Login"
@@ -35,7 +36,8 @@ export default class AdminDashboard extends Component {
     render() {
         const { activeItem } = this.state
         // Add more components to be rendered here
-        const itemsToRender = {'volunteerList': <VolunteerList />, 'addEvent': <AddEvent />, 'newStory': <NewStory />}
+        const itemsToRender = {'volunteerList': <VolunteerList />, 'addEvent': <AddEvent />,
+                               'newStory': <NewStory />, 'welcomeMessage' : <WelcomeMessage /> }
         if (!this.state.authenticated){
             return(
                 <div>
@@ -124,7 +126,7 @@ export default class AdminDashboard extends Component {
                             </Menu.Menu>
                         </Menu>
                     </div>
-                    <Header as='h1'> {this.state.message} </Header>
+                  
                     {/* Changed these to divs so we can work some CSS magic on them */}
                     <div className='adminPageContent'>
                     {
