@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "cd ../../ ; yarn bootstrap",
-    "start": "react-scripts start",
+    "start": "REACT_APP_API_ENDPOINT=http://localhost:5000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -15,6 +15,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.8.3",
+    "react-datepicker": "^2.4.0",
     "react-dom": "^16.8.3",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.5",

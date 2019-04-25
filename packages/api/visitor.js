@@ -90,7 +90,7 @@ volunteerFormSubmit = function(req, res) {
                                 "volunteer_name" : req.body.volunteer_name,
                                 "volunteer_phone" : req.body.volunteer_phone}},
                         {upsert : true},
-                        function(err, result){
+                        function(err, result) {
                             if(err)
                                 console.log(err, "Volunteer Not Updated")
                             else{

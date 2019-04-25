@@ -108,6 +108,7 @@ app.get('/api/getImages', visitorHandlers.homeImages.bind({amazon: AWS}))
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
 
+
 // Admin request handlers
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
   res.send({
@@ -118,3 +119,7 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 })
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
+app.post('/api/updateEvent'), adminHandlers.updateEvent.bind({dbClient: client})
+app.post('/api/deleteEvent', ensureAuthenticated, adminHandlers.deleteEvent.bind({dbClient: client}))
+app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({dbClient: client}))
+app.post('/api/addPublish', ensureAuthenticated, adminHandlers.addNewPublished.bind({dbClient: client}))

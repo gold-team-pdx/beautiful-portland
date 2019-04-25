@@ -151,7 +151,7 @@ export default class Item extends Component {
 	}
 
 	render() {
-		let options = []
+    let options = []
 		this.props.event_info.forEach(category => {
 			options.push({
 				key: category.type,
@@ -164,6 +164,7 @@ export default class Item extends Component {
 		let isDisabled = curType ? curType.servings >= this.props.max_servings : false
 		
 		return (
+
 			<div>
 				<Segment>
 					<Form onSubmit={this.onSubmit}>
