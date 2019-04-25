@@ -46,8 +46,21 @@ volunteerFormGetEventInfo = function(req, res) {
 
         let i = 0, response_data = []
         docs[0].categories.forEach(category => {
-            response_data.push({type: category.name, servings: 0})
+            response_data.push({
+                type: category.name,
+                max_signups: category.max_signups,
+                real_signups: 0,
+                min_servings: category.min_servings,
+                food: category.food,
+                min_vegan: category.min_vegan,
+                real_vegan: 0, 
+                servings: 0
+            })
             category.submissions.forEach(sub => {
+                response_data[i].signups++
+                if(response_data[i].food && sub.vegan) {
+                    response_data[i].real_vegan++
+                }
                 response_data[i].servings += sub.servings
             })
             i++
@@ -55,6 +68,9 @@ volunteerFormGetEventInfo = function(req, res) {
         res.send({
             status: 'SUCCESS',
             event_info: JSON.stringify(response_data),
+            location: docs[0].location,
+            coordinator: docs[0].coordinator,
+            coordinator_phone: docs[0].coordinator_phone,
             max_servings: docs[0].max_servings
         })
     })
