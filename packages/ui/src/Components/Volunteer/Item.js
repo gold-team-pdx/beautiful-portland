@@ -102,7 +102,9 @@ export default class Item extends Component {
 				break
 			case 'servings':
 				servingsValid = value > 0 && value <= this.props.max_servings
-				errors.servings = servingsValid ? '' : ' ✗ Please enter a vaild number between 0~' + this.props.max_servings + '.'
+				errors.servings = servingsValid
+					? ''
+					: ' ✗ Please enter a vaild number between 0~' + this.props.max_servings + '.'
 				break
 			case 'volunteer_name':
 				volunteer_nameValid = value.length > 2
@@ -151,8 +153,8 @@ export default class Item extends Component {
 	}
 
 	render() {
-    let options = []
-		this.props.event_info.forEach(category => {
+		let options = []
+		this.props.event_info.forEach((category) => {
 			options.push({
 				key: category.type,
 				text: category.type,
@@ -160,11 +162,12 @@ export default class Item extends Component {
 				servings: category.servings
 			})
 		})
-		let curType = options.find((elem) => {return elem.key === this.state.type})
+		let curType = options.find((elem) => {
+			return elem.key === this.state.type
+		})
 		let isDisabled = curType ? curType.servings >= this.props.max_servings : false
-		
-		return (
 
+		return (
 			<div>
 				<Segment>
 					<Form onSubmit={this.onSubmit}>
