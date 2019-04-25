@@ -121,3 +121,4 @@ app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullE
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
 app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({dbClient: client}))
 app.post('/api/addPublish', ensureAuthenticated, adminHandlers.addNewPublished.bind({dbClient: client}))
+app.get('/api/publishedStories', adminHandlers.publishStory.bind({dbClient: client}))
