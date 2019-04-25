@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Card, Button, Icon, Modal, Header, } from 'semantic-ui-react'
+import { Card, Button, Icon, Modal, Header, Form } from 'semantic-ui-react'
 import Axios from 'axios'
+// import FilePond from 'react-filepond'
 import '../Stylesheets/ViewAllImages.css'
 
 export default class ViewAllImages extends Component {
@@ -121,21 +122,21 @@ export default class ViewAllImages extends Component {
                         }
                         open= {this.state.addModalOpen}
                         onClose={this.handleAddModalClose}
-
                     >
-                    <Header icon='add' content='Upload Photos' />
                     <Modal.Content>
-                        <p>
-                            Please select photos to upload
-                        </p>
-                        <input type='file'> Choose Files </input>
+                        <p> Select the photos you would like to add </p>
+                        <Form>
+                            <input type='file'></input>
+                        </Form>
                     </Modal.Content>
                     <Modal.Actions>
-                        <Button basic color='red' inverted onClick={this.handleAddModalClose}>
-                            <Icon name='remove' /> Cancel
+                        <Button color='red' inverted onClick={this.handleAddModalClose}>
+                            <Icon name='remove' /> 
+                            Cancel
                         </Button>
                         <Button color='green' inverted onClick={this.addPhotos}>
-                            <Icon name='checkmark' /> Upload
+                            <Icon name='checkmark' /> 
+                            Upload
                         </Button>
                     </Modal.Actions> 
                 </Modal>
