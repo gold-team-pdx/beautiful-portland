@@ -5,6 +5,7 @@ import VolunteerList from './VolunteerList'
 import EditCarouselImages from './EditCarouselImages'
 import ViewAllImages from './ViewAllImages'
 import AddEvent from './AddEvent'
+import NewStory from './Stories/NewStory'
 import '../Stylesheets/AdminDashboard.css'
 import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 
@@ -41,7 +42,8 @@ export default class AdminDashboard extends Component {
             'volunteerList': <VolunteerList />, 
             'editCarouselImages': <EditCarouselImages />, 
             'viewAllImages': <ViewAllImages />,
-            'addEvent': <AddEvent />
+            'addEvent': <AddEvent />,
+            'newStory': <NewStory />
         }
         if (!this.state.authenticated){
             return(
@@ -122,7 +124,7 @@ export default class AdminDashboard extends Component {
                                 Stories
                             </Menu.Item>
                             <Menu.Menu>
-                                <Menu.Item name='createStory' active={activeItem === 'createStory'} onClick={this.handleItemClick}>
+                                <Menu.Item name='newStory' active={activeItem === 'newStory'} onClick={this.handleItemClick}>
                                     Create Story
                                 </Menu.Item>
                                 <Menu.Item name='removeStory' active={activeItem === 'removeStory'} onClick={this.handleItemClick}>

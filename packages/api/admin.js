@@ -18,7 +18,7 @@ getFullEventInfo = function(req, res) {
          })
          return
        }
-  
+
        let response_data = []
        docs[0].categories.forEach(category => {
        category.submissions.forEach(sub => {
@@ -35,7 +35,7 @@ getFullEventInfo = function(req, res) {
          response_data.push(eventObj)
        })
     })
-  
+
        res.send({
            status: 'SUCCESS',
            event_info: JSON.stringify(response_data)
@@ -119,5 +119,51 @@ getVolunteerList = function(req, res) {
   }
 
 module.exports.removePhotos = removePhotos
+addNewDraft = function(req, res) {
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("drafts")
+  collection.updateOne(
+  { "edited_timestamp" : req.body.edited_timestamp },
+  { $set : {
+       "edited_timestamp" : new Date(),
+       "publish_status" : req.body.publishedStatus,
+       "title" : req.body.title,
+       "hook" : req.body.subtitle,
+       "content" : req.body.content,
+  }},
+  { upsert : true },
+   function(err,obj) {
+     if(err)
+       throw err
+     else
+       res.end("Draft Saved")
+   }
+  )
+}
+
+addNewPublished = function(req, res) {
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.updateOne(
+    { "edited_timestamp" : req.body.edited_timestamp },
+    { $set: {
+        "edited_timestamp" : new Date(),
+        "publish_status" : req.body.publishedStatus,
+        "title" : req.body.title,
+        "hook" : req.body.subtitle,
+        "content" : req.body.content
+    }},
+    { upsert : true },
+    function(err,obj) {
+      if(err)
+        throw err
+      else
+        res.end("Story Published")
+    }
+  )
+}
+
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
+module.exports.addNewDraft = addNewDraft
+module.exports.addNewPublished = addNewPublished

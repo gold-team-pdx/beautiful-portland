@@ -126,7 +126,7 @@ export default class ViewAllImages extends Component {
                     <Modal.Content>
                         <p> Select the photos you would like to add </p>
                         <Form>
-                            <input type='file'></input>
+                            <input type='file' multiple></input>
                         </Form>
                     </Modal.Content>
                     <Modal.Actions>
