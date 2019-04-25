@@ -30,16 +30,16 @@ class VolunteerList extends Component {
             <Table singleLine>
                 <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell> Name  </Table.HeaderCell>  
-                      <Table.HeaderCell> Email </Table.HeaderCell> 
-                      <Table.HeaderCell> Phone </Table.HeaderCell> 
+                      <Table.HeaderCell> Name  </Table.HeaderCell>
+                      <Table.HeaderCell> Email </Table.HeaderCell>
+                      <Table.HeaderCell> Phone </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                     {
                         // If not volunteers is not empty, go ahead and map it to table
                         this.state.volunteers && this.state.volunteers.map(item =>
-                            <Table.Row key={item.email}>
+                            <Table.Row> key={item.email}>
                                 <Table.Cell>{item.name}</Table.Cell>
                                 <Table.Cell>{item.email}</Table.Cell>
                                 <Table.Cell>{item.phone}</Table.Cell>
@@ -47,7 +47,7 @@ class VolunteerList extends Component {
                         )
                     }
                 </Table.Body>
-            </Table>    
+            </Table>
         )
     }
 }
