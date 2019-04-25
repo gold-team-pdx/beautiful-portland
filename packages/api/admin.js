@@ -122,8 +122,7 @@ addNewPublished = function(req, res) {
   )
 }
 
-publishStory = function(req, res) {
-  console.log("inside getPublishedStory")
+getPublishedStory = function(req, res) {
   let client = this.dbClient
   collection = client.db("stories_example1").collection("published")
   collection.find().sort({_id:1}).limit(50).toArray((err, docs) => {
@@ -158,10 +157,47 @@ publishStory = function(req, res) {
   })
 }
 
+getDraftedStories = function(req, res) {
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("drafts")
+  collection.find().sort({_id:1}).limit(50).toArray((err, docs) => {
+    if(err) {
+      console.log(err, "Error trying to find drafted Stories")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs[0] == null) {
+      console.log("Couldn't fufill Story request")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    let response_data = []
+    docs.map(draftStory => {
+         var draftObj = new Object()
+         draftObj.original_timestamp = draftStory._id.getTimestamp()
+         draftObj.edited_timestamp = draftStory.edited_timestamp
+         draftObj.title = draftStory.title
+         draftObj.hook = draftStory.hook
+         draftObj.content = draftStory.content
+         draftObj.public_status = draftStory.public_status
+         response_data.push(draftStory)
+     })
+    res.send({
+      status: 'SUCCESS',
+      volunteer_info: JSON.stringify(response_data)
+    })
+  })
+}
+
+
 
 
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
 module.exports.addNewDraft = addNewDraft
 module.exports.addNewPublished = addNewPublished
-module.exports.publishStory = publishStory
+module.exports.getPublishedStory = getPublishedStory
+module.exports.getDraftedStories = getDraftedStories
