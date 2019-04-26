@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
-import '../Stylesheets/contact.css'
 import 'semantic-ui-css/semantic.min.css'
 
-class Footer extends Component {
+export default class Header extends Component {
 	state = {}
 	handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
 	render() {
 		const { activeItem } = this.state
+
 		return (
-			<div className="footer">
 			<Menu
-				color="cust"
-				borderless
-				widths={4}
+				inverted
+				color = {"olive"}
+				size = "massive"
+				widths={5}
 				style={{
 					flexShrink: 100000, //don't allow flexbox to shrink it
 					borderRadius: 0, //clear semantic-ui style
@@ -40,10 +40,22 @@ class Footer extends Component {
 				>
 					Volunteer Calender
 				</Menu.Item>
+
 				<Menu.Item
-				 name="Stories"
-				 active={activeItem === 'Stories'}
-				 onClick={this.handleItemClick}
+					active={activeItem === 'Logo'}
+					as={NavLink}
+					onClick={this.handleItemClick}
+					to="/"
+				>
+				<img src='/logo-white.png' />
+				</Menu.Item>
+
+				<Menu.Item
+					name="Stories"
+					as={NavLink}
+					active={activeItem === 'Stories'}
+					onClick={this.handleItemClick}
+					to="/Stories"
 				 >
 					Stories
 				</Menu.Item>
@@ -57,9 +69,6 @@ class Footer extends Component {
 					Contact Us
 				</Menu.Item>
 			</Menu>
-			</div>
 		)
 	}
 }
-
-export default Footer
