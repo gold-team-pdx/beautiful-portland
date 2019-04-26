@@ -75,8 +75,95 @@ getVolunteerList = function(req, res) {
           status: 'SUCCESS',
           volunteer_info: JSON.stringify(response_data)
         })
-      })
-  }
+    })
+}
+
+updateEvent = function(req, res) {
+    client = this.dbClient
+    collection = client.db("events-form").collection("events")
+
+    let updatedEvent = new Object()
+    updatedEvent.date = req.body.date
+    updatedEvent.time = req.body.time
+    updatedEvent.coordinator = req.body.coordinator
+    updatedEvent.coordinator_phone = req.body.coordinator_phone
+    updatedEvent.location = req.body.location
+    updatedEvent.max_servings = req.body.max_servings
+    updatedEvent.categories = []
+    let i = 0
+    req.body.categories.forEach(category => {
+        updatedEvent.categories.push({
+            name: category.name,
+            max_signups: category.max_signups,
+            min_servings: category.min_servings,
+            min_vegan: category.min_vegan,
+            food: category.food,
+            submissions: []
+        })
+        category.submissions.forEach(sub => {
+            if (!sub.marked_for_deletion) {
+                updatedEvent.categories[i].submissions.push({
+                    description: sub.description,
+                    servings: sub.servings,
+                    vegetarian: sub.vegetarian,
+                    vegan: sub.vegan,
+                    gluten_free: sub.gluten_free,
+                    volunteer_name: sub.volunteer_name,
+                    volunteer_email: sub.volunteer_email,
+                    volunteer_phone: sub.volunteer_phone
+                })
+            }
+        })
+        i++
+    })
+
+    collection.findOneAndReplace({date: req.body.date}, updatedEvent, (err, doc) => {
+        if(err) {
+            console.log(err, "Error trying to find or update event ")
+            res.send({
+                status: 'FAILURE'
+            })
+            return
+        } else if( doc.value === null) {
+            console.log("Couldn't find event to update")
+            res.send({
+                status: 'FAILURE'
+            })
+            return
+        } else {
+            console.log("Event updated")
+            res.send({
+                status: 'SUCCESS'
+            })
+            return
+        }
+    })
+}
+
+deleteEvent = function(req, res) {
+    client = this.dbClient
+    collection = client.db("events-form").collection("events")
+    collection.findOneAndDelete({date: req.body.date}, (err, doc) => {
+       if(err) {
+         console.log(err, "Error trying to find event to delete")
+         res.send({
+           status: 'FAILURE'
+         })
+         return
+       } else if (doc.value === null) {
+           console.log("No event to delete with that date")
+           res.send({
+               status: 'FAILURE'
+           })
+        } else {
+         console.log("Event deleted")
+         res.send({
+           status: 'SUCCESS'
+         })
+         return
+       }
+  })
+}
 
   removePhotos = function(req, res) {
     let AWS = this.amazon
@@ -165,5 +252,7 @@ addNewPublished = function(req, res) {
 
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
+module.exports.updateEvent = updateEvent
+module.exports.deleteEvent = deleteEvent
 module.exports.addNewDraft = addNewDraft
 module.exports.addNewPublished = addNewPublished
