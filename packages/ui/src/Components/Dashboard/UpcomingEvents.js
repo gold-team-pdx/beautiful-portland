@@ -48,17 +48,30 @@ class UpcomingEvents extends Component {
 		this.state.lastDate = this.state.dates.slice(-1)[0]
 	}
 
-	loadPrev = () => {}
+	deleteEvent = (e) => {
+		console.log(e.currentTarget.name)
+	}
 
-	loadNext = () => {
+	loadPrev = () => {
 		this.setState({ dates: [] }, () => {
-			for (let index = 0; index < 5; index++) {
-				this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').add(index + 1, 'd').format('MM-DD-YY'))
+			for (let index = 10; index > 0; index--) {
+				this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').subtract(index, 'd').format('MM-DD-YY'))
 			}
 			let last = this.state.dates.slice(-1)[0]
 			this.setState({ lastDate: last })
+			console.log(this.state.dates)
 		})
-		console.log(this.state.dates)
+	}
+
+	loadNext = () => {
+		this.setState({ dates: [] }, () => {
+			for (let index = 1; index <= 10; index++) {
+				this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').add(index, 'd').format('MM-DD-YY'))
+			}
+			let last = this.state.dates.slice(-1)[0]
+			this.setState({ lastDate: last })
+			console.log(this.state.dates)
+		})
 	}
 
 	close = () => {
