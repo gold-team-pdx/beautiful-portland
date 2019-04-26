@@ -44,7 +44,12 @@ export default class VolunteerForm extends Component {
         if (res.data["event_info"]) {
           let data = JSON.parse(res.data["event_info"])
           data.map(category => categories.push(category))
-          this.setState({ event_info: categories, max_servings: res.data.max_servings })
+          this.setState({ 
+            event_info: categories,
+            location: res.data.location,
+            coordinator: res.data.coordinator,
+            coordinator_phone: res.data.coordinator_phone,
+            max_servings: res.data.max_servings })
         }
       })
       .catch(err => {
@@ -66,8 +71,10 @@ export default class VolunteerForm extends Component {
           return (
             <div>
               <Container>
-                <Header as="h2" style={{ marginTop: "20px" }}>Director Park Dinner Sign-Up:{" "}</Header>
-                <Header as="h2">Name and Contact info of Volunteer Coordinator:{" "}</Header>
+                <Header as="h2" style={{ marginTop: "20px" }}>Dinner Sign-Up{" "}</Header>
+                <Header as="h2">Volunteer Coordinator: {this.state.coordinator}</Header>
+                <Header as="h2">Volunteer Coordinator Phone: {this.state.coordinator_phone}</Header>
+                <Header as="h2">Location: {this.state.location}</Header>
                 <Header as="h2">Date: {this.state.date} </Header>
                 <Item onSubmit={this.onSubmit} event_info={this.state.event_info} max_servings={this.state.max_servings}/>
               </Container>

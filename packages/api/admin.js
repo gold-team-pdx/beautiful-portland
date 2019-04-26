@@ -4,7 +4,7 @@
 getFullEventInfo = function(req, res) {
     let client = this.dbClient
     collection = client.db("events-form").collection("events")
-    collection.find({date: req.query.date}, {projection:{ _id: 0, location: 0}}).toArray((err, docs) => {
+    collection.find({date: req.query.date}, {projection:{ _id: 0}}).toArray((err, docs) => {
        if(err) {
          console.log(err, "Error trying to find document")
          res.send({
@@ -37,8 +37,12 @@ getFullEventInfo = function(req, res) {
     })
 
        res.send({
-           status: 'SUCCESS',
-           event_info: JSON.stringify(response_data)
+          status: 'SUCCESS',
+          event_info: JSON.stringify(response_data),
+          location: docs[0].location,
+          coordinator: docs[0].coordinator,
+          coordinator_phone: docs[0].coordinator_phone,
+          max_servings: docs[0].max_servings
         })
     })
 }
