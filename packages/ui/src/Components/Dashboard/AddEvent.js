@@ -141,7 +141,7 @@ export default class AddEvent extends Component {
       return (
       <Segment>
         <Form onSubmit={(this.handleSubmit)}>
-          <Header as="H1">Add New Event</Header>
+          <Header as="h1">Add New Event</Header>
           <Form.Group widths='equal'>
            <Form.Field>
             <label>Event Date</label>
