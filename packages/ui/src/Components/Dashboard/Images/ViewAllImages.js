@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Button, Icon, Modal, Header, Form } from 'semantic-ui-react'
 import Axios from 'axios'
-// import FilePond from 'react-filepond'
-import '../Stylesheets/ViewAllImages.css'
+import '../../Stylesheets/ViewAllImages.css'
 
 export default class ViewAllImages extends Component {
     state = {
@@ -22,6 +21,19 @@ export default class ViewAllImages extends Component {
     // Serve images
     componentDidMount = () => {
         // Images from s3 container
+        this.initializeImages()
+    }
+
+    // Remove images from storage and unmount
+    componentWillUnmount = () => {
+        this.setState({
+            images: []
+        })
+        let storage = window.localStorage
+        storage.removeItem('urls')
+    }
+
+    initializeImages = () => {
         let storage = window.sessionStorage
         let urls = []
         Axios.get('/api/getImages')
@@ -42,7 +54,6 @@ export default class ViewAllImages extends Component {
                 }
                 imagesToDisplay.push(newImage)
             })
-            console.log(imagesToDisplay)
             this.setState({
                 images: imagesToDisplay,
             })
@@ -51,15 +62,6 @@ export default class ViewAllImages extends Component {
             // handle error
             console.log(err)
         })
-    }
-
-    // Remove images from storage and unmount
-    componentWillUnmount = () => {
-        this.setState({
-            images: []
-        })
-        let storage = window.localStorage
-        storage.removeItem('urls')
     }
 
     // When photo is clicked, flip boolean
@@ -74,9 +76,39 @@ export default class ViewAllImages extends Component {
         })
     }
 
-    // Adding photos brings in new component
-    addPhotos = () => {
-        console.log('add')
+    // Adding photos to s3 bucket
+    addPhotos = (input) => {
+        if(input.files.length > 0) {
+            for(let i = 0; i < input.files.length; ++i) {
+                let reader = new FileReader()
+                reader.onerror = () => {
+                    reader.abort()
+                    console.log("Problem parsing input file")
+                }
+                reader.onload = e => {
+                    let data = e.target.result
+                    let file = {
+                        "fileData": data,
+                        "fileName": input.files[i].name
+                    }
+                    Axios.post('/api/addImagesToBucket', {
+                        filesToAdd: file
+                    })
+                    .then(res => {
+                        if(i === (input.files.length - 1)) {
+                            this.initializeImages()
+                            this.setState({
+                                addModalOpen: false
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }
+                reader.readAsDataURL(input.files[i])
+            }
+        }
     }
 
     // Removing photos
@@ -124,9 +156,9 @@ export default class ViewAllImages extends Component {
                         onClose={this.handleAddModalClose}
                     >
                     <Modal.Content>
-                        <p> Select the photos you would like to add </p>
+                        <h3> Add photos </h3>
                         <Form>
-                            <input type='file' multiple></input>
+                            <input type='file' id="files" name="files[]" multiple></input>
                         </Form>
                     </Modal.Content>
                     <Modal.Actions>
@@ -134,7 +166,7 @@ export default class ViewAllImages extends Component {
                             <Icon name='remove' /> 
                             Cancel
                         </Button>
-                        <Button color='green' inverted onClick={this.addPhotos}>
+                        <Button color='green' inverted onClick={e => this.addPhotos(document.getElementById("files"))}>
                             <Icon name='checkmark' /> 
                             Upload
                         </Button>
@@ -168,7 +200,7 @@ export default class ViewAllImages extends Component {
                 </Modal>
                 <Card.Group className="cardGroup" itemsPerRow = {5}>
                     {
-                        this.state.images.length && this.state.images.map(item => (
+                        this.state.images.length > 0 && this.state.images.map(item => (
                             <Card 
                                 image={item.imageUrl} 
                                 onClick={e => {this.handlePhotoClick(item)}}

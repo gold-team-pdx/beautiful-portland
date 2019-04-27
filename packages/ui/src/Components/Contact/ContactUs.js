@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
-<<<<<<< HEAD
-import { Grid, Header} from 'semantic-ui-react';
-=======
 import { Grid, Header } from 'semantic-ui-react';
->>>>>>> bce153332514dadd2fce7025a467b80742013784
 import '../Stylesheets/contact.css'
 import 'semantic-ui-css/semantic.min.css';
 
