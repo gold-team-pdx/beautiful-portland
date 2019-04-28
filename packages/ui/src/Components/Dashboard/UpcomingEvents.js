@@ -2,76 +2,150 @@ import React, { Component } from 'react'
 import { Button, Header, Icon, Modal, Menu } from 'semantic-ui-react'
 import Moment from 'moment'
 import { Table } from 'semantic-ui-react'
+import Axios from 'axios'
 
 class UpcomingEvents extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			date: new Moment().format('MM-DD-YY'),
-			events: [
-				{
-					date: '04-04-19',
-					location: 'Parkasdasdasdasd',
-					volunteer_signups: '50',
-					servings: 69
-				},
-				{
-					date: '04-20-19',
-					location: 'Park Blocs',
-					volunteer_signups: '50',
-					servings: 69
-				},
-				{
-					date: '04-15-19',
-					location: 'Park Blocs',
-					volunteer_signups: '50',
-					servings: 69
-				},
-				{
-					date: '04-11-19',
-					location: 'Park Blocs',
-					volunteer_signups: '50',
-					servings: 69
-				}
-			],
-			dates: [],
+			currentDate: new Moment().format('MM-DD-YY'),
+			events: [],
+			dates: [ new Moment().format('MM-DD-YY') ],
 			lastDate: '',
+			numOfDays: 5,
 			open: false
 		}
 	}
 
-	async componentDidMount() {
+	componentDidMount() {
+		this.initializeDates()
+		this.updateEvents()
+		/*
+		let path = '/api/fullEvent?date=' + this.state.date
+
+		Axios.get(path)
+			.then((res) => {
+				if (res.data['event_info']) {
+					console.log(res.data)
+					let list = JSON.parse(res.data['event_info'])
+					let event = {
+						coordinator: res.data.coordinator,
+						phone: res.data.coordinator_phone,
+						location: res.data.location,
+						signups: list.length,
+						volunteers: list,
+						servings: this.calculateServings(list),
+						date: this.state.date
+					}
+					this.setState((prevState) => ({
+						events: [ ...prevState.events, event ]
+					}))
+
+					//console.log(this.state.events)
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+            })
+            */
+		/*
 		this.state.dates.push('05-05-19')
 		for (let index = 0; index < 4; index++) {
 			this.state.dates.push(Moment('05-05-19', 'MM-DD-YY').add(index + 1, 'd').format('MM-DD-YY'))
 		}
-		this.state.lastDate = this.state.dates.slice(-1)[0]
+        this.state.lastDate = this.state.dates.slice(-1)[0]
+        */
+	}
+
+	initializeDates = () => {
+		for (let index = 1; index < this.state.numOfDays; index++) {
+			this.state.dates.push(Moment(this.state.currentDate, 'MM-DD-YY').add(index, 'd').format('MM-DD-YY'))
+		}
+		this.setState({ lastDate: this.state.dates.slice(-1)[0] })
+	}
+
+	updateEvents = () => {
+		this.state.dates.forEach((newDate) => {
+			let path = '/api/fullEvent?date=' + newDate
+			Axios.get(path)
+				.then((res) => {
+					if (res.data['event_info']) {
+						let tempVolunteers = JSON.parse(res.data['event_info'])
+						let event = {
+							coordinator: res.data.coordinator,
+							coordinator_phone: res.data.coordinator_phone,
+							location: res.data.location,
+							volunteer_signups: tempVolunteers.length,
+							volunteers: tempVolunteers,
+							servings: this.calculateServings(tempVolunteers),
+							date: newDate
+						}
+						this.setState((prevState) => ({
+							events: [ ...prevState.events, event ]
+						}))
+					}
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		})
+	}
+
+	calculateServings = (volunteers) => {
+		let totalServings = 0
+		if (volunteers) {
+			volunteers.map((volunteer) => (totalServings += volunteer.servings))
+		}
+		return totalServings
 	}
 
 	deleteEvent = (e) => {
 		console.log(e.currentTarget.name)
 	}
 
+	generateDates = (direction) => {
+		if (direction === 'backward') {
+			this.setState({ dates: [] }, () => {
+				for (let index = this.state.numOfDays; index > 0; index--) {
+					this.state.dates.push(
+						Moment(this.state.lastDate, 'MM-DD-YY').subtract(index, 'd').format('MM-DD-YY')
+					)
+				}
+				let last = this.state.dates.slice(-1)[0]
+				this.setState({ lastDate: last })
+				this.updateEvents()
+			})
+		} else if (direction === 'forward') {
+			this.setState({ dates: [] }, () => {
+				for (let index = 1; index <= this.state.numOfDays; index++) {
+					this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').add(index, 'd').format('MM-DD-YY'))
+				}
+				let last = this.state.dates.slice(-1)[0]
+				this.setState({ lastDate: last })
+				this.updateEvents()
+			})
+		}
+	}
+
 	loadPrev = () => {
-		this.setState({ dates: [] }, () => {
-			for (let index = 10; index > 0; index--) {
-				this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').subtract(index, 'd').format('MM-DD-YY'))
-			}
-			let last = this.state.dates.slice(-1)[0]
-			this.setState({ lastDate: last })
-			console.log(this.state.dates)
-		})
+		this.generateDates('backward')
+		//this.updateEvents()
 	}
 
 	loadNext = () => {
+		/*
 		this.setState({ dates: [] }, () => {
-			for (let index = 1; index <= 10; index++) {
+			for (let index = 1; index <= this.state.numOfDays; index++) {
 				this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').add(index, 'd').format('MM-DD-YY'))
 			}
 			let last = this.state.dates.slice(-1)[0]
 			this.setState({ lastDate: last })
 			console.log(this.state.dates)
-		})
+        })
+        */
+		this.generateDates('forward')
+		//console.log(this.state.dates)
+		//this.updateEvents()
 	}
 
 	close = () => {
@@ -99,7 +173,7 @@ class UpcomingEvents extends Component {
 					<Table.Body>
 						{this.state.events &&
 							this.state.events.map((event) => (
-								<Table.Row key={event.date}>
+								<Table.Row key={event.date + event.location}>
 									<Table.Cell width={2}>
 										<Button color="teal" onClick={() => this.props.updateDate(event.date)}>
 											{event.date}
