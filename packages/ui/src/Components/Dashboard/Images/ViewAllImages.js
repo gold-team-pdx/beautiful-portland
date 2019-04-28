@@ -29,23 +29,17 @@ export default class ViewAllImages extends Component {
         this.setState({
             images: []
         })
-        let storage = window.localStorage
-        storage.removeItem('urls')
     }
 
     initializeImages = () => {
-        let storage = window.sessionStorage
         let urls = []
-        Axios.get('/api/getImages')
+        Axios.get('/api/getImages/', {
+            params: {
+                isFrontPage: false
+            }
+        })
         .then((res) => {
-            // Add pre-signed url strings to local storage
-            if (res.data.length !== 0) {
-                storage.setItem('urls', JSON.stringify(res.data))
-            }
-            // If successfully in local storage, set urls to the new images
-            if(storage.length > 0) {
-                urls = JSON.parse(storage.getItem('urls'))
-            }
+            urls = res.data
             let imagesToDisplay = []
             urls.forEach(url => {
                 let newImage = {
@@ -92,7 +86,8 @@ export default class ViewAllImages extends Component {
                         "fileName": input.files[i].name
                     }
                     Axios.post('/api/addImagesToBucket', {
-                        filesToAdd: file
+                        filesToAdd: file,
+                        isFrontPage: false
                     })
                     .then(res => {
                         if(i === (input.files.length - 1)) {
@@ -132,7 +127,8 @@ export default class ViewAllImages extends Component {
         })
         if(imagesToDelete.length > 0) {
             Axios.post('/api/removeImageFromBucket', {
-                urlsToRemove: imagesToDelete
+                urlsToRemove: imagesToDelete,
+                isFrontPage: false
             })
             .then(res => {
                 console.log(res)

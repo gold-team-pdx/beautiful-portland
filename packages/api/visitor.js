@@ -9,20 +9,26 @@ homeImages = function(req, res) {
     })
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
+    let isFront = req.query.isFrontPage
     let data = s3.listObjects({Bucket:bucket}).promise()
-        data.then(data => {
-            data.Contents.forEach((item) => {
+    data.then(data => {
+        data.Contents.forEach((item) => {
+            let keyString = JSON.stringify(item.Key)
+            // Only get images for all images OR if we are on the front page
+            // (isFront === 'true'), only get images in frontPage folder
+            if(isFront === 'false' || (keyString.indexOf('frontPage') !== -1)) {
                 let key = item.Key
                 imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
                     Bucket: bucket,
                     Key: key,
                 }))
-            })
-            res.send(imageUrls)
+            }   
         })
-        .catch(err => {
-            console.log(err)
-        })
+        res.send(imageUrls)
+    })
+    .catch(err => {
+        console.log(err)
+    })
 }
 
 // Called by '/volunteer-form' to get category info for an event, to properly limit signups

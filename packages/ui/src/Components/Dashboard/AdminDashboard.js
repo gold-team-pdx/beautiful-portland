@@ -113,7 +113,7 @@ export default class AdminDashboard extends Component {
                                 Images
                             </Menu.Item>
                             <Menu.Menu>
-                                <Menu.Item name='addImages' active={activeItem === 'editCarouselImages'} onClick={this.handleItemClick}>
+                                <Menu.Item name='editCarouselImages' active={activeItem === 'editCarouselImages'} onClick={this.handleItemClick}>
                                     Edit Front Page Images
                                 </Menu.Item>
                                 <Menu.Item name='viewAllImages' active={activeItem === 'viewAllImages'} onClick={this.handleItemClick}>

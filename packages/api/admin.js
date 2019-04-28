@@ -177,14 +177,17 @@ addPhotos = function(req, res) {
   let file = req.body.filesToAdd
   let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ""), 'base64')
   const bucket = 'beautiful-portland-carousel-photos'
+  if(req.body.isFrontPage === true) {
+    file.fileName = 'frontPage/' + file.fileName
+  }
   const params = {
-    Bucket: bucket,
+    Bucket: bucket, 
     Key: file.fileName,
     Body: buf
   }
   s3.upload(params, function(s3Err, data) {
     if (s3Err) throw s3Err
-    console.log(`File uploaded successfully`)
+    console.log('File uploaded successfully')
     res.send("upload successful")
   })
 }
@@ -204,9 +207,13 @@ removePhotos = function(req, res) {
   let files = []
   urls.forEach(url => {
     let file = url.split('/').pop().split('?').splice(0, 1).toString()
-    files.push({Key: file});
+    if(req.body.isFrontPage === true) {
+      files.push({Key: '/frontPage/' + file})
+    }
+    else {
+      files.push({Key: file});
+    }
   })
-  console.log(files)
   //const url = req.body.urlToRemove
   const params = {
     Bucket: bucket,

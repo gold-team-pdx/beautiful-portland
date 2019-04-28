@@ -104,7 +104,7 @@ app.get('/api/logout', function(req, res) {
 })
 
 // Visitor request handlers
-app.get('/api/getImages', visitorHandlers.homeImages.bind({amazon: AWS}))
+app.get('/api/getImages/*', visitorHandlers.homeImages.bind({amazon: AWS}))
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
 
