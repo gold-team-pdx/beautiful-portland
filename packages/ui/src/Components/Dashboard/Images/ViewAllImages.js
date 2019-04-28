@@ -31,11 +31,13 @@ export default class ViewAllImages extends Component {
         })
     }
 
+    // Get all images from s3 bucket and display
     initializeImages = () => {
         let urls = []
         Axios.get('/api/getImages/', {
             params: {
-                isFrontPage: false
+                isFrontPage: false,
+                needNotOnFront: false
             }
         })
         .then((res) => {

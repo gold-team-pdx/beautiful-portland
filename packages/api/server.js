@@ -120,6 +120,8 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 
 app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.removePhotos.bind({amazon: AWS}))
 app.post('/api/addImagesToBucket', ensureAuthenticated, adminHandlers.addPhotos.bind({amazon: AWS}))
+app.post('/api/removeImagesFromFrontPage', ensureAuthenticated, adminHandlers.removeImagesFromFrontPage.bind({amazon: AWS}))
+app.post('/api/addImageFromUploaded', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
 app.post('/api/updateEvent'), adminHandlers.updateEvent.bind({dbClient: client})

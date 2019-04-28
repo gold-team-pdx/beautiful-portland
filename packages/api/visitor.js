@@ -10,13 +10,25 @@ homeImages = function(req, res) {
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
     let isFront = req.query.isFrontPage
+    let needNotFront = req.query.needNotOnFront
     let data = s3.listObjects({Bucket:bucket}).promise()
     data.then(data => {
         data.Contents.forEach((item) => {
             let keyString = JSON.stringify(item.Key)
+            // Need images not on front page
+            if(needNotFront === 'true') {
+                if(keyString.indexOf('frontPage') === -1) {
+                    console.log("getting non-front page images")
+                    let key = item.Key
+                    imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
+                        Bucket: bucket,
+                        Key: key,
+                    }))
+                }
+            }
             // Only get images for all images OR if we are on the front page
             // (isFront === 'true'), only get images in frontPage folder
-            if(isFront === 'false' || (keyString.indexOf('frontPage') !== -1)) {
+            else if(isFront === 'false' || (keyString.indexOf('frontPage') !== -1)) {
                 let key = item.Key
                 imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
                     Bucket: bucket,

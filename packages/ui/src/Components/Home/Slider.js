@@ -31,7 +31,8 @@ export default class Slider extends Component {
         let urls = []
         Axios.get('/api/getImages/', {
             params: {
-                isFrontPage: true
+                isFrontPage: true,
+                needNotOnFront: false
             }
         })
         .then((res) => {

@@ -5,6 +5,7 @@ import Axios from 'axios'
 export default class EditCarouselImages extends Component {
     state = {
         images: [],
+        imagesNotOnFrontPage: [],
         removeModalOpen: false,
         addNewModalOpen: false,
         addFromUploadModalOpen: false,
@@ -19,31 +20,38 @@ export default class EditCarouselImages extends Component {
     handleAddModalOpen = () => {this.setState({addNewModalOpen: true})}
 
     // Modal add from uploaded functions
-    handleAddFromModalClose = () => {this.setState({addFromUploadModal: false})}
-    handleAddFromModalOpen = () => {this.setState({addFromUploadModal: true})}
+    handleAddFromModalClose = () => {this.setState({addFromUploadModalOpen: false})}
+    handleAddFromModalOpen = () => {this.setState({addFromUploadModalOpen: true})}
 
     // Serve images
     componentDidMount = () => {
         // Images from s3 container
         this.initializeImages()
+        // Get images specifically NOT being displayed on the front page
+       this.initializeNotFrontImages()
     }
 
     // Remove images from storage and unmount
     componentWillUnmount = () => {
         this.setState({
-            images: []
+            images: [],
+            imagesNotOnFrontPAge: []
         })
     }
 
+    // Initialize images to display
     initializeImages = () => {
+        console.log("initializeImages")
         let urls = []
         Axios.get('/api/getImages/', {
             params: {
-                isFrontPage: true
+                isFrontPage: true,
+                needNotOnFront: false
             }
         })
         .then((res) => {
             urls = res.data
+            console.log(urls)
             let imagesToDisplay = []
             urls.forEach(url => {
                 let newImage = {
@@ -52,7 +60,6 @@ export default class EditCarouselImages extends Component {
                 }
                 imagesToDisplay.push(newImage)
             })
-            console.log(imagesToDisplay)
             this.setState({
                 images: imagesToDisplay,
             })
@@ -63,6 +70,44 @@ export default class EditCarouselImages extends Component {
         })
     }
 
+    // Initialize images not on front page
+    initializeNotFrontImages = () => {
+        console.log("initializeNotImages")
+        Axios.get('/api/getImages/', {
+            params: {
+                isFrontPage: true,
+                needNotOnFront: true
+            }
+        })
+        .then((res) => {
+            let urls = res.data
+            let imagesToDisplay = []
+            if(urls.length === 0) {
+                this.setState({
+                    imagesNotOnFrontPage: []
+                })
+            }
+            else {
+                console.log(urls)
+                urls.forEach(url => {
+                    let newImage = {
+                        imageUrl: url,
+                        checked: false
+                    }
+                    imagesToDisplay.push(newImage)
+                })
+                this.setState({
+                    imagesNotOnFrontPage: imagesToDisplay,
+                })
+            }
+        })
+        .catch((err) => {
+            // handle error
+            console.log(err)
+        })
+    }
+
+    // Handles clicking a photo in the photoview
     // When photo is clicked, flip boolean
     handlePhotoClick = (item) => {
         let tempImages = [...this.state.images]
@@ -72,6 +117,18 @@ export default class EditCarouselImages extends Component {
         tempImages[index].checked = isClicked
         this.setState({
             images: tempImages
+        })
+    }
+
+    // Handles clicking a photo in the "Add from Uploaded" modal
+    handlePhotoClickInModal = (item) => {
+        let tempImages = [...this.state.imagesNotOnFrontPage]
+        let index = tempImages.indexOf(item)
+        let isClicked = tempImages[index].checked 
+        isClicked = isClicked ? false : true
+        tempImages[index].checked = isClicked
+        this.setState({
+            imagesNotOnFrontPage: tempImages
         })
     }
 
@@ -114,7 +171,7 @@ export default class EditCarouselImages extends Component {
     // Removing photos
     // Parses through to remove multiple. If one or
     // more images to remove, send API call to backend
-    removePhotos = () => {
+    removePhotosFromFrontPage = () => {
         let imagesToDelete = []
         let tempImages = [...this.state.images]
         tempImages = tempImages.filter(image => {
@@ -128,12 +185,11 @@ export default class EditCarouselImages extends Component {
         })
         this.setState({
             images: tempImages,
-            modalOpen: false
+            removeModalOpen: false
         })
         if(imagesToDelete.length > 0) {
-            Axios.post('/api/removeImageFromBucket', {
+            Axios.post('/api/removeImagesFromFrontPage', {
                 urlsToRemove: imagesToDelete,
-                isFrontPage: true,
             })
             .then(res => {
                 console.log(res)
@@ -141,6 +197,39 @@ export default class EditCarouselImages extends Component {
             .catch(err => {
                 console.log(err)
             })
+            this.initializeNotFrontImages()
+        }
+    }
+
+    // Add photos to s3 from already uploaded photos
+    addPhotosFromUploaded = () => {
+        let imagesToDelete = []
+        let tempImages = [...this.state.imagesNotOnFrontPage]
+        tempImages = tempImages.filter(image => {
+            if(image.checked === true){
+                imagesToDelete.push(image.imageUrl)
+                return false
+            }
+            else {
+                return true
+            }
+        })
+        console.log(tempImages)
+        this.setState({
+            imagesNotOnFrontPage: tempImages,
+            addFromUploadModalOpen: false
+        })
+        if(imagesToDelete.length > 0) {
+            Axios.post('/api/addImageFromUploaded', {
+                urlsToRemove: imagesToDelete
+            })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            this.initializeImages()
         }
     }
 
@@ -184,13 +273,24 @@ export default class EditCarouselImages extends Component {
                     >
                     <Modal.Content>
                         <h3> Choose Photos </h3>
+                        <Card.Group className="cardGroup" itemsPerRow = {5}>
+                            {
+                                this.state.imagesNotOnFrontPage.length > 0 && this.state.imagesNotOnFrontPage.map(item => (
+                                    <Card 
+                                        image={item.imageUrl} 
+                                        onClick={e => {this.handlePhotoClickInModal(item)}}
+                                        className={item.checked ? 'clicked' : 'notClicked'} 
+                                    />
+                                ))
+                            }
+                        </Card.Group>       
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='red' inverted onClick={this.handleAddFromModalClose}>
                             <Icon name='remove' /> 
                             Cancel
                         </Button>
-                        <Button color='green' inverted onClick={e => this.addPhotos(document.getElementById("files"))}>
+                        <Button color='green' inverted onClick={this.addPhotosFromUploaded}>
                             <Icon name='checkmark' /> 
                             Add Photos
                         </Button>
@@ -202,7 +302,7 @@ export default class EditCarouselImages extends Component {
                                 Remove Photos from Front Page
                             </Button>
                         } 
-                        open={this.state.modalOpen}
+                        open={this.state.removeModalOpen}
                         onClose={this.handleClose}
                         basic 
                         size='small'
@@ -210,14 +310,14 @@ export default class EditCarouselImages extends Component {
                     <Header icon='trash' content='Remove Photos' />
                     <Modal.Content>
                         <p>
-                            Are you sure you want to remove these photos?
+                            Are you sure you want to remove these photos from the front page?
                         </p>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button basic color='red' inverted onClick={this.handleClose}>
                             <Icon name='remove' /> No
                         </Button>
-                        <Button color='green' inverted onClick={this.removePhotos}>
+                        <Button color='green' inverted onClick={this.removePhotosFromFrontPage}>
                             <Icon name='checkmark' /> Yes
                         </Button>
                     </Modal.Actions>
