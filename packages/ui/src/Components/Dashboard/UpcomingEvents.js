@@ -12,42 +12,50 @@ class UpcomingEvents extends Component {
 			events: [],
 			dates: [ new Moment().format('MM-DD-YY') ],
 			lastDate: '',
-			numOfDays: 5,
+			numOfDays: 3,
 			open: false
 		}
 	}
 
 	componentDidMount() {
 		this.initializeDates()
-		this.updateEvents()
-		/*
-		let path = '/api/fullEvent?date=' + this.state.date
+		let paths = []
+		this.state.dates.forEach((date) => {
+			const path = '/api/fullEvent?date=' + date
+			paths.push(path)
+		})
 
+		/*
+		Promise.all(paths)
+			.then((response) => response.map((res) => console.log(res.data))
+			.catch((err) => console.log(err))
+			*/
+		/*
+		let path = '/api/fullEvent?date=04-27-19'
 		Axios.get(path)
 			.then((res) => {
 				if (res.data['event_info']) {
-					console.log(res.data)
 					let list = JSON.parse(res.data['event_info'])
 					let event = {
 						coordinator: res.data.coordinator,
 						phone: res.data.coordinator_phone,
 						location: res.data.location,
-						signups: list.length,
+						volunteer_signups: list.length,
 						volunteers: list,
 						servings: this.calculateServings(list),
-						date: this.state.date
+						date: this.state.currentDate
 					}
 					this.setState((prevState) => ({
 						events: [ ...prevState.events, event ]
 					}))
 
-					//console.log(this.state.events)
+					console.log(this.state.events)
 				}
 			})
 			.catch((err) => {
 				console.log(err)
-            })
-            */
+			})
+			*/
 		/*
 		this.state.dates.push('05-05-19')
 		for (let index = 0; index < 4; index++) {
@@ -65,6 +73,7 @@ class UpcomingEvents extends Component {
 	}
 
 	updateEvents = () => {
+		let tempevent = []
 		this.state.dates.forEach((newDate) => {
 			let path = '/api/fullEvent?date=' + newDate
 			Axios.get(path)
@@ -80,9 +89,13 @@ class UpcomingEvents extends Component {
 							servings: this.calculateServings(tempVolunteers),
 							date: newDate
 						}
+						console.log(event)
+						/*
 						this.setState((prevState) => ({
 							events: [ ...prevState.events, event ]
 						}))
+						*/
+						tempevent.push(event)
 					}
 				})
 				.catch((err) => {
@@ -113,7 +126,6 @@ class UpcomingEvents extends Component {
 				}
 				let last = this.state.dates.slice(-1)[0]
 				this.setState({ lastDate: last })
-				this.updateEvents()
 			})
 		} else if (direction === 'forward') {
 			this.setState({ dates: [] }, () => {
@@ -122,30 +134,18 @@ class UpcomingEvents extends Component {
 				}
 				let last = this.state.dates.slice(-1)[0]
 				this.setState({ lastDate: last })
-				this.updateEvents()
 			})
 		}
 	}
 
 	loadPrev = () => {
 		this.generateDates('backward')
-		//this.updateEvents()
+		this.updateEvents()
 	}
 
 	loadNext = () => {
-		/*
-		this.setState({ dates: [] }, () => {
-			for (let index = 1; index <= this.state.numOfDays; index++) {
-				this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').add(index, 'd').format('MM-DD-YY'))
-			}
-			let last = this.state.dates.slice(-1)[0]
-			this.setState({ lastDate: last })
-			console.log(this.state.dates)
-        })
-        */
 		this.generateDates('forward')
-		//console.log(this.state.dates)
-		//this.updateEvents()
+		this.updateEvents()
 	}
 
 	close = () => {
