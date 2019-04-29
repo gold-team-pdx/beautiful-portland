@@ -83,65 +83,85 @@ getVolunteerList = function(req, res) {
 }
 
 updateEvent = function(req, res) {
-    client = this.dbClient
-    collection = client.db("events-form").collection("events")
+  client = this.dbClient
+  collection = client.db("events-form").collection("events")
+  let response_data = []
+  let updatedEvent = new Object()
+  updatedEvent.date = req.body.date
+  //updatedEvent.time = req.body.time
+  updatedEvent.coordinator = req.body.coordinator
+  updatedEvent.coordinator_phone = req.body.coordinator_phone
+  updatedEvent.location = req.body.location
+  //updatedEvent.max_servings = req.body.max_servings
+  updatedEvent.categories = []
 
-    let updatedEvent = new Object()
-    updatedEvent.date = req.body.date
-    updatedEvent.time = req.body.time
-    updatedEvent.coordinator = req.body.coordinator
-    updatedEvent.coordinator_phone = req.body.coordinator_phone
-    updatedEvent.location = req.body.location
-    updatedEvent.max_servings = req.body.max_servings
-    updatedEvent.categories = []
-    let i = 0
-    req.body.categories.forEach(category => {
-        updatedEvent.categories.push({
-            name: category.name,
-            max_signups: category.max_signups,
-            min_servings: category.min_servings,
-            min_vegan: category.min_vegan,
-            food: category.food,
-            submissions: []
+  // Get old document to get category info
+  collection.find({date: req.body.date}, {projection:{ _id: 0}}).toArray((err, docs) => {
+    if(err) {
+      console.log(err, "Error trying to find document")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs[0] == null) {
+      console.log("Couldn't fulfill document request")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    updatedEvent.time = docs[0].time
+    updatedEvent.max_servings = docs[0].max_servings
+    docs[0].categories.forEach(category => {
+      updatedEvent.categories.push({
+          name: category.name,
+          max_signups: category.max_signups,
+          min_servings: category.min_servings,
+          min_vegan: category.min_vegan,
+          food: category.food,
+          submissions: []
+      })
+     })
+    
+    // Load in submissions that came in from front end
+    for(var sub of req.body.submissions) {
+      if (!sub.marked_for_deletion) {
+        let cat = updatedEvent.categories.find((elem) => {return elem.name === sub.type})
+        cat.submissions.push({
+            description: sub.desc,
+            servings: sub.servings,
+            vegetarian: sub.vegetarian,
+            vegan: sub.vegan,
+            gluten_free: sub.gluten_free,
+            volunteer_name: sub.name,
+            volunteer_email: sub.phone,
+            volunteer_phone: sub.email
         })
-        category.submissions.forEach(sub => {
-            if (!sub.marked_for_deletion) {
-                updatedEvent.categories[i].submissions.push({
-                    description: sub.description,
-                    servings: sub.servings,
-                    vegetarian: sub.vegetarian,
-                    vegan: sub.vegan,
-                    gluten_free: sub.gluten_free,
-                    volunteer_name: sub.volunteer_name,
-                    volunteer_email: sub.volunteer_email,
-                    volunteer_phone: sub.volunteer_phone
-                })
-            }
-        })
-        i++
-    })
+      }
+    }
 
     collection.findOneAndReplace({date: req.body.date}, updatedEvent, (err, doc) => {
-        if(err) {
-            console.log(err, "Error trying to find or update event ")
-            res.send({
-                status: 'FAILURE'
-            })
-            return
-        } else if( doc.value === null) {
-            console.log("Couldn't find event to update")
-            res.send({
-                status: 'FAILURE'
-            })
-            return
-        } else {
-            console.log("Event updated")
-            res.send({
-                status: 'SUCCESS'
-            })
-            return
-        }
+      if(err) {
+          console.log(err, "Error trying to find or update event ")
+          res.send({
+              status: 'FAILURE'
+          })
+          return
+      } else if( doc.value === null) {
+          console.log("Couldn't find event to update")
+          res.send({
+              status: 'FAILURE'
+          })
+          return
+      } else {
+          console.log("Event updated")
+          res.send({
+              status: 'SUCCESS'
+          })
+          return
+      }
     })
+  })
 }
 
 deleteEvent = function(req, res) {

@@ -125,7 +125,7 @@ app.post('/api/addImageFromUploaded', ensureAuthenticated, adminHandlers.addFrom
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/fullEvent', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
-app.post('/api/updateEvent'), ensureAuthenticated, adminHandlers.updateEvent.bind({dbClient: client})
+app.post('/api/updateEvent', ensureAuthenticated, adminHandlers.updateEvent.bind({dbClient: client}))
 app.post('/api/deleteEvent', ensureAuthenticated, adminHandlers.deleteEvent.bind({dbClient: client}))
 app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({dbClient: client}))
 app.post('/api/addPublish', ensureAuthenticated, adminHandlers.addNewPublished.bind({dbClient: client}))
