@@ -23,8 +23,7 @@ class EditEvent extends Component {
 		}
 	}
 	componentDidMount() {
-		//let path = '/api/fullEvent?date=' + this.props.date
-		let path = '/api/fullEvent?date=04-27-19'
+		let path = '/api/fullEvent?date=' + this.props.date
 		Axios.get(path)
 			.then((res) => {
 				if (res.data['event_info']) {
@@ -149,7 +148,7 @@ class EditEvent extends Component {
 	render() {
 		return (
 			<div>
-				<Header as="h3">Date: 04-25-19</Header>
+				<Header as="h3">{this.props.date}</Header>
 				<Grid>
 					<Grid.Row>
 						<Grid.Column width={4}>

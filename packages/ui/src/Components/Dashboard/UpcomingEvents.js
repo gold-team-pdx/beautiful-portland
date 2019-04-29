@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Button, Header, Icon, Modal, Menu } from 'semantic-ui-react'
+import { Confirm, Button, Header, Icon, Modal, Menu, Table } from 'semantic-ui-react'
 import Moment from 'moment'
-import { Table } from 'semantic-ui-react'
 import Axios from 'axios'
 
 class UpcomingEvents extends Component {
@@ -12,7 +11,7 @@ class UpcomingEvents extends Component {
 			events: [],
 			dates: [ new Moment().format('MM-DD-YY') ],
 			lastDate: '',
-			numOfDays: 3,
+			numOfDays: 5,
 			open: false
 		}
 	}
@@ -25,44 +24,31 @@ class UpcomingEvents extends Component {
 			paths.push(path)
 		})
 
-		/*
-		Promise.all(paths)
-			.then((response) => response.map((res) => console.log(res.data))
-			.catch((err) => console.log(err))
-			*/
-		/*
-		let path = '/api/fullEvent?date=04-27-19'
-		Axios.get(path)
-			.then((res) => {
-				if (res.data['event_info']) {
-					let list = JSON.parse(res.data['event_info'])
-					let event = {
-						coordinator: res.data.coordinator,
-						phone: res.data.coordinator_phone,
-						location: res.data.location,
-						volunteer_signups: list.length,
-						volunteers: list,
-						servings: this.calculateServings(list),
-						date: this.state.currentDate
-					}
-					this.setState((prevState) => ({
-						events: [ ...prevState.events, event ]
-					}))
-
-					console.log(this.state.events)
-				}
-			})
+		Axios.all(paths.map((l) => Axios.get(l)))
+			.then(
+				Axios.spread((...res) => {
+					res.forEach((event) => {
+						if (event.data['event_info']) {
+							let temp = JSON.parse(event.data['event_info'])
+							let newEvent = {
+								coordinator: event.data.coordinator,
+								phone: event.data.coordinator_phone,
+								location: event.data.location,
+								volunteer_signups: temp.length,
+								servings: this.calculateServings(temp),
+								volunteers: temp,
+								date: event.data.date
+							}
+							this.setState((prevState) => ({
+								events: [ ...prevState.events, newEvent ]
+							}))
+						}
+					})
+				})
+			)
 			.catch((err) => {
 				console.log(err)
 			})
-			*/
-		/*
-		this.state.dates.push('05-05-19')
-		for (let index = 0; index < 4; index++) {
-			this.state.dates.push(Moment('05-05-19', 'MM-DD-YY').add(index + 1, 'd').format('MM-DD-YY'))
-		}
-        this.state.lastDate = this.state.dates.slice(-1)[0]
-        */
 	}
 
 	initializeDates = () => {
@@ -72,36 +58,38 @@ class UpcomingEvents extends Component {
 		this.setState({ lastDate: this.state.dates.slice(-1)[0] })
 	}
 
-	updateEvents = () => {
-		let tempevent = []
-		this.state.dates.forEach((newDate) => {
-			let path = '/api/fullEvent?date=' + newDate
-			Axios.get(path)
-				.then((res) => {
-					if (res.data['event_info']) {
-						let tempVolunteers = JSON.parse(res.data['event_info'])
-						let event = {
-							coordinator: res.data.coordinator,
-							coordinator_phone: res.data.coordinator_phone,
-							location: res.data.location,
-							volunteer_signups: tempVolunteers.length,
-							volunteers: tempVolunteers,
-							servings: this.calculateServings(tempVolunteers),
-							date: newDate
-						}
-						console.log(event)
-						/*
-						this.setState((prevState) => ({
-							events: [ ...prevState.events, event ]
-						}))
-						*/
-						tempevent.push(event)
-					}
-				})
-				.catch((err) => {
-					console.log(err)
-				})
+	updateEvents = (dates) => {
+		let paths = []
+		dates.forEach((date) => {
+			const path = '/api/fullEvent?date=' + date
+			paths.push(path)
 		})
+
+		Axios.all(paths.map((l) => Axios.get(l)))
+			.then(
+				Axios.spread((...res) => {
+					res.forEach((event) => {
+						if (event.data['event_info']) {
+							let temp = JSON.parse(event.data['event_info'])
+							let newEvent = {
+								coordinator: event.data.coordinator,
+								phone: event.data.coordinator_phone,
+								location: event.data.location,
+								volunteer_signups: temp.length,
+								servings: this.calculateServings(temp),
+								volunteers: temp,
+								date: event.data.date
+							}
+							this.setState((prevState) => ({
+								events: [ ...prevState.events, newEvent ]
+							}))
+						}
+					})
+				})
+			)
+			.catch((err) => {
+				console.log(err)
+			})
 	}
 
 	calculateServings = (volunteers) => {
@@ -112,40 +100,53 @@ class UpcomingEvents extends Component {
 		return totalServings
 	}
 
-	deleteEvent = (e) => {
-		console.log(e.currentTarget.name)
-	}
+	deleteEvent = (event, data) => {
+		let newEvents = this.state.events.filter((obj) => {
+			return obj.date !== data.name
+		})
+		this.setState({
+			events: newEvents
+		})
 
-	generateDates = (direction) => {
-		if (direction === 'backward') {
-			this.setState({ dates: [] }, () => {
-				for (let index = this.state.numOfDays; index > 0; index--) {
-					this.state.dates.push(
-						Moment(this.state.lastDate, 'MM-DD-YY').subtract(index, 'd').format('MM-DD-YY')
-					)
-				}
-				let last = this.state.dates.slice(-1)[0]
-				this.setState({ lastDate: last })
-			})
-		} else if (direction === 'forward') {
-			this.setState({ dates: [] }, () => {
-				for (let index = 1; index <= this.state.numOfDays; index++) {
-					this.state.dates.push(Moment(this.state.lastDate, 'MM-DD-YY').add(index, 'd').format('MM-DD-YY'))
-				}
-				let last = this.state.dates.slice(-1)[0]
-				this.setState({ lastDate: last })
-			})
+		const deletedEvent = {
+			date: data.name
 		}
+
+		Axios.post('/api/deleteEvent', deletedEvent)
+			.then((response) => {
+				console.log(response, 'Deleted Event ' + data.name)
+			})
+			.catch((err) => {
+				console.log(err, 'Try again.')
+			})
 	}
 
 	loadPrev = () => {
-		this.generateDates('backward')
-		this.updateEvents()
+		this.setState({ events: [] }, () => {
+			let newDates = []
+			for (let i = this.state.numOfDays; i > 0; i--) {
+				newDates.push(Moment(this.state.currentDate, 'MM-DD-YY').subtract(i, 'd').format('MM-DD-YY'))
+			}
+			this.setState({
+				lastDate: newDates.slice(-1)[0],
+				currentDate: newDates[0]
+			})
+			this.updateEvents(newDates)
+		})
 	}
 
 	loadNext = () => {
-		this.generateDates('forward')
-		this.updateEvents()
+		this.setState({ events: [] }, () => {
+			let newDates = []
+			for (let i = 1; i <= this.state.numOfDays; i++) {
+				newDates.push(Moment(this.state.lastDate, 'MM-DD-YY').add(i, 'd').format('MM-DD-YY'))
+			}
+			this.setState({
+				lastDate: newDates.slice(-1)[0],
+				currentDate: newDates[0]
+			})
+			this.updateEvents(newDates)
+		})
 	}
 
 	close = () => {
@@ -172,10 +173,10 @@ class UpcomingEvents extends Component {
 					</Table.Header>
 					<Table.Body>
 						{this.state.events &&
-							this.state.events.map((event) => (
-								<Table.Row key={event.date + event.location}>
+							this.state.events.map((event, index) => (
+								<Table.Row key={index}>
 									<Table.Cell width={2}>
-										<Button color="teal" onClick={() => this.props.updateDate(event.date)}>
+										<Button color="teal" onClick={() => this.props.updateActiveDate(event.date)}>
 											{event.date}
 										</Button>
 									</Table.Cell>
@@ -183,27 +184,9 @@ class UpcomingEvents extends Component {
 									<Table.Cell>{event['volunteer_signups']}</Table.Cell>
 									<Table.Cell>{event.servings}</Table.Cell>
 									<Table.Cell collapsing>
-										<Modal
-											trigger={
-												<Button negative onClick={this.open}>
-													Delete
-												</Button>
-											}
-											open={this.state.open}
-										>
-											<Header icon="calendar alternate outline" content="Delete Event" />
-											<Modal.Content>
-												<h3>Are you sure you want to delete event {event.date} </h3>
-											</Modal.Content>
-											<Modal.Actions>
-												<Button color="red" onClick={this.close}>
-													<Icon name="remove" /> No
-												</Button>
-												<Button color="green" onClick={this.deleteEvent} name={event.date}>
-													<Icon name="checkmark" /> Yes
-												</Button>
-											</Modal.Actions>
-										</Modal>
+										<Button negative onClick={this.deleteEvent} name={event.date}>
+											Delete
+										</Button>
 									</Table.Cell>
 								</Table.Row>
 							))}

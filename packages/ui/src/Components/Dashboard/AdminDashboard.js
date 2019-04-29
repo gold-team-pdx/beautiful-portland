@@ -13,7 +13,7 @@ export default class AdminDashboard extends Component {
 	state = {
 		// Default active content
 		activeItem: 'viewEvents',
-		date: new Moment().format('MM-DD-YY'),
+		activeDate: new Moment().format('MM-DD-YY'),
 		adminName: 'Anonymous',
 		authenticated: false,
 		message: 'Please Login'
@@ -35,6 +35,12 @@ export default class AdminDashboard extends Component {
 
 	handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
+	updateActiveDate = (date) => {
+		this.setState({
+			activeDate: date,
+			activeItem: 'editEvent'
+		})
+	}
 	render() {
 		const { activeItem } = this.state
 		// Add more components to be rendered here
@@ -42,7 +48,8 @@ export default class AdminDashboard extends Component {
 			volunteerList: <VolunteerList />,
 			addEvent: <AddEvent />,
 			newStory: <NewStory />,
-			viewEvents: <UpcomingEvents />
+			viewEvents: <UpcomingEvents updateActiveDate={this.updateActiveDate} />,
+			editEvent: <EditEvent date={this.state.activeDate} />
 		}
 		if (!this.state.authenticated) {
 			return (
