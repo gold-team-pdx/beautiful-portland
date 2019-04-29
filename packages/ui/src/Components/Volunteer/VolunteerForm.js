@@ -16,6 +16,9 @@ export default class VolunteerForm extends Component {
     }
     this.state = {
       date: params.get("date"),
+      coordinator: '',
+      coordinator_phone: '',
+      location: '',
       event_info: [{type: "n/a", servings: 0}],
       max_servings: 0
     }
