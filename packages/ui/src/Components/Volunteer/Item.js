@@ -286,7 +286,7 @@ export default class Item extends Component {
 										onChange={this.onChange}
 										inline
 										label="Servings"
-										disabled={this.state.isDisabled}
+										disabled={this.state.disableAll}
 									/>
 									<div>
 										<span>{this.state.errors.servings || ' ✓'}</span>
@@ -303,7 +303,7 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Name"
 									placeholder=" John"
-									disabled={this.state.isDisabled}
+									disabled={this.state.disableAll}
 								/>
 								<span>{this.state.errors.volunteer_name || ' ✓'}</span>
 							</div>
@@ -315,7 +315,7 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Email"
 									placeholder=" xxxx@gmail.com"
-									disabled={this.state.isDisabled}
+									disabled={this.state.disableAll}
 								/>
 								<span>{this.state.errors.volunteer_email || ' ✓'}</span>
 							</div>
@@ -327,7 +327,7 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Phone"
 									placeholder=" xxx-xxx-xxxx"
-									disabled={this.state.isDisabled}
+									disabled={this.state.disableAll}
 								/>
 								<span>{this.state.errors.volunteer_phone || ' ✓'}</span>
 							</div>

@@ -33,10 +33,7 @@ export default class VolunteerForm extends Component {
       .catch(err => {
         console.log(err, "Try again.")
       })
-    this.setState((prevState) => {
-      prevState.event_info.find((elem) => {return elem.type === data.type}).servings += data.servings
-      return prevState
-    })
+    window.location.reload()
   }
 
   async componentDidMount() {
