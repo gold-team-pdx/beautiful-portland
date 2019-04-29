@@ -94,7 +94,7 @@ export default class Item extends Component {
 	onCategoryChange = (event, data) => {
 		this.clearForm()
 		let temp = data.options.find((elem) => { return elem.key === data.value})
-		this.validateField(data.name, data.value)
+		this.validateField('type', data.value)
 		this.setState({type: data.value, cat_info: temp.data}, this.validateForm)
 	}
 
@@ -161,7 +161,7 @@ export default class Item extends Component {
 										this.state.volunteer_emailValid &&
 										this.state.descriptionValid
 
-		if(this.state.cat_info.food && this.state.cat_info.real_signups >= this.state.cat_info.max_signups) {
+		if(this.state.cat_info.real_signups >= this.state.cat_info.max_signups) {
 			this.setState({
 				formValid,
 				message: 'Sorry, but this course is full up on signups. Please consider volunteering for another category!\n',
@@ -332,9 +332,7 @@ export default class Item extends Component {
 								<span>{this.state.errors.volunteer_phone || ' ✓'}</span>
 							</div>
 						</Form.Group>
-						{/* {console.log(!this.state.formValid)}
-						{console.log(disableSubmit)}
-						{console.log(this.state.disableAll)} */}
+
 						<Button color="green" disabled={!this.state.formValid || disableSubmit || this.state.disableAll}>
 							Submit
 						</Button>
