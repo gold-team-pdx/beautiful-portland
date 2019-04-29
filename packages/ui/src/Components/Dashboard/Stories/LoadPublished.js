@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Accordion, Icon, Button } from 'semantic-ui-react'
+import Axios from 'axios'
 
 export default class LoadPublished extends Component {
   constructor(props){
@@ -17,6 +18,18 @@ export default class LoadPublished extends Component {
  		this.setState({ activeIndex: newIndex })
  	}
 
+  handleDelete = () => {
+    console.log("Deleting published Story with id: " + this.props.sPublish._id)
+    Axios.post('/api/deletePublish', {deleteId: this.props.sPublish._id})
+      .then(res => {
+         console.log(res.data);
+      })
+      .catch((err) => {
+         console.log(err);
+      })
+      this.forceUpdate()
+  }
+
    render () {
      const { activeIndex } = this.state
      return (
@@ -24,7 +37,7 @@ export default class LoadPublished extends Component {
          <div>
          <Card.Group>
               {
-                   <Card>
+                   <Card fluid>
                      <Card.Content>
                        <Card.Header>{this.props.sPublish.title}</Card.Header>
                        <Card.Meta>{this.props.sPublish.edited_timestamp}</Card.Meta>
@@ -44,7 +57,7 @@ export default class LoadPublished extends Component {
                                          onClick={this.handleItemClick}>Edit</Button>
                                  <Button color='red'
                                          name='deleteDraft'
-                                         onClick={this.handleItemClick}>Delete</Button>
+                                         onClick={this.handleDelete}>Delete</Button>
                                </Button.Group>
                              </Accordion.Content>
                         </Accordion>

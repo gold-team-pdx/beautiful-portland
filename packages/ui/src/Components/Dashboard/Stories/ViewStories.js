@@ -45,11 +45,7 @@ export default class ViewStories extends Component {
 
     let activeItem  = this.state.activeItem
 
-    let chooseRender = (
-      this.state.publishStory && this.state.publishStory.map(sPublish =>
-        <LoadDrafts key={sPublish.edited_timestamp} sPublish={sPublish} />
-      )
-    )
+    let chooseRender;
     if(activeItem === 'loadPublished'){
       chooseRender = (
         this.state.publishStory && this.state.publishStory.map(sPublish =>

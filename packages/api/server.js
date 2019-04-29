@@ -120,7 +120,9 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
-app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({dbClient: client}))
-app.post('/api/addPublish', ensureAuthenticated, adminHandlers.addNewPublished.bind({dbClient: client}))
 app.get('/api/publishedStories', ensureAuthenticated, adminHandlers.getPublishedStory.bind({dbClient: client}))
 app.get('/api/draftStories', ensureAuthenticated, adminHandlers.getDraftedStories.bind({dbClient: client}))
+app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({dbClient: client}))
+app.post('/api/addPublish', ensureAuthenticated, adminHandlers.addNewPublished.bind({dbClient: client}))
+app.post('/api/deleteDraft', ensureAuthenticated, adminHandlers.deleteDraft.bind({dbClient: client}))
+app.post('/api/deletePublish', ensureAuthenticated, adminHandlers.deletePublish.bind({dbClient: client}))

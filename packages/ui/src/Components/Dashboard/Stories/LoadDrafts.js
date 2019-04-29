@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { Card, Accordion, Icon, Button } from 'semantic-ui-react'
+import Axios from 'axios'
 
 export default class LoadDrafts extends Component {
   constructor(props){
     super(props)
     this.state = {
-      activeIndex: -1
+      activeIndex: -1,
+      deleteId : 0
     }
   }
 
@@ -17,8 +19,21 @@ export default class LoadDrafts extends Component {
     this.setState({ activeIndex: newIndex })
   }
 
+  handleDelete = () => {
+    this.setState({deleteId : this.state.deleteId})
+    console.log("Deleting draft with id: " + this.props.sDraft._id)
+    Axios.post('/api/deleteDraft', {deleteId: this.props.sDraft._id})
+      .then(res => {
+         console.log(res.data);
+      })
+      .catch((err) => {
+         console.log(err);
+      })
+  }
+
    render () {
      const { activeIndex } = this.state
+
 
      return (
        <div className="viewStories">
@@ -45,7 +60,7 @@ export default class LoadDrafts extends Component {
                                          onClick={this.handleItemClick}>Publish</Button>
                                  <Button color='red'
                                          name='deleteDraft'
-                                         onClick={this.handleItemClick}>Delete</Button>
+                                         onClick={this.handleDelete}>Delete</Button>
                                </Button.Group>
                              </Accordion.Content>
                         </Accordion>

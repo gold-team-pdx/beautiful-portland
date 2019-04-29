@@ -192,7 +192,39 @@ getDraftedStories = function(req, res) {
   })
 }
 
+deleteDraft = function(req, res) {
+  console.log(req.body.deleteId)
+  var ObjectId = require('mongodb').ObjectID;
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("drafts")
+  collection.deleteOne({
+    '_id' : ObjectId(req.body.deleteId)
+  },
+   function(err,obj) {
+    if(err)
+      throw err
+    else
+      res.end("Draft Deleted Successful")
+   }
+  )
+}
 
+deletePublish = function(req, res) {
+  console.log(req.body.deleteId)
+  var ObjectId = require('mongodb').ObjectID;
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.deleteOne({
+    '_id' : ObjectId(req.body.deleteId)
+  },
+   function(err,obj) {
+    if(err)
+      throw err
+    else
+      res.end("Published Story Deleted Successful")
+   }
+  )
+}
 
 
 module.exports.getFullEventInfo = getFullEventInfo
@@ -201,3 +233,5 @@ module.exports.addNewDraft = addNewDraft
 module.exports.addNewPublished = addNewPublished
 module.exports.getPublishedStory = getPublishedStory
 module.exports.getDraftedStories = getDraftedStories
+module.exports.deleteDraft = deleteDraft
+module.exports.deletePublish = deletePublish
