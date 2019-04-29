@@ -170,6 +170,7 @@ deleteEvent = function(req, res) {
 }
 
 // Adds files to s3 bucket using filenames from user
+// Returns a success message to front end
 addPhotos = function(req, res) {
   let AWS = this.amazon
   const s3 = new AWS.S3({
@@ -197,6 +198,7 @@ addPhotos = function(req, res) {
 }
 
 // Removes multiple photos from s3 bucket using filesnames from urls.
+// Does not return anything, but console.logs success/failure
 removePhotos = function(req, res) {
   let AWS = this.amazon
   const s3 = new AWS.S3({
@@ -243,6 +245,7 @@ removePhotos = function(req, res) {
 // Moves photos from in s3 bucket from front page to all photos
 // To do this move, copy the item first with the new key, then remove
 // the item with the old key.
+// Does not return anything, but console.logs success or failure.
 removeImagesFromFrontPage = function(req,res) {
   let AWS = this.amazon
   const s3 = new AWS.S3({
@@ -258,7 +261,6 @@ removeImagesFromFrontPage = function(req,res) {
     let newFile = url.split('/').pop().split('?').splice(0, 1).toString()
     // push old file to array to remove later
     let file = 'frontPage/' + newFile
-    console.log('/' + bucket + '/' + file)
     const params = {
       Bucket: bucket, 
       CopySource: '/' + bucket + '/' + file, 
@@ -293,6 +295,8 @@ removeImagesFromFrontPage = function(req,res) {
 // To do this, we need to copy the photo from all photos
 // to /frontPage, then remove the other photo to prevent
 // duplicates.
+// Does not return anything (S3 doesn't return anything on delete), 
+// but console.logs errors/success
 addFromUploaded = function(req, res) {
   let AWS = this.amazon
   const s3 = new AWS.S3({
@@ -308,7 +312,6 @@ addFromUploaded = function(req, res) {
     let file = url.split('/').pop().split('?').splice(0, 1).toString()
     // push old file to array to remove later
     let newFile = 'frontPage/' + file
-    console.log('/' + bucket + '/' + file)
     const params = {
       Bucket: bucket, 
       CopySource: '/' + bucket + '/' + file, 

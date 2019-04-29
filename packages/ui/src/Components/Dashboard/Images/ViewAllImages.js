@@ -24,7 +24,7 @@ export default class ViewAllImages extends Component {
         this.initializeImages()
     }
 
-    // Remove images from storage and unmount
+    // Remove images (unmount)
     componentWillUnmount = () => {
         this.setState({
             images: []

@@ -1,4 +1,5 @@
 // Get request to S3 container to get photos for image carousel
+// Returns a list of presigned image urls from the s3 bucket.
 homeImages = function(req, res) {
     let AWS = this.amazon
     const s3 = new AWS.S3({
@@ -9,7 +10,9 @@ homeImages = function(req, res) {
     })
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
+    // Checks for if on front page (or editing front page images)
     let isFront = req.query.isFrontPage
+    // Checks for if we need non-front page images only (editing front page images on admin side)
     let needNotFront = req.query.needNotOnFront
     let data = s3.listObjects({Bucket:bucket}).promise()
     data.then(data => {
@@ -18,7 +21,6 @@ homeImages = function(req, res) {
             // Need images not on front page
             if(needNotFront === 'true') {
                 if(keyString.indexOf('frontPage') === -1) {
-                    console.log("getting non-front page images")
                     let key = item.Key
                     imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
                         Bucket: bucket,
