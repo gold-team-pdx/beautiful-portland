@@ -30,6 +30,28 @@ export default class LoadDrafts extends Component {
          console.log(err);
       })
   }
+  moveToPublish = () => {
+    let data = {
+      _id : this.props.sDraft._id,
+      edited_timestamp : this.props.sDraft.edited_timestamp,
+      title : this.props.sDraft.title,
+      hook : this.props.sDraft.hook,
+      content : this.props.sDraft.content,
+      publish_status: true
+    }
+    Axios.post('/api/addPublish', data)
+    .then(response => {
+      console.log(response, "Story has been published")
+    })
+    .catch(err => {
+      console.log(err, "Try again.")
+    })
+  }
+
+  handlePublish = () => {
+    console.log("Publishing draft with id: " + this.props.sDraft._id)
+    Axios.all([this.moveToPublish(), this.handleDelete()])
+  }
 
    render () {
      const { activeIndex } = this.state
@@ -57,7 +79,7 @@ export default class LoadDrafts extends Component {
                                          onClick={this.handleItemClick}>Edit</Button>
                                  <Button color='green'
                                          name='publishDraft'
-                                         onClick={this.handleItemClick}>Publish</Button>
+                                         onClick={this.handlePublish}>Publish</Button>
                                  <Button color='red'
                                          name='deleteDraft'
                                          onClick={this.handleDelete}>Delete</Button>
