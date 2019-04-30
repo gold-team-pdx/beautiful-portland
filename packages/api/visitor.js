@@ -1,4 +1,5 @@
 // Get request to S3 container to get photos for image carousel
+// Returns a list of presigned image urls from the s3 bucket.
 homeImages = function(req, res) {
     let AWS = this.amazon
     const s3 = new AWS.S3({
@@ -9,20 +10,39 @@ homeImages = function(req, res) {
     })
     const bucket = 'beautiful-portland-carousel-photos'
     let imageUrls = []
+    // Checks for if on front page (or editing front page images)
+    let isFront = req.query.isFrontPage
+    // Checks for if we need non-front page images only (editing front page images on admin side)
+    let needNotFront = req.query.needNotOnFront
     let data = s3.listObjects({Bucket:bucket}).promise()
-        data.then(data => {
-            data.Contents.forEach((item) => {
+    data.then(data => {
+        data.Contents.forEach((item) => {
+            let keyString = JSON.stringify(item.Key)
+            // Need images not on front page
+            if(needNotFront === 'true') {
+                if(keyString.indexOf('frontPage') === -1) {
+                    let key = item.Key
+                    imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
+                        Bucket: bucket,
+                        Key: key,
+                    }))
+                }
+            }
+            // Only get images for all images OR if we are on the front page
+            // (isFront === 'true'), only get images in frontPage folder
+            else if(isFront === 'false' || (keyString.indexOf('frontPage') !== -1)) {
                 let key = item.Key
                 imageUrls = imageUrls.concat(s3.getSignedUrl('getObject', {
                     Bucket: bucket,
                     Key: key,
                 }))
-            })
-            res.send(imageUrls)
+            }   
         })
-        .catch(err => {
-            console.log(err)
-        })
+        res.send(imageUrls)
+    })
+    .catch(err => {
+        console.log(err)
+    })
 }
 
 // Called by '/volunteer-form' to get category info for an event, to properly limit signups

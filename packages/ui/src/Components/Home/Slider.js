@@ -28,20 +28,17 @@ export default class Slider extends Component {
 
     componentDidMount = () => {
         let timer = setInterval(this.tick, 1000)
-        // Current Images come from a public S3 container. If any images 
-        // are in minio instance, they will be served instead.
-        let storage = window.sessionStorage
         let urls = []
-        Axios.get('/api/getImages')
+        Axios.get('/api/getImages/', {
+            params: {
+                isFrontPage: true,
+                needNotOnFront: false
+            }
+        })
         .then((res) => {
-            // Add pre-signed url strings to local storage
-            if (res.data.length !== 0) {
-                storage.setItem('urls', JSON.stringify(res.data))
-            }
-            // If successfully in local storage, set urls to the new images
-            if(storage.length > 0) {
-                urls = JSON.parse(storage.getItem('urls'))
-            }
+            urls = res.data
+            console.log(urls)
+            console.log(urls.length)
             // Else, set the urls to the default image urls given (TESTING ONLY)
             if(urls.length === 0) {
                 urls = defaultImages
@@ -62,8 +59,6 @@ export default class Slider extends Component {
         this.setState({
             images: []
         })
-        let storage = window.localStorage
-        storage.removeItem('urls')
     }
 
     tick = () => {
@@ -92,7 +87,7 @@ export default class Slider extends Component {
             <div className="slider">
                 <div className="slider-wrapper" onClick= {this.nextSlide}>
                     {
-                        this.state.images.length && this.state.images.map((image, i) => (
+                        this.state.images.length > 0 && this.state.images.map((image, i) => (
                             <Slide
                                 key={i}
                                 image={image}
