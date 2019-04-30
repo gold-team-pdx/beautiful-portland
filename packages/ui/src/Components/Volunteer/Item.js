@@ -93,9 +93,11 @@ export default class Item extends Component {
 
 	onCategoryChange = (event, data) => {
 		this.clearForm()
-		let temp = data.options.find((elem) => { return elem.key === data.value})
+		let temp = data.options.find((elem) => {
+			return elem.key === data.value
+		})
 		this.validateField('type', data.value)
-		this.setState({type: data.value, cat_info: temp.data}, this.validateForm)
+		this.setState({ type: data.value, cat_info: temp.data }, this.validateForm)
 	}
 
 	validateField(fieldName, value) {
@@ -120,7 +122,9 @@ export default class Item extends Component {
 				break
 			case 'servings':
 				servingsValid = value >= min_servings && value <= this.props.max_servings
-				errors.servings = servingsValid ? '' : ' ✗ Please enter a vaild number between ' + min_servings + '~' + this.props.max_servings + '.'
+				errors.servings = servingsValid
+					? ''
+					: ' ✗ Please enter a vaild number between ' + min_servings + '~' + this.props.max_servings + '.'
 				break
 			case 'volunteer_name':
 				volunteer_nameValid = value.length > 2
@@ -153,22 +157,30 @@ export default class Item extends Component {
 	}
 
 	validateForm() {
-		let numVeganNeeded = this.state.cat_info.food ? this.state.cat_info.min_vegan - this.state.cat_info.real_vegan : 0
-		let formValid = this.state.typeValid &&
-										this.state.servingsValid &&
-										this.state.volunteer_nameValid &&
-										this.state.volunteer_phoneValid &&
-										this.state.volunteer_emailValid &&
-										this.state.descriptionValid
+		let numVeganNeeded = this.state.cat_info.food
+			? this.state.cat_info.min_vegan - this.state.cat_info.real_vegan
+			: 0
+		let formValid =
+			this.state.typeValid &&
+			this.state.servingsValid &&
+			this.state.volunteer_nameValid &&
+			this.state.volunteer_phoneValid &&
+			this.state.volunteer_emailValid &&
+			this.state.descriptionValid
 
-		if(this.state.cat_info.real_signups >= this.state.cat_info.max_signups) {
+		if (this.state.cat_info.real_signups >= this.state.cat_info.max_signups) {
 			this.setState({
 				formValid,
-				message: 'Sorry, but this course is full up on signups. Please consider volunteering for another category!\n',
+				message:
+					'Sorry, but this course is full up on signups. Please consider volunteering for another category!\n',
 				messageNeeded: true,
 				disableAll: true
 			})
-		} else if(this.state.cat_info.food && this.state.cat_info.real_signups + numVeganNeeded === this.state.cat_info.max_signups && !this.state.vegan) {
+		} else if (
+			this.state.cat_info.food &&
+			this.state.cat_info.real_signups + numVeganNeeded === this.state.cat_info.max_signups &&
+			!this.state.vegan
+		) {
 			this.setState({
 				formValid,
 				message: 'Signups for this category are limited to Vegan options only.\n',
@@ -177,7 +189,7 @@ export default class Item extends Component {
 		} else {
 			this.setState({
 				formValid,
-				messageNeeded:false
+				messageNeeded: false
 			})
 		}
 	}
@@ -187,7 +199,7 @@ export default class Item extends Component {
 	}
 
 	render() {
-		let options = this.props.event_info.map(category => {
+		let options = this.props.event_info.map((category) => {
 			return {
 				key: category.type,
 				text: category.type,
@@ -199,11 +211,8 @@ export default class Item extends Component {
 		let disableSubmit = this.state.messageNeeded
 
 		return (
-
 			<div>
-				{this.state.messageNeeded && 
-					<Header as="h3">{this.state.message}</Header>
-				}
+				{this.state.messageNeeded && <Header as="h3">{this.state.message}</Header>}
 				<Segment>
 					<Form onSubmit={this.onSubmit}>
 						<br />
@@ -248,7 +257,7 @@ export default class Item extends Component {
 							</Form.Group>
 						</div>
 						<br />
-						{this.state.cat_info.food && 
+						{this.state.cat_info.food && (
 							<div>
 								<Form.Group>
 									<Form.Checkbox
@@ -275,7 +284,7 @@ export default class Item extends Component {
 								</Form.Group>
 								<br />
 							</div>
-						}
+						)}
 
 						<Form.Group inline>
 							<div className={`input-wrapper ${this.errorClass(this.state.errors.servings)}`}>
@@ -333,7 +342,10 @@ export default class Item extends Component {
 							</div>
 						</Form.Group>
 
-						<Button color="green" disabled={!this.state.formValid || disableSubmit || this.state.disableAll}>
+						<Button
+							color="green"
+							disabled={!this.state.formValid || disableSubmit || this.state.disableAll}
+						>
 							Submit
 						</Button>
 					</Form>

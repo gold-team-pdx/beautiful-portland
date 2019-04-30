@@ -13,8 +13,8 @@ export default class Header extends Component {
 		return (
 			<Menu
 				inverted
-				color = {"olive"}
-				size = "massive"
+				color={'olive'}
+				size="massive"
 				widths={5}
 				style={{
 					flexShrink: 100000, //don't allow flexbox to shrink it
@@ -41,13 +41,8 @@ export default class Header extends Component {
 					Volunteer Calender
 				</Menu.Item>
 
-				<Menu.Item
-					active={activeItem === 'Logo'}
-					as={NavLink}
-					onClick={this.handleItemClick}
-					to="/"
-				>
-				<img src='/logo-white.png' />
+				<Menu.Item active={activeItem === 'Logo'} as={NavLink} onClick={this.handleItemClick} to="/">
+					<img src="/logo-white.png" alt="logo" />
 				</Menu.Item>
 
 				<Menu.Item
@@ -56,7 +51,7 @@ export default class Header extends Component {
 					active={activeItem === 'Stories'}
 					onClick={this.handleItemClick}
 					to="/Stories"
-				 >
+				>
 					Stories
 				</Menu.Item>
 				<Menu.Item
