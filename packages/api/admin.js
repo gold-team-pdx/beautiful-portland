@@ -195,174 +195,170 @@ deleteEvent = function(req, res) {
 // Adds files to s3 bucket using filenames from user
 // Returns a success message to front end
 addPhotos = function(req, res) {
-  let AWS = this.amazon
-  const s3 = new AWS.S3({
-    endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-    s3ForcePathStyle: true,
-    accessKeyId: process.env.S3_ACCESS_KEY,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-  })
-  let file = req.body.filesToAdd
-  let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ""), 'base64')
-  const bucket = 'beautiful-portland-carousel-photos'
-  if(req.body.isFrontPage === true) {
-    file.fileName = 'frontPage/' + file.fileName
-  }
-  const params = {
-    Bucket: bucket, 
-    Key: file.fileName,
-    Body: buf
-  }
-  s3.upload(params, function(s3Err, data) {
-    if (s3Err) throw s3Err
-    console.log('File uploaded successfully')
-    res.send("upload successful")
-  })
+	let AWS = this.amazon
+	const s3 = new AWS.S3({
+		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+		s3ForcePathStyle: true,
+		accessKeyId: process.env.S3_ACCESS_KEY,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+	})
+	let file = req.body.filesToAdd
+	let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+	const bucket = 'beautiful-portland-carousel-photos'
+	if (req.body.isFrontPage === true) {
+		file.fileName = 'frontPage/' + file.fileName
+	}
+	const params = {
+		Bucket: bucket,
+		Key: file.fileName,
+		Body: buf
+	}
+	s3.upload(params, function(s3Err, data) {
+		if (s3Err) throw s3Err
+		console.log('File uploaded successfully')
+		res.send('upload successful')
+	})
 }
 
 // Removes multiple photos from s3 bucket using filesnames from urls.
 // Does not return anything, but console.logs success/failure
 removePhotos = function(req, res) {
-  let AWS = this.amazon
-  const s3 = new AWS.S3({
-    endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-    s3ForcePathStyle: true,
-    accessKeyId: process.env.S3_ACCESS_KEY,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-  })
-  const bucket = 'beautiful-portland-carousel-photos'
-  // Get presigned url and parse for file name
-  const urls = req.body.urlsToRemove
-  let files = []
-  urls.forEach(url => {
-    let file = url.split('/').pop().split('?').splice(0, 1).toString()
-    if(req.body.isFrontPage === true) {
-      files.push({Key: '/frontPage/' + file})
-    }
-    else {
-      files.push({Key: file});
-    }
-  })
-  //const url = req.body.urlToRemove
-  const params = {
-    Bucket: bucket,
-    Delete: {
-      Objects: files
-    }
-  }
-  try {
-      s3.headObject(params).promise()
-      console.log("File Found in S3")
-      try {
-          s3.deleteObjects(params).promise()
-          console.log("file deleted Successfully")
-      }
-      catch (err) {
-          console.log("ERROR in file Deleting : " + JSON.stringify(err))
-      }
-  } catch (err) {
-          console.log("File not Found ERROR : " + err.code)
-  }
+	let AWS = this.amazon
+	const s3 = new AWS.S3({
+		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+		s3ForcePathStyle: true,
+		accessKeyId: process.env.S3_ACCESS_KEY,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+	})
+	const bucket = 'beautiful-portland-carousel-photos'
+	// Get presigned url and parse for file name
+	const urls = req.body.urlsToRemove
+	let files = []
+	urls.forEach((url) => {
+		let file = url.split('/').pop().split('?').splice(0, 1).toString()
+		if (req.body.isFrontPage === true) {
+			files.push({ Key: '/frontPage/' + file })
+		} else {
+			files.push({ Key: file })
+		}
+	})
+	//const url = req.body.urlToRemove
+	const params = {
+		Bucket: bucket,
+		Delete: {
+			Objects: files
+		}
+	}
+	try {
+		s3.headObject(params).promise()
+		console.log('File Found in S3')
+		try {
+			s3.deleteObjects(params).promise()
+			console.log('file deleted Successfully')
+		} catch (err) {
+			console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+		}
+	} catch (err) {
+		console.log('File not Found ERROR : ' + err.code)
+	}
 }
 
 // Moves photos from in s3 bucket from front page to all photos
 // To do this move, copy the item first with the new key, then remove
 // the item with the old key.
 // Does not return anything, but console.logs success or failure.
-removeImagesFromFrontPage = function(req,res) {
-  let AWS = this.amazon
-  const s3 = new AWS.S3({
-    endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-    s3ForcePathStyle: true,
-    accessKeyId: process.env.S3_ACCESS_KEY,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-  })
-  const bucket = 'beautiful-portland-carousel-photos'
-  // Get presigned url and parse for file name
-  const urls = req.body.urlsToRemove
-  urls.forEach(url => {
-    let newFile = url.split('/').pop().split('?').splice(0, 1).toString()
-    // push old file to array to remove later
-    let file = 'frontPage/' + newFile
-    const params = {
-      Bucket: bucket, 
-      CopySource: '/' + bucket + '/' + file, 
-      Key: newFile
-    }
-    let data = s3.copyObject(params).promise()
-    // Now remove old files
-    data.then(() => {
-      console.log("file copied successfully!")
-      const params2 = {
-        Bucket: bucket,
-        Key: file
-      }
-      try {
-        s3.headObject(params2).promise()
-        console.log("File Found in S3")
-        try {
-            s3.deleteObject(params2).promise()
-            console.log("file deleted Successfully")
-        }
-        catch (err) {
-            console.log("ERROR in file Deleting : " + JSON.stringify(err))
-        }
-      } catch (err) {
-          console.log("File not Found ERROR : " + err.code)
-      }
-    })
-  })
+removeImagesFromFrontPage = function(req, res) {
+	let AWS = this.amazon
+	const s3 = new AWS.S3({
+		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+		s3ForcePathStyle: true,
+		accessKeyId: process.env.S3_ACCESS_KEY,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+	})
+	const bucket = 'beautiful-portland-carousel-photos'
+	// Get presigned url and parse for file name
+	const urls = req.body.urlsToRemove
+	urls.forEach((url) => {
+		let newFile = url.split('/').pop().split('?').splice(0, 1).toString()
+		// push old file to array to remove later
+		let file = 'frontPage/' + newFile
+		const params = {
+			Bucket: bucket,
+			CopySource: '/' + bucket + '/' + file,
+			Key: newFile
+		}
+		let data = s3.copyObject(params).promise()
+		// Now remove old files
+		data.then(() => {
+			console.log('file copied successfully!')
+			const params2 = {
+				Bucket: bucket,
+				Key: file
+			}
+			try {
+				s3.headObject(params2).promise()
+				console.log('File Found in S3')
+				try {
+					s3.deleteObject(params2).promise()
+					console.log('file deleted Successfully')
+				} catch (err) {
+					console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+				}
+			} catch (err) {
+				console.log('File not Found ERROR : ' + err.code)
+			}
+		})
+	})
 }
 
 // Add photo to front page from already uploaded photos.
 // To do this, we need to copy the photo from all photos
 // to /frontPage, then remove the other photo to prevent
 // duplicates.
-// Does not return anything (S3 doesn't return anything on delete), 
+// Does not return anything (S3 doesn't return anything on delete),
 // but console.logs errors/success
 addFromUploaded = function(req, res) {
-  let AWS = this.amazon
-  const s3 = new AWS.S3({
-    endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-    s3ForcePathStyle: true,
-    accessKeyId: process.env.S3_ACCESS_KEY,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-  })
-  const bucket = 'beautiful-portland-carousel-photos'
-  // Get presigned url and parse for file name
-  const urls = req.body.urlsToRemove
-  urls.forEach(url => {
-    let file = url.split('/').pop().split('?').splice(0, 1).toString()
-    // push old file to array to remove later
-    let newFile = 'frontPage/' + file
-    const params = {
-      Bucket: bucket, 
-      CopySource: '/' + bucket + '/' + file, 
-      Key: newFile
-    }
-    let data = s3.copyObject(params).promise()
-    // Now remove the old version of the file
-    data.then(() => {
-      console.log("file copied successfully!")
-      const params2 = {
-        Bucket: bucket,
-        Key: file
-      }
-      try {
-        s3.headObject(params2).promise()
-        console.log("File Found in S3")
-        try {
-            s3.deleteObject(params2).promise()
-            console.log("file deleted Successfully")
-        }
-        catch (err) {
-            console.log("ERROR in file Deleting : " + JSON.stringify(err))
-        }
-      } catch (err) {
-          console.log("File not Found ERROR : " + err.code)
-      }
-    })
-  })
+	let AWS = this.amazon
+	const s3 = new AWS.S3({
+		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+		s3ForcePathStyle: true,
+		accessKeyId: process.env.S3_ACCESS_KEY,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+	})
+	const bucket = 'beautiful-portland-carousel-photos'
+	// Get presigned url and parse for file name
+	const urls = req.body.urlsToRemove
+	urls.forEach((url) => {
+		let file = url.split('/').pop().split('?').splice(0, 1).toString()
+		// push old file to array to remove later
+		let newFile = 'frontPage/' + file
+		const params = {
+			Bucket: bucket,
+			CopySource: '/' + bucket + '/' + file,
+			Key: newFile
+		}
+		let data = s3.copyObject(params).promise()
+		// Now remove the old version of the file
+		data.then(() => {
+			console.log('file copied successfully!')
+			const params2 = {
+				Bucket: bucket,
+				Key: file
+			}
+			try {
+				s3.headObject(params2).promise()
+				console.log('File Found in S3')
+				try {
+					s3.deleteObject(params2).promise()
+					console.log('file deleted Successfully')
+				} catch (err) {
+					console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+				}
+			} catch (err) {
+				console.log('File not Found ERROR : ' + err.code)
+			}
+		})
+	})
 }
 
 addNewDraft = function(req, res) {
@@ -409,6 +405,78 @@ addNewPublished = function(req, res) {
 	)
 }
 
+editEventTemplate = function(req, res) {
+	client = this.dbClient
+	collection = client.db('events-form').collection('events')
+	let updatedEvent = new Object()
+	updatedEvent.date = 'MASTER'
+	updatedEvent.time = req.body.time
+	updatedEvent.location = req.body.location
+	updatedEvent.max_servings = req.body.max_servings
+	updatedEvent.categories = req.body.categories
+
+	collection.findOneAndReplace({ date: req.body.date }, updatedEvent, (err, doc) => {
+		if (err) {
+			console.log(err, 'Error trying to find or update master template ')
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		} else if (doc.value === null) {
+			console.log("Couldn't the master template")
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		} else {
+			console.log('Master template updated')
+			res.send({
+				status: 'SUCCESS'
+			})
+			return
+		}
+	})
+}
+
+getEventTemplate = function(req, res) {
+	client = this.dbClient
+	collection.find({ date: 'MASTER' }, { projection: { _id: 0 } }).toArray((err, docs) => {
+		if (err) {
+			console.log(err, 'Error trying to master template')
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		} else if (docs[0] == null) {
+			console.log("Couldn't fulfill document request")
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		}
+
+		let response_data = []
+		docs[0].categories.forEach((category) => {
+			var categoryObj = new Object()
+			categoryObj.name = category.name
+			categoryObj.max_signups = category.max_signups
+			categoryObj.min_servings = category.min_servings
+			categoryObj.food = category.food
+			if (categoryObj.food) {
+				categoryObj.min_vegan = category.min_vegan
+			}
+		})
+
+		res.send({
+			status: 'SUCCESS',
+			event_info: JSON.stringify(response_data),
+			time: docs[0].time,
+			location: docs[0].location,
+			max_servings: docs[0].max_servings
+		})
+	})
+}
+
 module.exports.addPhotos = addPhotos
 module.exports.removePhotos = removePhotos
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
@@ -419,3 +487,5 @@ module.exports.updateEvent = updateEvent
 module.exports.deleteEvent = deleteEvent
 module.exports.addNewDraft = addNewDraft
 module.exports.addNewPublished = addNewPublished
+module.exports.editEventTemplate = editEventTemplate
+module.exports.getEventTemplate = getEventTemplate
