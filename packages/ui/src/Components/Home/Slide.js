@@ -6,6 +6,7 @@ const Slide = ({ image }) => {
       backgroundImage: `url(${image})`,
       backgroundPosition: 'center top',
       backgroundSize: 'auto 100%',
+      objectFit: 'cover',
       backgroundRepeat: 'no-repeat',
       float: 'left',
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Header, Icon, Modal, Menu, Table } from 'semantic-ui-react'
+import { Button, Header, Icon, Menu, Table } from 'semantic-ui-react'
 import Moment from 'moment'
 import Axios from 'axios'
 

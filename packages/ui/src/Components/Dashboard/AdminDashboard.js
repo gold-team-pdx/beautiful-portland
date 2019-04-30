@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
-import { Menu, Header, Segment, Button } from 'semantic-ui-react'
+import { Menu, Header, Segment, Button, Image } from 'semantic-ui-react'
 import Axios from 'axios'
 import VolunteerList from './VolunteerList'
+import EditCarouselImages from './Images/EditCarouselImages'
+import ViewAllImages from './Images/ViewAllImages'
 import AddEvent from './AddEvent'
 import NewStory from './Stories/NewStory'
 import EditEvent from './EditEvent'
 import Moment from 'moment'
 import UpcomingEvents from './UpcomingEvents'
 import '../Stylesheets/AdminDashboard.css'
+import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 
 export default class AdminDashboard extends Component {
 	state = {
@@ -41,11 +44,14 @@ export default class AdminDashboard extends Component {
 			activeItem: 'editEvent'
 		})
 	}
+
 	render() {
 		const { activeItem } = this.state
 		// Add more components to be rendered here
 		const itemsToRender = {
 			volunteerList: <VolunteerList />,
+			editCarouselImages: <EditCarouselImages />,
+			viewAllImages: <ViewAllImages />,
 			addEvent: <AddEvent />,
 			newStory: <NewStory />,
 			viewEvents: <UpcomingEvents updateActiveDate={this.updateActiveDate} />,
@@ -55,7 +61,9 @@ export default class AdminDashboard extends Component {
 			return (
 				<div>
 					<Menu size="huge" inverted color="teal">
-						<Menu.Item>Logo Here?</Menu.Item>
+						<Menu.Item>
+							<Image src={logo} size="small" />
+						</Menu.Item>
 						<Menu.Menu position="right">
 							<Menu.Item>
 								{/* We could change this to be whichever user is logged in */}
@@ -88,7 +96,9 @@ export default class AdminDashboard extends Component {
 		return (
 			<div className="adminDash">
 				<Menu size="huge" inverted color="teal">
-					<Menu.Item>Logo Here?</Menu.Item>
+					<Menu.Item>
+						<Image src={logo} size="small" />
+					</Menu.Item>
 					<Menu.Menu position="right">
 						<Menu.Item>
 							{/* We could change this to be whichever user is logged in */}
@@ -129,18 +139,18 @@ export default class AdminDashboard extends Component {
 							<Menu.Item name="Images">Images</Menu.Item>
 							<Menu.Menu>
 								<Menu.Item
-									name="addImages"
-									active={activeItem === 'addImages'}
+									name="editCarouselImages"
+									active={activeItem === 'editCarouselImages'}
 									onClick={this.handleItemClick}
 								>
-									Add Image
+									Edit Front Page Images
 								</Menu.Item>
 								<Menu.Item
-									name="removeImages"
-									active={activeItem === 'removeImages'}
+									name="viewAllImages"
+									active={activeItem === 'viewAllImages'}
 									onClick={this.handleItemClick}
 								>
-									Remove Image
+									View All Images
 								</Menu.Item>
 							</Menu.Menu>
 							<Menu.Item name="stories">Stories</Menu.Item>
@@ -162,6 +172,7 @@ export default class AdminDashboard extends Component {
 							</Menu.Menu>
 						</Menu>
 					</div>
+					{/* <Header as='h1'> {this.state.message} </Header> */}
 					{/* Changed these to divs so we can work some CSS magic on them */}
 					<div className="adminPageContent">
 						{

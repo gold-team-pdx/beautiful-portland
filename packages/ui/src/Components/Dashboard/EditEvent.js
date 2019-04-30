@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Confirm, Form, Grid, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import DatePicker from 'react-datepicker'
 import Axios from 'axios'
 import Moment from 'moment'
 import '../Stylesheets/EditEvent.css'
-import { Checkbox } from 'semantic-ui-react'
 
 class EditEvent extends Component {
 	constructor(props) {

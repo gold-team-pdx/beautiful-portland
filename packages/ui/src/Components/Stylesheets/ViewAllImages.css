@@ -1,0 +1,29 @@
+.photoView {
+    width: 100%;
+    height: 100%;
+}
+
+.cardGroup {
+    padding-top:1%;
+
+}
+
+.ui.labeled.icon.button {
+    display: inline-block;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.ui.card.notClicked{
+    box-shadow: none !important;
+    animation: none !important;
+    position: static;
+}
+.ui.card.clicked {
+    border-style: solid;
+    border-color: red;
+    border-width: 3%;
+    box-shadow: none !important;
+    animation: none !important;
+
+}
