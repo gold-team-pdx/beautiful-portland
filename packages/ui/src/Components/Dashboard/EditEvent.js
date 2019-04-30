@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Form, Grid, Header, Icon, Table } from 'semantic-ui-react'
 import Axios from 'axios'
 import '../Stylesheets/EditEvent.css'
+import { Checkbox } from 'semantic-ui-react'
 
 class EditEvent extends Component {
 	constructor(props) {
@@ -76,6 +77,7 @@ class EditEvent extends Component {
 			submissions: this.state.submissions
 		}
 
+		console.log(updatedEvent)
 		Axios.post('/api/updateEvent', updatedEvent)
 			.then((response) => {
 				console.log(response, 'Updated Event')
@@ -172,6 +174,7 @@ class EditEvent extends Component {
 							<Table.HeaderCell>Vegan</Table.HeaderCell>
 							<Table.HeaderCell>Vegetarian</Table.HeaderCell>
 							<Table.HeaderCell>Gluten-Free</Table.HeaderCell>
+							<Table.HeaderCell />
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
@@ -193,6 +196,9 @@ class EditEvent extends Component {
 									<Table.Cell>{this.renderIcon(volunteer.vegan)}</Table.Cell>
 									<Table.Cell>{this.renderIcon(volunteer.vegetarian)}</Table.Cell>
 									<Table.Cell>{this.renderIcon(volunteer['gluten_free'])}</Table.Cell>
+									<Table.Cell>
+										<Checkbox>Delete</Checkbox>
+									</Table.Cell>
 								</Table.Row>
 							))}
 					</Table.Body>

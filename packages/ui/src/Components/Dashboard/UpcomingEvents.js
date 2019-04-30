@@ -18,13 +18,15 @@ class UpcomingEvents extends Component {
 
 	componentDidMount() {
 		this.initializeDates()
+		this.updateEvents(this.state.dates)
+		/*
 		let paths = []
 		this.state.dates.forEach((date) => {
 			const path = '/api/fullEvent?date=' + date
 			paths.push(path)
 		})
 
-		Axios.all(paths.map((l) => Axios.get(l)))
+		Axios.all(paths.map((url) => Axios.get(url)))
 			.then(
 				Axios.spread((...res) => {
 					res.forEach((event) => {
@@ -49,6 +51,7 @@ class UpcomingEvents extends Component {
 			.catch((err) => {
 				console.log(err)
 			})
+			*/
 	}
 
 	initializeDates = () => {

@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
-import { Form, Button, Dropdown, Segment } from 'semantic-ui-react'
+import { Header, Form, Button, Dropdown, Segment } from 'semantic-ui-react'
 import '../Stylesheets/Item.css'
 
 export default class Item extends Component {
 	constructor(props) {
 		super(props)
 		this.onChange = this.onChange.bind(this)
+		this.onCategoryChange = this.onCategoryChange.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 		this.validateField = this.validateField.bind(this)
 		this.errorClass = this.errorClass.bind(this)
+
 		this.state = {
+			cat_info: {},
 			description: '',
 			type: '',
 			servings: 0,
@@ -27,6 +30,9 @@ export default class Item extends Component {
 				volunteer_phone: '',
 				volunteer_email: ''
 			},
+			messageNeeded: false,
+			message: '',
+			disableAll: false,
 			typeValid: false,
 			descriptionValid: false,
 			servingsValid: false,
@@ -56,6 +62,9 @@ export default class Item extends Component {
 				volunteer_phone: '',
 				volunteer_email: ''
 			},
+			messageNeeded: false,
+			message: '',
+			disableAll: false,
 			typeValid: false,
 			descriptionValid: false,
 			servingsValid: false,
@@ -73,13 +82,22 @@ export default class Item extends Component {
 	}
 
 	updateCheckbox = (event, data) => {
-		this.setState({ [data.name]: data.checked })
+		this.setState({ [data.name]: data.checked }, this.validateForm)
 	}
 
 	onChange = (event, data) => {
 		this.setState({ [data.name]: data.value }, () => {
 			this.validateField(data.name, data.value)
 		})
+	}
+
+	onCategoryChange = (event, data) => {
+		this.clearForm()
+		let temp = data.options.find((elem) => {
+			return elem.key === data.value
+		})
+		this.validateField('type', data.value)
+		this.setState({ type: data.value, cat_info: temp.data }, this.validateForm)
 	}
 
 	validateField(fieldName, value) {
@@ -91,6 +109,8 @@ export default class Item extends Component {
 		let volunteer_emailValid = this.state.volunteer_emailValid
 		let descriptionValid = this.state.descriptionValid
 
+		let min_servings = this.state.vegan ? this.state.cat_info.min_vegan_servings : this.state.cat_info.min_servings
+
 		switch (fieldName) {
 			case 'type':
 				typeValid = value
@@ -101,10 +121,10 @@ export default class Item extends Component {
 				errors.description = descriptionValid ? '' : ' ✗ Message must be longer than five characters.'
 				break
 			case 'servings':
-				servingsValid = value > 0 && value <= this.props.max_servings
+				servingsValid = value >= min_servings && value <= this.props.max_servings
 				errors.servings = servingsValid
 					? ''
-					: ' ✗ Please enter a vaild number between 0~' + this.props.max_servings + '.'
+					: ' ✗ Please enter a vaild number between ' + min_servings + '~' + this.props.max_servings + '.'
 				break
 			case 'volunteer_name':
 				volunteer_nameValid = value.length > 2
@@ -137,15 +157,41 @@ export default class Item extends Component {
 	}
 
 	validateForm() {
-		this.setState({
-			formValid:
-				this.state.typeValid &&
-				this.state.servingsValid &&
-				this.state.volunteer_nameValid &&
-				this.state.volunteer_phoneValid &&
-				this.state.volunteer_emailValid &&
-				this.state.descriptionValid
-		})
+		let numVeganNeeded = this.state.cat_info.food
+			? this.state.cat_info.min_vegan - this.state.cat_info.real_vegan
+			: 0
+		let formValid =
+			this.state.typeValid &&
+			this.state.servingsValid &&
+			this.state.volunteer_nameValid &&
+			this.state.volunteer_phoneValid &&
+			this.state.volunteer_emailValid &&
+			this.state.descriptionValid
+
+		if (this.state.cat_info.real_signups >= this.state.cat_info.max_signups) {
+			this.setState({
+				formValid,
+				message:
+					'Sorry, but this course is full up on signups. Please consider volunteering for another category!\n',
+				messageNeeded: true,
+				disableAll: true
+			})
+		} else if (
+			this.state.cat_info.food &&
+			this.state.cat_info.real_signups + numVeganNeeded === this.state.cat_info.max_signups &&
+			!this.state.vegan
+		) {
+			this.setState({
+				formValid,
+				message: 'Signups for this category are limited to Vegan options only.\n',
+				messageNeeded: true
+			})
+		} else {
+			this.setState({
+				formValid,
+				messageNeeded: false
+			})
+		}
 	}
 
 	errorClass(error) {
@@ -153,22 +199,20 @@ export default class Item extends Component {
 	}
 
 	render() {
-		let options = []
-		this.props.event_info.forEach((category) => {
-			options.push({
+		let options = this.props.event_info.map((category) => {
+			return {
 				key: category.type,
 				text: category.type,
 				value: category.type,
-				servings: category.servings
-			})
+				data: category
+			}
 		})
-		let curType = options.find((elem) => {
-			return elem.key === this.state.type
-		})
-		let isDisabled = curType ? curType.servings >= this.props.max_servings : false
+
+		let disableSubmit = this.state.messageNeeded
 
 		return (
 			<div>
+				{this.state.messageNeeded && <Header as="h3">{this.state.message}</Header>}
 				<Segment>
 					<Form onSubmit={this.onSubmit}>
 						<br />
@@ -180,7 +224,7 @@ export default class Item extends Component {
 									<Dropdown
 										name="type"
 										value={this.state.type}
-										onChange={this.onChange}
+										onChange={this.onCategoryChange}
 										placeholder="type"
 										fluid
 										selection
@@ -205,7 +249,7 @@ export default class Item extends Component {
 									style={{ width: '370px' }}
 									label="Item"
 									placeholder="description"
-									disabled={isDisabled}
+									disabled={this.state.disableAll}
 								/>
 								<div>
 									<span>{this.state.errors.description || ' ✓'}</span>
@@ -213,30 +257,34 @@ export default class Item extends Component {
 							</Form.Group>
 						</div>
 						<br />
-						<Form.Group>
-							<Form.Checkbox
-								onChange={this.updateCheckbox}
-								checked={this.state.vegan}
-								name="vegan"
-								label="Vegan"
-								disabled={isDisabled}
-							/>
-							<Form.Checkbox
-								onChange={this.updateCheckbox}
-								checked={this.state.vegetarian}
-								name="vegetarian"
-								label="Vegetarian"
-								disabled={isDisabled}
-							/>
-							<Form.Checkbox
-								onChange={this.updateCheckbox}
-								checked={this.state.gluten_free}
-								name="gluten_free"
-								label="Gluten-free"
-								disabled={isDisabled}
-							/>
-						</Form.Group>
-						<br />
+						{this.state.cat_info.food && (
+							<div>
+								<Form.Group>
+									<Form.Checkbox
+										onChange={this.updateCheckbox}
+										checked={this.state.vegan}
+										name="vegan"
+										label="Vegan"
+										disabled={this.state.disableAll}
+									/>
+									<Form.Checkbox
+										onChange={this.updateCheckbox}
+										checked={this.state.vegetarian}
+										name="vegetarian"
+										label="Vegetarian"
+										disabled={this.state.disableAll}
+									/>
+									<Form.Checkbox
+										onChange={this.updateCheckbox}
+										checked={this.state.gluten_free}
+										name="gluten_free"
+										label="Gluten-free"
+										disabled={this.state.disableAll}
+									/>
+								</Form.Group>
+								<br />
+							</div>
+						)}
 
 						<Form.Group inline>
 							<div className={`input-wrapper ${this.errorClass(this.state.errors.servings)}`}>
@@ -247,7 +295,7 @@ export default class Item extends Component {
 										onChange={this.onChange}
 										inline
 										label="Servings"
-										disabled={isDisabled}
+										disabled={this.state.disableAll}
 									/>
 									<div>
 										<span>{this.state.errors.servings || ' ✓'}</span>
@@ -264,7 +312,7 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Name"
 									placeholder=" John"
-									disabled={isDisabled}
+									disabled={this.state.disableAll}
 								/>
 								<span>{this.state.errors.volunteer_name || ' ✓'}</span>
 							</div>
@@ -276,7 +324,7 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Email"
 									placeholder=" xxxx@gmail.com"
-									disabled={isDisabled}
+									disabled={this.state.disableAll}
 								/>
 								<span>{this.state.errors.volunteer_email || ' ✓'}</span>
 							</div>
@@ -288,12 +336,16 @@ export default class Item extends Component {
 									onChange={this.onChange}
 									label="Phone"
 									placeholder=" xxx-xxx-xxxx"
-									disabled={isDisabled}
+									disabled={this.state.disableAll}
 								/>
 								<span>{this.state.errors.volunteer_phone || ' ✓'}</span>
 							</div>
 						</Form.Group>
-						<Button color="green" disabled={!this.state.formValid || isDisabled}>
+
+						<Button
+							color="green"
+							disabled={!this.state.formValid || disableSubmit || this.state.disableAll}
+						>
 							Submit
 						</Button>
 					</Form>

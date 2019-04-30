@@ -51,13 +51,14 @@ volunteerFormGetEventInfo = function(req, res) {
                 max_signups: category.max_signups,
                 real_signups: 0,
                 min_servings: category.min_servings,
+                min_vegan_servings: Math.ceil(Math.floor(category.min_servings/3) / 10) * 10,
                 food: category.food,
                 min_vegan: category.min_vegan,
                 real_vegan: 0, 
                 servings: 0
             })
             category.submissions.forEach(sub => {
-                response_data[i].signups++
+                response_data[i].real_signups++
                 if(response_data[i].food && sub.vegan) {
                     response_data[i].real_vegan++
                 }
