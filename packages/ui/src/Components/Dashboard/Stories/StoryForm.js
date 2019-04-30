@@ -12,6 +12,7 @@ export default class StoryForm extends Component {
     this.close = this.close.bind(this)
     this.onChange = this.onChange.bind(this)
     this.state = {
+      _id: '',
       title: '',
       subtitle: '',
       content: '',

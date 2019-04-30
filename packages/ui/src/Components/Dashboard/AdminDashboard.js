@@ -16,7 +16,15 @@ export default class AdminDashboard extends Component {
         activeItem: 'welcomeMessage',
         adminName: "Anonymous",
         authenticated: false,
-        message: "Please Login"
+        message: "Please Login",
+        storyObj: {
+          _id: '',
+          edited_timestamp: '',
+          title : '',
+          hook : '',
+          content : '',
+          published_status : false
+        }
     }
     async componentDidMount () {
         //Need to generate and fill volunteer list from databases
@@ -33,7 +41,23 @@ export default class AdminDashboard extends Component {
         })
     }
 
-    updateGrandparent = async () => await this.setState({activeItem : 'editStory'})
+    updateGrandparent = (e) => {
+      this.setState({activeItem : 'editStory'})
+    }
+
+    passStoryGrandparent = (value) => {
+      this.setState({
+        storyObj: {
+          ...this.state.storyObj,
+        _id: value._id,
+        edited_timestamp: value.edited_timestamp,
+        title: value.title,
+        hook: value.hook,
+        content: value.Content,
+        published_status: value.published_status}
+      })
+    }
+
     handleItemClick = (e, { name }) => this.setState({activeItem: name})
 
     render() {
@@ -42,7 +66,11 @@ export default class AdminDashboard extends Component {
         const itemsToRender = {'volunteerList': <VolunteerList />, 'addEvent': <AddEvent />,
                                'newStory': <NewStory />, 'welcomeMessage' : <WelcomeMessage />,
                                'viewStories' : <ViewStories edit={this.state.activeItem}
-                                                updateGrandparent={this.updateGrandparent.bind(this)}/>, 'editStory' : <EditStory /> }
+                                                passStoryGrandparent={this.passStoryGrandparent}
+                                                story={this.state.storyObj}
+                                                updateGrandparent={this.updateGrandparent}/>,
+                                'editStory' : <EditStory /> }
+
         if (!this.state.authenticated){
             return(
                 <div>

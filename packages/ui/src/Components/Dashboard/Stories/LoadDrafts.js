@@ -5,6 +5,7 @@ import Axios from 'axios'
 export default class LoadDrafts extends Component {
   constructor(props){
     super(props)
+    /*this.passStoryParent = this.passStoryParent.bind(this)*/
     this.state = {
       activeIndex: -1,
       deleteId : 0
@@ -54,6 +55,15 @@ export default class LoadDrafts extends Component {
   }
 
   handleEdit = (e) => {
+    let draftObj = {
+      _id: this.props.sDraft._id,
+      edited_timestamp : this.props.sDraft.edited_timestamp,
+      title : this.props.sDraft.title,
+      hook: this.props.sDraft.hook,
+      content : this.props.sDraft.content,
+      published_status: this.props.sDraft.published_status
+    }
+    this.props.passStoryParent((this.props.storyObj : draftObj))
     this.props.updateParent((this.props.activeItem: 'editStory'))
   }
 
@@ -80,7 +90,7 @@ export default class LoadDrafts extends Component {
                                <Button.Group widths={3}>
                                  <Button color='blue'
                                          name='editDraft'
-                                         onClick={this.handleEdit.bind(this)}>Edit</Button>
+                                         onClick={this.handleEdit}>Edit</Button>
                                  <Button color='green'
                                          name='publishDraft'
                                          onClick={this.handlePublish}>Publish</Button>
