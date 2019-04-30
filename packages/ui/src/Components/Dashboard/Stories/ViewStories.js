@@ -13,8 +13,7 @@ export default class ViewStories extends Component {
       activeItem: 'loadDrafts',
       passEdit: false,
       draftStory : [],
-      publishStory: [],
-      storyObj: {}
+      publishStory: []
     }
   }
 
@@ -41,13 +40,15 @@ export default class ViewStories extends Component {
   handleEditClick = async () => await this.setState({passEdit: true})
   handlePublishClick = async () => await this.setState({activeItem: 'loadPublished'})
   handleDraftClick = async() => await this.setState({activeItem: 'loadDrafts'})
-  updateParent = (e) => {
+  updateParent = (e) =>
     this.props.updateGrandparent((this.props.activeItem: 'editStory'))
-  }
 
-  passStoryParent = (value) => {
-    this.props.passStoryGrandparent((this.props.storyObj: value))
-  }
+  updateParentID = (value) => {
+     this.props.updateGrandparentID(value)
+     console.log(value)
+   }
+
+
 
   render () {
 
@@ -57,17 +58,22 @@ export default class ViewStories extends Component {
     if(activeItem === 'loadPublished'){
       chooseRender = (
         this.state.publishStory && this.state.publishStory.map(sPublish =>
-          <LoadPublished edit={this.props.activeItem} passStoryParent={this.passStoryParent}
-                         updateParent={this.updateParent} story={this.props.storyObj}
-                         key={sPublish.edited_timestamp} sPublish={sPublish} /> )
+          <LoadPublished key={sPublish.edited_timestamp}
+                         sPublish={sPublish}
+                         updateParent={this.updateParent}
+                         edit={this.props.activeItem}
+                         editId={this.props.editId}
+                         updateParentID={this.updateParentID}/> )
       )
     } else if(activeItem === 'loadDrafts'){
       chooseRender = (
         this.state.draftStory && this.state.draftStory.map(sDraft =>
-          <LoadDrafts edit={this.props.activeItem} passStoryParent={this.passStoryParent}
-                      updateParent={this.updateParent} story={this.props.storyObj}
-                      key={sDraft.edited_timestamp} sDraft={sDraft} /> )
-
+          <LoadDrafts key={sDraft.edited_timestamp}
+                      sDraft={sDraft}
+                      updateParent={this.updateParent}
+                      edit={this.props.activeItem}
+                      editId={this.props.editId}
+                      updateParentID={this.updateParentID}/> )
       )
     }
 

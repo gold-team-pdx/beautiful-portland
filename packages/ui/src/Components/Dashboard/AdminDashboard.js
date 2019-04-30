@@ -17,14 +17,7 @@ export default class AdminDashboard extends Component {
         adminName: "Anonymous",
         authenticated: false,
         message: "Please Login",
-        storyObj: {
-          _id: '',
-          edited_timestamp: '',
-          title : '',
-          hook : '',
-          content : '',
-          published_status : false
-        }
+        editId : '0000'
     }
     async componentDidMount () {
         //Need to generate and fill volunteer list from databases
@@ -41,22 +34,15 @@ export default class AdminDashboard extends Component {
         })
     }
 
-    updateGrandparent = (e) => {
+    updateGrandparent = (e) =>
       this.setState({activeItem : 'editStory'})
+
+    updateGrandparentID = async (value) => {
+      await this.setState({editId: value})
+      await console.log(this.state.editId)
     }
 
-    passStoryGrandparent = (value) => {
-      this.setState({
-        storyObj: {
-          ...this.state.storyObj,
-        _id: value._id,
-        edited_timestamp: value.edited_timestamp,
-        title: value.title,
-        hook: value.hook,
-        content: value.Content,
-        published_status: value.published_status}
-      })
-    }
+
 
     handleItemClick = (e, { name }) => this.setState({activeItem: name})
 
@@ -65,10 +51,11 @@ export default class AdminDashboard extends Component {
         // Add more components to be rendered here
         const itemsToRender = {'volunteerList': <VolunteerList />, 'addEvent': <AddEvent />,
                                'newStory': <NewStory />, 'welcomeMessage' : <WelcomeMessage />,
-                               'viewStories' : <ViewStories edit={this.state.activeItem}
-                                                passStoryGrandparent={this.passStoryGrandparent}
-                                                story={this.state.storyObj}
-                                                updateGrandparent={this.updateGrandparent}/>,
+                               'viewStories' : <ViewStories
+                                                updateGrandparent={this.updateGrandparent}
+                                                edit={this.state.activeItem}
+                                                updateGrandparentID={this.updateGrandparentID}
+                                                editId={this.state.editId} />,
                                 'editStory' : <EditStory /> }
 
         if (!this.state.authenticated){

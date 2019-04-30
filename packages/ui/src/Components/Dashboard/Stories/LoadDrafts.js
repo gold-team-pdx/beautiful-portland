@@ -55,16 +55,16 @@ export default class LoadDrafts extends Component {
   }
 
   handleEdit = (e) => {
-    let draftObj = {
+   /*  let draftObj = {
       _id: this.props.sDraft._id,
       edited_timestamp : this.props.sDraft.edited_timestamp,
       title : this.props.sDraft.title,
       hook: this.props.sDraft.hook,
       content : this.props.sDraft.content,
       published_status: this.props.sDraft.published_status
-    }
-    this.props.passStoryParent((this.props.storyObj : draftObj))
+    } */
     this.props.updateParent((this.props.activeItem: 'editStory'))
+    this.props.updateParentID(this.props.sDraft._id)
   }
 
    render () {
