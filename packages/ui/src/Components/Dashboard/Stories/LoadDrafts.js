@@ -53,6 +53,10 @@ export default class LoadDrafts extends Component {
     Axios.all([this.moveToPublish(), this.handleDelete()])
   }
 
+  handleEdit = (e) => {
+    this.props.updateParent((this.props.activeItem: 'editStory'))
+  }
+
    render () {
      const { activeIndex } = this.state
 
@@ -76,7 +80,7 @@ export default class LoadDrafts extends Component {
                                <Button.Group widths={3}>
                                  <Button color='blue'
                                          name='editDraft'
-                                         onClick={this.handleItemClick}>Edit</Button>
+                                         onClick={this.handleEdit.bind(this)}>Edit</Button>
                                  <Button color='green'
                                          name='publishDraft'
                                          onClick={this.handlePublish}>Publish</Button>

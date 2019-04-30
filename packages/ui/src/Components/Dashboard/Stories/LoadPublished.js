@@ -30,6 +30,10 @@ export default class LoadPublished extends Component {
       this.forceUpdate()
   }
 
+  handleEdit = (e) => {
+    this.props.updateParent((this.props.activeItem: 'editStory'))
+  }
+
    render () {
      const { activeIndex } = this.state
      return (
@@ -54,7 +58,7 @@ export default class LoadPublished extends Component {
                                <Button.Group widths={2}>
                                  <Button color='blue'
                                          name='editDraft'
-                                         onClick={this.handleItemClick}>Edit</Button>
+                                         onClick={this.handleEdit}>Edit</Button>
                                  <Button color='red'
                                          name='deleteDraft'
                                          onClick={this.handleDelete}>Delete</Button>

@@ -11,6 +11,7 @@ export default class ViewStories extends Component {
 
     this.state = {
       activeItem: 'loadDrafts',
+      passEdit: false,
       draftStory : [],
       publishStory: []
     }
@@ -36,10 +37,12 @@ export default class ViewStories extends Component {
         })
     }
 
-
+  handleEditClick = async () => await this.setState({passEdit: true})
   handlePublishClick = async () => await this.setState({activeItem: 'loadPublished'})
   handleDraftClick = async() => await this.setState({activeItem: 'loadDrafts'})
-
+  updateParent = (e) => {
+    this.props.updateGrandparent((this.props.activeItem: 'EditStory'))
+  }
 
   render () {
 
@@ -49,12 +52,14 @@ export default class ViewStories extends Component {
     if(activeItem === 'loadPublished'){
       chooseRender = (
         this.state.publishStory && this.state.publishStory.map(sPublish =>
-          <LoadPublished key={sPublish.edited_timestamp} sPublish={sPublish} /> )
+          <LoadPublished edit={this.props.activeItem} updateParent={this.updateParent.bind(this)}
+                         key={sPublish.edited_timestamp} sPublish={sPublish} /> )
       )
     } else if(activeItem === 'loadDrafts'){
       chooseRender = (
         this.state.draftStory && this.state.draftStory.map(sDraft =>
-          <LoadDrafts key={sDraft.edited_timestamp} sDraft={sDraft} /> )
+          <LoadDrafts edit={this.props.activeItem} updateParent={this.updateParent.bind(this)}
+                      key={sDraft.edited_timestamp} sDraft={sDraft} /> )
 
       )
     }

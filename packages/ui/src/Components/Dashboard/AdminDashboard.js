@@ -6,6 +6,7 @@ import AddEvent from './AddEvent'
 import NewStory from './Stories/NewStory'
 import ViewStories from './Stories/ViewStories'
 import WelcomeMessage from './WelcomeMessage'
+import EditStory from './Stories/EditStory'
 import '../Stylesheets/AdminDashboard.css'
 
 
@@ -32,6 +33,7 @@ export default class AdminDashboard extends Component {
         })
     }
 
+    updateGrandparent = async () => await this.setState({activeItem : 'editStory'})
     handleItemClick = (e, { name }) => this.setState({activeItem: name})
 
     render() {
@@ -39,7 +41,8 @@ export default class AdminDashboard extends Component {
         // Add more components to be rendered here
         const itemsToRender = {'volunteerList': <VolunteerList />, 'addEvent': <AddEvent />,
                                'newStory': <NewStory />, 'welcomeMessage' : <WelcomeMessage />,
-                               'viewStories' : <ViewStories /> }
+                               'viewStories' : <ViewStories edit={this.state.activeItem}
+                                                updateGrandparent={this.updateGrandparent.bind(this)}/>, 'editStory' : <EditStory /> }
         if (!this.state.authenticated){
             return(
                 <div>
