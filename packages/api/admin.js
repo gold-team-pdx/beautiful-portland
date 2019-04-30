@@ -43,7 +43,8 @@ getFullEventInfo = function(req, res) {
 			coordinator: docs[0].coordinator,
 			coordinator_phone: docs[0].coordinator_phone,
 			max_servings: docs[0].max_servings,
-			date: docs[0].date
+			date: docs[0].date,
+			time: docs[0].time
 		})
 	})
 }
@@ -89,7 +90,7 @@ updateEvent = function(req, res) {
 	let response_data = []
 	let updatedEvent = new Object()
 	updatedEvent.date = req.body.date
-	//updatedEvent.time = req.body.time
+	updatedEvent.time = req.body.time
 	updatedEvent.coordinator = req.body.coordinator
 	updatedEvent.coordinator_phone = req.body.coordinator_phone
 	updatedEvent.location = req.body.location
@@ -111,7 +112,6 @@ updateEvent = function(req, res) {
 			})
 			return
 		}
-		updatedEvent.time = docs[0].time
 		updatedEvent.max_servings = docs[0].max_servings
 		docs[0].categories.forEach((category) => {
 			updatedEvent.categories.push({

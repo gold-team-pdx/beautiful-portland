@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Confirm, Button, Header, Icon, Modal, Menu, Table } from 'semantic-ui-react'
+import { Button, Header, Icon, Modal, Menu, Table } from 'semantic-ui-react'
 import Moment from 'moment'
 import Axios from 'axios'
 
@@ -19,39 +19,6 @@ class UpcomingEvents extends Component {
 	componentDidMount() {
 		this.initializeDates()
 		this.updateEvents(this.state.dates)
-		/*
-		let paths = []
-		this.state.dates.forEach((date) => {
-			const path = '/api/fullEvent?date=' + date
-			paths.push(path)
-		})
-
-		Axios.all(paths.map((url) => Axios.get(url)))
-			.then(
-				Axios.spread((...res) => {
-					res.forEach((event) => {
-						if (event.data['event_info']) {
-							let temp = JSON.parse(event.data['event_info'])
-							let newEvent = {
-								coordinator: event.data.coordinator,
-								phone: event.data.coordinator_phone,
-								location: event.data.location,
-								volunteer_signups: temp.length,
-								servings: this.calculateServings(temp),
-								volunteers: temp,
-								date: event.data.date
-							}
-							this.setState((prevState) => ({
-								events: [ ...prevState.events, newEvent ]
-							}))
-						}
-					})
-				})
-			)
-			.catch((err) => {
-				console.log(err)
-			})
-			*/
 	}
 
 	initializeDates = () => {

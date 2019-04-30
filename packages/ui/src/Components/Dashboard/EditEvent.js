@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import { Button, Form, Grid, Header, Icon, Table } from 'semantic-ui-react'
+import { Button, Confirm, Form, Grid, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import DatePicker from 'react-datepicker'
 import Axios from 'axios'
+import Moment from 'moment'
 import '../Stylesheets/EditEvent.css'
 import { Checkbox } from 'semantic-ui-react'
 
@@ -11,16 +13,19 @@ class EditEvent extends Component {
 			location: '',
 			coordinator: '',
 			coordinator_phone: '',
+			newTime: new Date(),
+			time: '',
 			submissions: [],
 			errors: {
 				location: '',
-				coordinator_name: '',
+				coordinator: '',
 				coordinator_phone: ''
 			},
+			formValid: false,
 			locationValid: false,
 			coordinatorValid: false,
-			phoneValid: false,
-			formValid: false
+			coordinator_phoneValid: false,
+			open: false
 		}
 	}
 	componentDidMount() {
@@ -32,6 +37,7 @@ class EditEvent extends Component {
 						coordinator: res.data.coordinator,
 						coordinator_phone: res.data.coordinator_phone,
 						location: res.data.location,
+						time: res.data.time,
 						submissions: JSON.parse(res.data['event_info'])
 					})
 				}
@@ -44,40 +50,33 @@ class EditEvent extends Component {
 	clearForm = () => {
 		this.setState({
 			location: '',
-			coordinator_name: '',
+			coordinator: '',
 			coordinator_phone: '',
-			volunteers: [],
+			time: '',
+			submissions: [],
 			errors: {
 				location: '',
-				coordinator_name: '',
+				coordinator: '',
 				coordinator_phone: ''
 			},
+			formValid: false,
 			locationValid: false,
 			coordinatorValid: false,
-			phoneValid: false,
-			formValid: false
+			coordinator_phoneValid: false
 		})
 	}
 
-	cancelUpdate = () => {
-		this.setState({
-			location: '',
-			coordinator: '',
-			coordinator_phone: ''
-		})
-	}
-
-	onSubmit = (e) => {
-		e.preventDefault()
+	onSubmit = () => {
+		this.closeModal()
 		let updatedEvent = {
 			date: this.props.date,
+			time: Moment(this.state.newTime).format('h:mm A'),
 			coordinator: this.state.coordinator,
 			coordinator_phone: this.state.coordinator_phone,
 			location: this.state.location,
 			submissions: this.state.submissions
 		}
 
-		console.log(updatedEvent)
 		Axios.post('/api/updateEvent', updatedEvent)
 			.then((response) => {
 				console.log(response, 'Updated Event')
@@ -93,24 +92,28 @@ class EditEvent extends Component {
 		})
 	}
 
+	timeChanged = (t) => {
+		this.setState({ newTime: t })
+	}
+
 	validateField = (fieldName, value) => {
 		let errors = this.state.errors
 		let locationValid = this.state.locationValid
 		let coordinatorValid = this.state.coordinatorValid
-		let phoneValid = this.state.phoneValid
+		let coordinator_phoneValid = this.state.coordinator_phoneValid
 
 		switch (fieldName) {
 			case 'location':
 				locationValid = value.length > 2
-				errors.location = locationValid ? '' : ' ✗ Please enter a vaild location.'
+				errors.location = locationValid ? '' : ' ✗ Please enter a vaild Location.'
 				break
-			case 'coordinator_name':
+			case 'coordinator':
 				coordinatorValid = value.length > 2
-				errors.coordinator_name = coordinatorValid ? '' : ' ✗ Please enter a vaild name.'
+				errors.coordinator = coordinatorValid ? '' : ' ✗ Please enter a vaild Name.'
 				break
 			case 'coordinator_phone':
-				phoneValid = value.match(/^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/i)
-				errors.coordinator_phone = phoneValid ? '' : ' ✗ Please enter a vaild phone number.'
+				coordinator_phoneValid = value.match(/^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/i)
+				errors.coordinator_phone = coordinator_phoneValid ? '' : ' ✗ Please enter a vaild Phone Number.'
 				break
 			default:
 				break
@@ -121,17 +124,21 @@ class EditEvent extends Component {
 				errors,
 				locationValid,
 				coordinatorValid,
-				phoneValid
+				coordinator_phoneValid
 			},
 			this.validateForm
 		)
 	}
 
 	validateForm = () => {
-		if (this.state.locationValid && this.state.coordinatorValid && this.state.phoneValid) {
-			this.setState({ formValid: true })
+		if (this.state.coordinatorValid || this.state.coordinator_phoneValid || this.state.locationValid) {
+			this.setState({
+				formValid: true
+			})
 		} else {
-			this.setState({ formValid: false })
+			this.setState({
+				formValid: false
+			})
 		}
 	}
 
@@ -147,12 +154,23 @@ class EditEvent extends Component {
 		}
 	}
 
+	openModal = () => {
+		this.setState({ open: true })
+	}
+
+	closeModal = () => {
+		this.setState({ open: false })
+	}
+
 	render() {
 		return (
 			<div>
 				<Header as="h3">{this.props.date}</Header>
 				<Grid>
 					<Grid.Row>
+						<Grid.Column width={2}>
+							<h4>Time:{this.state.time && this.state.time}</h4>
+						</Grid.Column>
 						<Grid.Column width={4}>
 							<h4>Location: {this.state.location && this.state.location}</h4>
 						</Grid.Column>
@@ -174,7 +192,6 @@ class EditEvent extends Component {
 							<Table.HeaderCell>Vegan</Table.HeaderCell>
 							<Table.HeaderCell>Vegetarian</Table.HeaderCell>
 							<Table.HeaderCell>Gluten-Free</Table.HeaderCell>
-							<Table.HeaderCell />
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
@@ -196,14 +213,12 @@ class EditEvent extends Component {
 									<Table.Cell>{this.renderIcon(volunteer.vegan)}</Table.Cell>
 									<Table.Cell>{this.renderIcon(volunteer.vegetarian)}</Table.Cell>
 									<Table.Cell>{this.renderIcon(volunteer['gluten_free'])}</Table.Cell>
-									<Table.Cell>
-										<Checkbox>Delete</Checkbox>
-									</Table.Cell>
 								</Table.Row>
 							))}
 					</Table.Body>
 				</Table>
-				<Form onSubmit={this.onSubmit}>
+				<Form>
+					<br />
 					<Form.Group>
 						<div className={`input-wrapper ${this.errorClass(this.state.errors.location)}`}>
 							<Form.Input
@@ -215,7 +230,7 @@ class EditEvent extends Component {
 							/>
 							<span>{this.state.errors.location || ' ✓'}</span>
 						</div>
-						<div className={`input-wrapper ${this.errorClass(this.state.errors.coordinator_name)}`}>
+						<div className={`input-wrapper ${this.errorClass(this.state.errors.coordinator)}`}>
 							<Form.Input
 								name="coordinator"
 								value={this.state.coordinator}
@@ -223,7 +238,7 @@ class EditEvent extends Component {
 								label="Coordinator"
 								placeholder="Julie"
 							/>
-							<span>{this.state.errors.coordinator_name || ' ✓'}</span>
+							<span>{this.state.errors.coordinator || ' ✓'}</span>
 						</div>
 						<div className={`input-wrapper ${this.errorClass(this.state.errors.coordinator_phone)}`}>
 							<Form.Input
@@ -235,12 +250,44 @@ class EditEvent extends Component {
 							/>
 							<span>{this.state.errors.coordinator_phone || ' ✓'}</span>
 						</div>
+						<Form.Field>
+							<label>Event Time</label>
+							<DatePicker
+								selected={this.state.newTime}
+								onChange={this.timeChanged}
+								showTimeSelect
+								showTimeSelectOnly
+								timeIntervals={30}
+								dateFormat="h:mm aa"
+								timeCaption="Time"
+							/>
+						</Form.Field>
 					</Form.Group>
 					<br />
 					<Form.Group inline>
-						<Button color="teal" disabled={this.state.formValid}>
-							Update
-						</Button>
+						<Modal
+							open={this.state.open}
+							trigger={
+								<Button color="teal" onClick={this.openModal}>
+									Update
+								</Button>
+							}
+							onClose={this.closeModal}
+							closeIcon
+						>
+							<Header icon="calendar alternate outline" content="Update Event" />
+							<Modal.Content>
+								<h3>Are you sure you want to update the event ?</h3>
+							</Modal.Content>
+							<Modal.Actions>
+								<Button color="red" onClick={this.closeModal}>
+									<Icon name="remove" /> No
+								</Button>
+								<Button color="green" onClick={this.onSubmit}>
+									<Icon name="checkmark" /> Yes
+								</Button>
+							</Modal.Actions>
+						</Modal>
 					</Form.Group>
 				</Form>
 			</div>
