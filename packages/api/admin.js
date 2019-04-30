@@ -406,6 +406,76 @@ addNewPublished = function(req, res) {
   )
 }
 
+editEventTemplate = function(req, res) {
+  client = this.dbClient
+  collection = client.db("events-form").collection("events")
+  let updatedEvent = new Object()
+  updatedEvent.date = 'MASTER'
+  updatedEvent.time = req.body.time
+  updatedEvent.location = req.body.location
+  updatedEvent.max_servings = req.body.max_servings
+  updatedEvent.categories = req.body.categories
+    
+  collection.findOneAndReplace({date: req.body.date}, updatedEvent, (err, doc) => {
+    if(err) {
+        console.log(err, "Error trying to find or update master template ")
+        res.send({
+            status: 'FAILURE'
+        })
+        return
+    } else if( doc.value === null) {
+        console.log("Couldn't the master template")
+        res.send({
+            status: 'FAILURE'
+        })
+        return
+    } else {
+        console.log("Master template updated")
+        res.send({
+            status: 'SUCCESS'
+        })
+        return
+    }
+  })
+}
+
+getEventTemplate = function(req, res) {
+  client = this.dbClient
+  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+    if(err) {
+      console.log(err, "Error trying to master template")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs[0] == null) {
+      console.log("Couldn't fulfill document request")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+
+    let response_data = []
+    docs[0].categories.forEach(category => {
+      var categoryObj = new Object
+      categoryObj.name = category.name
+      categoryObj.max_signups = category.max_signups
+      categoryObj.min_servings = category.min_servings
+      categoryObj.food = category.food
+      if (categoryObj.food) { categoryObj.min_vegan = category.min_vegan }
+    })
+
+    res.send({
+       status: 'SUCCESS',
+       event_info: JSON.stringify(response_data),
+       time: docs[0].time,
+       location: docs[0].location,
+       max_servings: docs[0].max_servings
+     })
+ })
+}
+
 module.exports.addPhotos = addPhotos
 module.exports.removePhotos = removePhotos
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
@@ -416,3 +486,5 @@ module.exports.updateEvent = updateEvent
 module.exports.deleteEvent = deleteEvent
 module.exports.addNewDraft = addNewDraft
 module.exports.addNewPublished = addNewPublished
+module.exports.editEventTemplate = editEventTemplate
+module.exports.getEventTemplate = getEventTemplate
