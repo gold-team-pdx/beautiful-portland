@@ -18,7 +18,8 @@ export default class StoryForm extends Component {
       content: '',
       publish_status: false,
       editedTimestamp: '',
-      open: false
+      open: false,
+      isEnabled: false
     }
   }
 
@@ -80,7 +81,8 @@ export default class StoryForm extends Component {
     hook: '',
     content: '',
     publish_status: false,
-    open: false
+    open: false,
+    isEnabled : false
   })
 
   this.close()
@@ -88,10 +90,17 @@ export default class StoryForm extends Component {
 
   open = () => this.setState({ open: true })
   close = () => this.setState({ open: false })
-  onChange = e => this.setState({ [e.target.name]: e.target.value })
+  onChange = async (e) => {
+    await this.setState({ [e.target.name]: e.target.value })
+    console.log(this.state.title + ' ' + this.state.hook + ' ' + this.state.content)
+    if(this.state.title && this.state.hook && this.state.content){
+      this.setState({isEnabled : true})
+    }
+  }
+
+
 
   render() {
-
     return (
       <Segment>
         <Form>
@@ -105,7 +114,7 @@ export default class StoryForm extends Component {
           </Form.Field>
           <Form.Field>
           <label>Subtitle</label>
-          <input name="subtitle"
+          <input name="hook"
                  placeholder="Subtitle"
                  value={this.state.hook}
                  onChange={this.onChange}
@@ -122,7 +131,10 @@ export default class StoryForm extends Component {
          </Form.Field>
          <Grid stackable columns={3}>
           <Grid.Column>
-             <Button color="blue" fluid onClick={this.handleSave}>Save</Button>
+             <Button color="blue"
+                     fluid
+                     disabled={!this.state.isEnabled}
+                     onClick={this.handleSave}>Save</Button>
              <Confirm open={this.state.open}
                       content='Your Story was saved as a draft'
                       onCancel={this.close}
@@ -130,7 +142,10 @@ export default class StoryForm extends Component {
              />
           </Grid.Column>
           <Grid.Column >
-             <Button color="green" fluid onClick={this.handlePublish}>Publish</Button>
+             <Button color="green"
+                     fluid
+                     disabled={!this.state.isEnabled}
+                     onClick={this.handlePublish}>Publish</Button>
              <Confirm open={this.state.open}
                       content='Your Story was published'
                       onCancel={this.close}
