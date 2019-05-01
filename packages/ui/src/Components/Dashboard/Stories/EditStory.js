@@ -11,6 +11,7 @@ export default class EditStory extends Component {
     return(
       <div className="storyform">
        <Header as="h1">Edit Story</Header>
+       <Header as="h5">Clear Form will result in loss of original story</Header>
        <StoryForm editId={this.props.editId}/>
     </div>
     )

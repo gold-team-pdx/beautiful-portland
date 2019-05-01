@@ -30,6 +30,7 @@ export default class LoadDrafts extends Component {
       .catch((err) => {
          console.log(err);
       })
+
   }
   moveToPublish = () => {
     let data = {
@@ -47,6 +48,7 @@ export default class LoadDrafts extends Component {
     .catch(err => {
       console.log(err, "Try again.")
     })
+    
   }
 
   handlePublish = () => {

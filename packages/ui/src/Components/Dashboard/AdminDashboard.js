@@ -42,8 +42,6 @@ export default class AdminDashboard extends Component {
       await console.log(this.state.editId)
     }
 
-
-
     handleItemClick = (e, { name }) => this.setState({activeItem: name})
 
     render() {

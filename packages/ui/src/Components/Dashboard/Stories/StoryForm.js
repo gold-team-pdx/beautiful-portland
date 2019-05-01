@@ -5,6 +5,7 @@ import Axios from 'axios'
 export default class StoryForm extends Component {
   constructor(props){
     super(props)
+    /*Prolly dont need these bindings since using arrow func, refactor*/
     this.handlePublish = this.handlePublish.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.clearForm = this.clearForm.bind(this)
@@ -24,9 +25,7 @@ export default class StoryForm extends Component {
   }
 
   componentDidMount = () => {
-    let editId = this.props.editId
-    console.log(editId)
-    if(editId !== '0000' || editId !== null || editId !== undefined) {
+    if(this.props.editId !== undefined) {
     Axios.post('/api/getStoryEdit', { id: this.props.editId })
         .then((response) => {
          console.log(response)
@@ -59,6 +58,7 @@ export default class StoryForm extends Component {
     console.log(this.state)
   }
 
+ /*Checks for publish_status if load through edit*/
   handleSave = (e) => {
     if(this.state.publish_status) {
       this.handlePublish()
@@ -82,23 +82,18 @@ export default class StoryForm extends Component {
     content: '',
     publish_status: false,
     open: false,
-    isEnabled : false
-  })
-
-  this.close()
-}
+    isEnabled : false })
+    this.close()
+ }
 
   open = () => this.setState({ open: true })
   close = () => this.setState({ open: false })
   onChange = async (e) => {
     await this.setState({ [e.target.name]: e.target.value })
-    console.log(this.state.title + ' ' + this.state.hook + ' ' + this.state.content)
     if(this.state.title && this.state.hook && this.state.content){
       this.setState({isEnabled : true})
     }
   }
-
-
 
   render() {
     return (
@@ -153,7 +148,7 @@ export default class StoryForm extends Component {
              />
           </Grid.Column>
           <Grid.Column>
-            <Button color="red" fluid /*floated='right'*/ onClick={this.open}>Delete</Button>
+            <Button color="red" fluid /*floated='right'*/ onClick={this.open}>Clear Form</Button>
             <Confirm open={this.state.open} onCancel={this.close} onConfirm={this.clearForm} />
           </Grid.Column>
           </Grid>

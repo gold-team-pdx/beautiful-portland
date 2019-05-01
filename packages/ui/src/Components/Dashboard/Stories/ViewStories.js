@@ -12,6 +12,7 @@ export default class ViewStories extends Component {
     this.state = {
       activeItem: 'loadDrafts',
       passEdit: false,
+      shouldRerender: false,
       draftStory : [],
       publishStory: []
     }
@@ -35,6 +36,7 @@ export default class ViewStories extends Component {
             publishStory : tempPubStory
           })
         })
+        this.setState({shouldRerender : false})
     }
 
   handleEditClick = async () => await this.setState({passEdit: true})
@@ -47,8 +49,6 @@ export default class ViewStories extends Component {
      this.props.updateGrandparentID(value)
      console.log(value)
    }
-
-
 
   render () {
 
