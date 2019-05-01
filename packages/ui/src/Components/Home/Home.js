@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Slider from './Slider'
 import DonateButton from './DonateButton'
-import Footer from './Footer'
+import Header from './Header'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
 
@@ -9,6 +9,9 @@ export default class Home extends Component {
 	render() {
 		return (
 			<div className="Home">
+			    <div style={{ flex: 1, top: 0, width: '100%', margin:"auto" }}>
+					  <Header />
+					</div>
 				<div className="Logo">
 					{/* <h1 className="Logo"></h1> */}
 				</div>
@@ -30,9 +33,7 @@ export default class Home extends Component {
 						mattis, at sodales nisl tempus. Pellentesque at risus a augue maximus venenatis vitae quis ante.
 					</h5>
 				</div>
-				<div style={{ flex: 1, position: 'fixed', bottom: 0, width: '100%' }}>
-					<Footer />
-				</div>
+
 			</div>
 		)
 	}
