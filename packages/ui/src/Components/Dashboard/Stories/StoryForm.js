@@ -14,18 +14,39 @@ export default class StoryForm extends Component {
     this.state = {
       _id: '',
       title: '',
-      subtitle: '',
+      hook: '',
       content: '',
-      publishedStatus: false,
+      publish_status: false,
       editedTimestamp: '',
       open: false
     }
   }
 
+  componentDidMount = () => {
+    let editId = this.props.editId
+    console.log(editId)
+    if(editId !== '0000' || editId !== null || editId !== undefined) {
+    Axios.post('/api/getStoryEdit', { id: this.props.editId })
+        .then((response) => {
+         console.log(response)
+         this.setState({
+           _id : response.data._id,
+         title :response.data.title,
+         hook :  response.data.hook,
+         content : response.data.content,
+         editedTimestamp : response.data.edited_timestamp,
+         publish_status : response.data.publish_status
+      })
+    })
+       .catch((error) => {
+         console.log(error)
+      })
+    }
+  }
+
 
   handlePublish = async (e) => {
-    e.preventDefault()
-    await this.setState({ publishedStatus : true })
+    await this.setState({ publish_status : true })
     Axios.post("/api/addPublish", this.state)
       .then(response => {
         console.log(response, "Story has been published")
@@ -38,14 +59,17 @@ export default class StoryForm extends Component {
   }
 
   handleSave = (e) => {
-    e.preventDefault()
-    Axios.post("/api/addDraft", this.state)
-      .then(response => {
-        console.log(response, "Story saved to drafts")
-      })
-      .catch(err => {
-        console.log(err, "Try again.")
-      })
+    if(this.state.publish_status) {
+      this.handlePublish()
+    } else {
+      Axios.post("/api/addDraft", this.state)
+       .then(response => {
+         console.log(response, "Story saved to drafts")
+       })
+       .catch(err => {
+         console.log(err, "Try again.")
+       })
+     }
     this.open()
     console.log(this.state)
   }
@@ -53,9 +77,9 @@ export default class StoryForm extends Component {
   clearForm = () => {
     this.setState({
     title: '',
-    subtitle: '',
+    hook: '',
     content: '',
-    publishedStatus: false,
+    publish_status: false,
     open: false
   })
 
@@ -83,7 +107,7 @@ export default class StoryForm extends Component {
           <label>Subtitle</label>
           <input name="subtitle"
                  placeholder="Subtitle"
-                 value={this.state.subtitle}
+                 value={this.state.hook}
                  onChange={this.onChange}
          />
          </Form.Field>

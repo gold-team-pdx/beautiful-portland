@@ -32,6 +32,7 @@ export default class LoadPublished extends Component {
 
   handleEdit = (e) => {
     this.props.updateParent((this.props.activeItem: 'editStory'))
+    this.props.updateParentID(this.props.sPublish._id)
   }
 
    render () {

@@ -11,7 +11,7 @@ export default class EditStory extends Component {
     return(
       <div className="storyform">
        <Header as="h1">Edit Story</Header>
-       <StoryForm />
+       <StoryForm editId={this.props.editId}/>
     </div>
     )
   }

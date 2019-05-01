@@ -56,7 +56,7 @@ export default class AdminDashboard extends Component {
                                                 edit={this.state.activeItem}
                                                 updateGrandparentID={this.updateGrandparentID}
                                                 editId={this.state.editId} />,
-                                'editStory' : <EditStory /> }
+                                'editStory' : <EditStory editId={this.state.editId}/> }
 
         if (!this.state.authenticated){
             return(

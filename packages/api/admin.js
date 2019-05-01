@@ -79,15 +79,16 @@ getVolunteerList = function(req, res) {
   }
 
 addNewDraft = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID;
   let client = this.dbClient
   collection = client.db("stories_example1").collection("drafts")
   collection.updateOne(
-  { "edited_timestamp" : req.body.edited_timestamp },
+  { "_id" : ObjectId(req.body._id) },
   { $set : {
        "edited_timestamp" : new Date(),
-       "publish_status" : req.body.publishedStatus,
+       "publish_status" : req.body.publish_status,
        "title" : req.body.title,
-       "hook" : req.body.subtitle,
+       "hook" : req.body.hook,
        "content" : req.body.content,
   }},
   { upsert : true },
@@ -101,15 +102,16 @@ addNewDraft = function(req, res) {
 }
 
 addNewPublished = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID;
   let client = this.dbClient
   collection = client.db("stories_example1").collection("published")
   collection.updateOne(
-    { "edited_timestamp" : req.body.edited_timestamp },
+    { "_id" : ObjectId(req.body._id) },
     { $set: {
         "edited_timestamp" : new Date(),
-        "publish_status" : req.body.publishedStatus,
+        "publish_status" : req.body.publish_status,
         "title" : req.body.title,
-        "hook" : req.body.subtitle,
+        "hook" : req.body.hook,
         "content" : req.body.content
     }},
     { upsert : true },
@@ -142,7 +144,7 @@ getPublishedStory = function(req, res) {
     let response_data = []
     docs.map(pubStory => {
          var publishObj = new Object()
-         publishObj.original_timestamp = pubStory._id.getTimestamp()
+         publishObj._id = pubStory._id
          publishObj.edited_timestamp = pubStory.edited_timestamp
          publishObj.title = pubStory.title
          publishObj.hook = pubStory.hook
@@ -210,7 +212,7 @@ deleteDraft = function(req, res) {
 }
 
 deletePublish = function(req, res) {
-  console.log(req.body.deleteId)
+  //console.log(req.body.deleteId)
   var ObjectId = require('mongodb').ObjectID;
   let client = this.dbClient
   collection = client.db("stories_example1").collection("published")
@@ -226,6 +228,34 @@ deletePublish = function(req, res) {
   )
 }
 
+getStoryEdit = function(req, res) {
+  console.log(req.body.id)
+  var ObjectId = require('mongodb').ObjectID;
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.findOne(
+    { '_id' : ObjectId(req.body.id) },
+    function(err,result) {
+      if (err) {
+        throw err
+      } else if(!result) {
+          collection = client.db("stories_example1").collection("drafts")
+          collection.findOne(
+            { '_id' : ObjectId(req.body.id) },
+            function(e,r) {
+              if(err) {
+                 throw err
+              } else {
+                res.send(r)
+              }
+            }
+          )
+         } else {
+           res.send(result)
+       }
+   })
+}
+
 
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
@@ -235,3 +265,4 @@ module.exports.getPublishedStory = getPublishedStory
 module.exports.getDraftedStories = getDraftedStories
 module.exports.deleteDraft = deleteDraft
 module.exports.deletePublish = deletePublish
+module.exports.getStoryEdit = getStoryEdit
