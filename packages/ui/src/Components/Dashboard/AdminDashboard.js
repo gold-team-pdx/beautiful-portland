@@ -18,12 +18,12 @@ import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 export default class AdminDashboard extends Component {
 	state = {
 		// Default active content
-		activeItem: 'welcomMessage',
+		activeItem: 'welcomeMessage',
 		activeDate: new Moment().format('MM-DD-YY'),
 		adminName: 'Anonymous',
 		authenticated: false,
 		message: 'Please Login',
-    editId : '0000'
+                editId : '0000'
 	}
 	async componentDidMount() {
 		//Need to generate and fill volunteer list from databases
