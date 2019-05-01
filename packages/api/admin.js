@@ -83,7 +83,7 @@ addNewDraft = function(req, res) {
   let client = this.dbClient
   collection = client.db("stories_example1").collection("drafts")
   collection.updateOne(
-  { "_id" : ObjectId(req.body._id) },
+  { "edited_timestamp" : req.body.edited_timestamp },
   { $set : {
        "edited_timestamp" : new Date(),
        "publish_status" : req.body.publish_status,
@@ -102,11 +102,10 @@ addNewDraft = function(req, res) {
 }
 
 addNewPublished = function(req, res) {
-  var ObjectId = require('mongodb').ObjectID;
   let client = this.dbClient
   collection = client.db("stories_example1").collection("published")
   collection.updateOne(
-    { "_id" : ObjectId(req.body._id) },
+    { "edited_timestamp" : req.body.edited_timestamp },
     { $set: {
         "edited_timestamp" : new Date(),
         "publish_status" : req.body.publish_status,
@@ -195,7 +194,6 @@ getDraftedStories = function(req, res) {
 }
 
 deleteDraft = function(req, res) {
-  console.log(req.body.deleteId)
   var ObjectId = require('mongodb').ObjectID;
   let client = this.dbClient
   collection = client.db("stories_example1").collection("drafts")
@@ -212,7 +210,6 @@ deleteDraft = function(req, res) {
 }
 
 deletePublish = function(req, res) {
-  //console.log(req.body.deleteId)
   var ObjectId = require('mongodb').ObjectID;
   let client = this.dbClient
   collection = client.db("stories_example1").collection("published")
@@ -229,7 +226,6 @@ deletePublish = function(req, res) {
 }
 
 getStoryEdit = function(req, res) {
-  console.log(req.body.id)
   var ObjectId = require('mongodb').ObjectID;
   let client = this.dbClient
   collection = client.db("stories_example1").collection("published")
