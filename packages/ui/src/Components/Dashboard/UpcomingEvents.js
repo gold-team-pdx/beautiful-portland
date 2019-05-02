@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Header, Icon, Menu, Table } from 'semantic-ui-react'
 import Moment from 'moment'
 import Axios from 'axios'
+import { Modal } from 'semantic-ui-react'
 
 class UpcomingEvents extends Component {
 	constructor(props) {
@@ -12,6 +13,7 @@ class UpcomingEvents extends Component {
 			dates: [ new Moment().format('MM-DD-YY') ],
 			lastDate: '',
 			numOfDays: 5,
+			dateToDelete: '',
 			open: false
 		}
 	}
@@ -22,7 +24,7 @@ class UpcomingEvents extends Component {
 	}
 
 	initializeDates = () => {
-		for (let index = 1; index < this.state.numOfDays; index++) {
+		for (let index = 1; index <= this.state.numOfDays; index++) {
 			this.state.dates.push(Moment(this.state.currentDate, 'MM-DD-YY').add(index, 'd').format('MM-DD-YY'))
 		}
 		this.setState({ lastDate: this.state.dates.slice(-1)[0] })
@@ -70,6 +72,11 @@ class UpcomingEvents extends Component {
 		return totalServings
 	}
 
+	displayDeleteModal = (event, data) => {
+		this.setState({ dateToDelete: data.name })
+		this.openModal()
+	}
+
 	deleteEvent = (event, data) => {
 		let newEvents = this.state.events.filter((obj) => {
 			return obj.date !== data.name
@@ -89,6 +96,8 @@ class UpcomingEvents extends Component {
 			.catch((err) => {
 				console.log(err, 'Try again.')
 			})
+
+		this.closeModal()
 	}
 
 	loadPrev = () => {
@@ -119,11 +128,11 @@ class UpcomingEvents extends Component {
 		})
 	}
 
-	close = () => {
+	closeModal = () => {
 		this.setState({ open: false })
 	}
 
-	open = () => {
+	openModal = () => {
 		this.setState({ open: true })
 	}
 
@@ -154,12 +163,26 @@ class UpcomingEvents extends Component {
 									<Table.Cell>{event['volunteer_signups']}</Table.Cell>
 									<Table.Cell>{event.servings}</Table.Cell>
 									<Table.Cell collapsing>
-										<Button negative onClick={this.deleteEvent} name={event.date}>
+										<Button negative onClick={this.displayDeleteModal} name={event.date}>
 											Delete
 										</Button>
 									</Table.Cell>
 								</Table.Row>
 							))}
+						<Modal open={this.state.open} onClose={this.closeModal} closeIcon>
+							<Header icon="calendar alternate outline" content="Delete Event" />
+							<Modal.Content>
+								<h3>Are you sure you want delete event {this.state.dateToDelete}?</h3>
+							</Modal.Content>
+							<Modal.Actions>
+								<Button color="red" onClick={this.closeModal}>
+									<Icon name="remove" /> No
+								</Button>
+								<Button color="green" onClick={this.deleteEvent} name={this.state.dateToDelete}>
+									<Icon name="checkmark" /> Yes
+								</Button>
+							</Modal.Actions>
+						</Modal>
 					</Table.Body>
 					<Table.Footer fullWidth>
 						<Table.Row>

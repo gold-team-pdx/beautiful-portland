@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Form, Grid, Header, Icon, Modal, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Grid, Header, Icon, Modal, Table } from 'semantic-ui-react'
 import DatePicker from 'react-datepicker'
 import Axios from 'axios'
 import Moment from 'moment'
@@ -28,6 +28,10 @@ class EditEvent extends Component {
 		}
 	}
 	componentDidMount() {
+		this.loadVolunteers()
+	}
+
+	loadVolunteers = () => {
 		let path = '/api/fullEvent?date=' + this.props.date
 		Axios.get(path)
 			.then((res) => {
@@ -67,6 +71,7 @@ class EditEvent extends Component {
 
 	onSubmit = () => {
 		this.closeModal()
+
 		let updatedEvent = {
 			date: this.props.date,
 			time: Moment(this.state.newTime).format('h:mm A'),
@@ -79,6 +84,7 @@ class EditEvent extends Component {
 		Axios.post('/api/updateEvent', updatedEvent)
 			.then((response) => {
 				console.log(response, 'Updated Event')
+				this.loadVolunteers()
 			})
 			.catch((err) => {
 				console.log(err, 'Try again.')
@@ -141,6 +147,24 @@ class EditEvent extends Component {
 		}
 	}
 
+	markForDeletion = (event, data) => {
+		let keys = data.name.split(':')
+		let email = keys[0]
+		let desc = keys[1]
+		let newSubmissions = []
+		this.state.submissions.forEach((submission) => {
+			if (submission.email === email && submission.desc === desc) {
+				if (submission['marked_for_deletion']) {
+					submission['marked_for_deletion'] = !submission['marked_for_deletion']
+				} else {
+					submission['marked_for_deletion'] = true
+				}
+			}
+			newSubmissions.push(submission)
+		})
+		this.setState({ submissions: newSubmissions })
+	}
+
 	errorClass(error) {
 		return error.length === 0 ? '' : 'has-error'
 	}
@@ -191,6 +215,7 @@ class EditEvent extends Component {
 							<Table.HeaderCell>Vegan</Table.HeaderCell>
 							<Table.HeaderCell>Vegetarian</Table.HeaderCell>
 							<Table.HeaderCell>Gluten-Free</Table.HeaderCell>
+							<Table.HeaderCell>Delete</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
@@ -212,6 +237,13 @@ class EditEvent extends Component {
 									<Table.Cell>{this.renderIcon(volunteer.vegan)}</Table.Cell>
 									<Table.Cell>{this.renderIcon(volunteer.vegetarian)}</Table.Cell>
 									<Table.Cell>{this.renderIcon(volunteer['gluten_free'])}</Table.Cell>
+									<Table.Cell>
+										<Checkbox
+											onChange={this.markForDeletion}
+											name={volunteer.email + ':' + volunteer.desc}
+											toggle
+										/>
+									</Table.Cell>
 								</Table.Row>
 							))}
 					</Table.Body>
