@@ -1,6 +1,6 @@
 //Route returns privileged volunteer info only when admin is logged in.
 //Returns array of objects for all logged volunteer info for given date.
-//NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
+
 getFullEventInfo = function(req, res) {
 	let client = this.dbClient
 	collection = client.db('events-form').collection('events')
@@ -51,7 +51,7 @@ getFullEventInfo = function(req, res) {
 
 // Method to retrieve list of all volunteers.
 // Returns array of objects for volunteer name, email, and phone number.
-// NOTE: THIS IS WORK IN PROGRESS. NO LOGIN CHECK UNTIL PASSPORT SET UP.
+
 getVolunteerList = function(req, res) {
 	let client = this.dbClient
 	collection = client.db('volunteer_info').collection('volunteers')
@@ -362,47 +362,177 @@ addFromUploaded = function(req, res) {
 }
 
 addNewDraft = function(req, res) {
-	let client = this.dbClient
-	collection = client.db('stories_example1').collection('drafts')
-	collection.updateOne(
-		{ edited_timestamp: req.body.edited_timestamp },
-		{
-			$set: {
-				edited_timestamp: new Date(),
-				publish_status: req.body.publishedStatus,
-				title: req.body.title,
-				hook: req.body.subtitle,
-				content: req.body.content
-			}
-		},
-		{ upsert: true },
-		function(err, obj) {
-			if (err) throw err
-			else res.end('Draft Saved')
-		}
-	)
+  var ObjectId = require('mongodb').ObjectID;
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("drafts")
+  collection.updateOne(
+  { "edited_timestamp" : req.body.edited_timestamp },
+  { $set : {
+       "edited_timestamp" : new Date(),
+       "publish_status" : req.body.publish_status,
+       "title" : req.body.title,
+       "hook" : req.body.hook,
+       "content" : req.body.content,
+  }},
+  { upsert : true },
+   function(err,obj) {
+     if(err)
+       throw err
+     else
+       res.end("Draft Saved")
+   }
+  )
 }
 
 addNewPublished = function(req, res) {
-	let client = this.dbClient
-	collection = client.db('stories_example1').collection('published')
-	collection.updateOne(
-		{ edited_timestamp: req.body.edited_timestamp },
-		{
-			$set: {
-				edited_timestamp: new Date(),
-				publish_status: req.body.publishedStatus,
-				title: req.body.title,
-				hook: req.body.subtitle,
-				content: req.body.content
-			}
-		},
-		{ upsert: true },
-		function(err, obj) {
-			if (err) throw err
-			else res.end('Story Published')
-		}
-	)
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.updateOne(
+    { "edited_timestamp" : req.body.edited_timestamp },
+    { $set: {
+        "edited_timestamp" : new Date(),
+        "publish_status" : req.body.publish_status,
+        "title" : req.body.title,
+        "hook" : req.body.hook,
+        "content" : req.body.content
+    }},
+    { upsert : true },
+    function(err,obj) {
+      if(err)
+        throw err
+      else
+        res.end("Story Published")
+    }
+  )
+}
+
+getPublishedStory = function(req, res) {
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.find().sort({_id:-1}).limit(50).toArray((err, docs) => {
+    if(err) {
+      console.log(err, "Error trying to find published Stories")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs[0] == null) {
+      console.log("Couldn't fufill Story request")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    let response_data = []
+    docs.map(pubStory => {
+         var publishObj = new Object()
+         publishObj._id = pubStory._id
+         publishObj.edited_timestamp = pubStory.edited_timestamp
+         publishObj.title = pubStory.title
+         publishObj.hook = pubStory.hook
+         publishObj.content = pubStory.content
+         publishObj.public_status = pubStory.public_status
+         response_data.push(pubStory)
+     })
+    res.send({
+      status: 'SUCCESS',
+      published_info: JSON.stringify(response_data)
+    })
+  })
+}
+
+getDraftedStories = function(req, res) {
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("drafts")
+  collection.find().sort({_id:-1}).limit(50).toArray((err, docs) => {
+    if(err) {
+      console.log(err, "Error trying to find drafted Stories")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs[0] == null) {
+      console.log("Couldn't fufill Story request")
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    let response_data = []
+    docs.map(draftStory => {
+         var draftObj = new Object()
+         draftObj.original_timestamp = draftStory._id.getTimestamp()
+         draftObj.edited_timestamp = draftStory.edited_timestamp
+         draftObj.title = draftStory.title
+         draftObj.hook = draftStory.hook
+         draftObj.content = draftStory.content
+         draftObj.public_status = draftStory.public_status
+         response_data.push(draftStory)
+     })
+    res.send({
+      status: 'SUCCESS',
+      draft_info: JSON.stringify(response_data)
+    })
+  })
+}
+
+deleteDraft = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID;
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("drafts")
+  collection.deleteOne({
+    '_id' : ObjectId(req.body.deleteId)
+  },
+   function(err,obj) {
+    if(err)
+      throw err
+    else
+      res.end("Draft Deleted Successful")
+   }
+  )
+}
+
+deletePublish = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID;
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.deleteOne({
+    '_id' : ObjectId(req.body.deleteId)
+  },
+   function(err,obj) {
+    if(err)
+      throw err
+    else
+      res.end("Published Story Deleted Successful")
+   }
+  )
+}
+
+getStoryEdit = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID;
+  let client = this.dbClient
+  collection = client.db("stories_example1").collection("published")
+  collection.findOne(
+    { '_id' : ObjectId(req.body.id) },
+    function(err,result) {
+      if (err) {
+        throw err
+      } else if(!result) {
+          collection = client.db("stories_example1").collection("drafts")
+          collection.findOne(
+            { '_id' : ObjectId(req.body.id) },
+            function(e,r) {
+              if(err) {
+                 throw err
+              } else {
+                res.send(r)
+              }
+            }
+          )
+         } else {
+           res.send(result)
+       }
+   })
 }
 
 editEventTemplate = function(req, res) {
@@ -487,5 +617,11 @@ module.exports.updateEvent = updateEvent
 module.exports.deleteEvent = deleteEvent
 module.exports.addNewDraft = addNewDraft
 module.exports.addNewPublished = addNewPublished
+module.exports.getPublishedStory = getPublishedStory
+module.exports.getDraftedStories = getDraftedStories
+module.exports.deleteDraft = deleteDraft
+module.exports.deletePublish = deletePublish
+module.exports.getStoryEdit = getStoryEdit
 module.exports.editEventTemplate = editEventTemplate
 module.exports.getEventTemplate = getEventTemplate
+

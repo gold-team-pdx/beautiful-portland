@@ -6,6 +6,9 @@ import EditCarouselImages from './Images/EditCarouselImages'
 import ViewAllImages from './Images/ViewAllImages'
 import AddEvent from './AddEvent'
 import NewStory from './Stories/NewStory'
+import ViewStories from './Stories/ViewStories'
+import WelcomeMessage from './WelcomeMessage'
+import EditStory from './Stories/EditStory'
 import EditEvent from './EditEvent'
 import Moment from 'moment'
 import UpcomingEvents from './UpcomingEvents'
@@ -15,11 +18,12 @@ import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 export default class AdminDashboard extends Component {
 	state = {
 		// Default active content
-		activeItem: 'viewEvents',
+		activeItem: 'welcomeMessage',
 		activeDate: new Moment().format('MM-DD-YY'),
 		adminName: 'Anonymous',
 		authenticated: false,
-		message: 'Please Login'
+		message: 'Please Login',
+                editId : '0000'
 	}
 	async componentDidMount() {
 		//Need to generate and fill volunteer list from databases
@@ -44,6 +48,13 @@ export default class AdminDashboard extends Component {
 			activeItem: 'editEvent'
 		})
 	}
+  
+  updateGrandparent = (e) => this.setState({activeItem : 'editStory'})
+
+  updateGrandparentID = async (value) => {
+      await this.setState({editId: value})
+      await console.log(this.state.editId)
+  }
 
 	render() {
 		const { activeItem } = this.state
@@ -55,8 +66,16 @@ export default class AdminDashboard extends Component {
 			addEvent: <AddEvent />,
 			newStory: <NewStory />,
 			viewEvents: <UpcomingEvents updateActiveDate={this.updateActiveDate} />,
-			editEvent: <EditEvent date={this.state.activeDate} />
+			editEvent: <EditEvent date={this.state.activeDate} />,
+      welcomeMessage: <WelcomeMessage />,
+      viewStories: <ViewStories
+                       updateGrandparent={this.updateGrandparent}
+                       edit={this.state.activeItem}
+                       updateGrandparentID={this.updateGrandparentID}
+                       editId={this.state.editId} />,
+       editStory: <EditStory editId={this.state.editId}/>
 		}
+       
 		if (!this.state.authenticated) {
 			return (
 				<div>
@@ -162,12 +181,11 @@ export default class AdminDashboard extends Component {
 								>
 									Create Story
 								</Menu.Item>
-								<Menu.Item
-									name="removeStory"
-									active={activeItem === 'removeStory'}
-									onClick={this.handleItemClick}
-								>
-									Remove Story
+								<Menu.Item name='viewStories' 
+                           active={activeItem === 'viewStories'} 
+                           onClick={this.handleItemClick}
+                 >
+                  View Stories
 								</Menu.Item>
 							</Menu.Menu>
 						</Menu>
