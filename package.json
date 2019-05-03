@@ -21,11 +21,14 @@
   "dependencies": {
     "cookie-parser": "^1.4.4",
     "express-session": "^1.16.1",
-    "lerna": "^3.13.0",
+    "lerna": "^3.13.4",
     "moment": "^2.24.0",
     "npm-run-all": "^4.1.5",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
     "semantic-ui-react": "^0.86.0"
+  },
+  "resolutions": {
+    "lerna/**/tar": "^4.4.8"
   }
 }
