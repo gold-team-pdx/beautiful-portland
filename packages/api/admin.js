@@ -530,7 +530,6 @@ getStoryEdit = function(req, res) {
 
 editEventTemplate = function(req, res) {
 	let client = this.dbClient
-	//updates Document in mongodb
 	collection = client.db("events-form").collection("events")
 	collection.findOneAndUpdate({ date : "MASTER2" },
 	{$set: {
@@ -546,9 +545,14 @@ editEventTemplate = function(req, res) {
 		}]
 	}},{ upsert : true },
 	function(err,doc) {
-		if(err)
-			throw err
-		else{
+		if(err){
+			console.log(err, "Error trying to find master template to edit")
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		}else{
+			console.log("SUCCESS! [" + req.body.name +"] has been updated")
 			res.end("Template Updated")
 		}}
 	)
@@ -559,16 +563,16 @@ getEventTemplate = function(req, res) {
 	collection = client.db("events-form").collection("events")
 	collection.find({date: "MASTER"}, {projection:{ _id: 0}}).toArray((err, docs) => {
 		if(err) {
-			console.log(err, "Error trying to find master template")
-		res.send({
-			status: 'FAILURE'
-		})
+			console.log(err, "Error trying to get info from master template")
+			res.send({
+				status: 'FAILURE'
+			})
 			return
 		} else if(docs[0] == null) {
 			console.log("Couldn't fulfill master template request")
-		res.send({
-			status: 'FAILURE'
-		})
+			res.send({
+				status: 'FAILURE'
+			})
 			return
 		}
 
