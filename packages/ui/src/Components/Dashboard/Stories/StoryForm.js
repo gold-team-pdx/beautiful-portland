@@ -1,17 +1,11 @@
 import React,{ Component } from 'react'
-import { Form, Segment, Button, TextArea, Confirm, Grid } from 'semantic-ui-react'
+import { Form, Segment, Button, TextArea, Confirm, Grid, Modal, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
+import '../../Stylesheets/StoryForm.css'
 
 export default class StoryForm extends Component {
   constructor(props){
     super(props)
-    /*Prolly dont need these bindings since using arrow func, refactor*/
-    this.handlePublish = this.handlePublish.bind(this)
-    this.handleSave = this.handleSave.bind(this)
-    this.clearForm = this.clearForm.bind(this)
-    this.open = this.open.bind(this)
-    this.close = this.close.bind(this)
-    this.onChange = this.onChange.bind(this)
     this.state = {
       _id: '',
       title: '',
@@ -20,7 +14,11 @@ export default class StoryForm extends Component {
       publish_status: false,
       editedTimestamp: '',
       open: false,
-      isEnabled: false
+      isEnabled: false,
+      postPhotoName: 'No Photo',
+      postPhoto: {},
+      addModalOpen: false,
+      postImageData: '',
     }
   }
 
@@ -35,7 +33,8 @@ export default class StoryForm extends Component {
          hook :  response.data.hook,
          content : response.data.content,
          editedTimestamp : response.data.edited_timestamp,
-         publish_status : response.data.publish_status
+         publish_status : response.data.publish_status,
+         postPhoto: response.data.photo
       })
     })
        .catch((error) => {
@@ -77,12 +76,16 @@ export default class StoryForm extends Component {
 
   clearForm = () => {
     this.setState({
-    title: '',
-    hook: '',
-    content: '',
-    publish_status: false,
-    open: false,
-    isEnabled : false })
+      title: '',
+      hook: '',
+      content: '',
+      publish_status: false,
+      open: false,
+      isEnabled : false,
+      postPhotoName: 'No Photo',
+      postPhoto: {},
+      postImageData: '' 
+    })
     this.close()
  }
 
@@ -93,6 +96,37 @@ export default class StoryForm extends Component {
     if(this.state.title && this.state.hook && this.state.content){
       this.setState({isEnabled : true})
     }
+  }
+
+  // Image Modal Functions
+  handleModalClose = () => this.setState({addModalOpen: false})
+  handleModalOpen = () => this.setState({addModalOpen: true})
+  
+  // Add Image to post
+  addPhoto = (input) => {
+    let reader = new FileReader()
+    let name = input.value.toString().split(/(\\|\/)/g).pop().split('.')[0]
+    let data = ''
+    let newFile = {}
+    let newFileName = name + '&' + Date.now() + '&' + this.state.title
+    reader.onerror = () => {
+        reader.abort()
+        console.log("Problem parsing input file")
+    }
+    reader.onload = e => {
+      data = e.target.result
+      newFile = {
+          "fileData": data,
+          "fileName": newFileName
+      }
+      this.setState({postImageData: data})
+    }
+    reader.readAsDataURL(input.files[0])
+    this.setState({
+      postPhotoName: newFileName,
+      postPhoto: newFile,
+      addModalOpen: false
+    })
   }
 
   render() {
@@ -106,6 +140,32 @@ export default class StoryForm extends Component {
                  value={this.state.title}
                  onChange={this.onChange}
           />
+          </Form.Field>
+          <Form.Field>
+          {
+            this.state.postImageData !== '' && 
+            <img alt="blog" className="imageToAdd" src={this.state.postImageData}></img>
+          }
+          <Modal trigger={<Button color="green" fluid onClick={this.handleModalOpen}>Add Photo to Post</Button>}
+                 open= {this.state.addModalOpen}
+                 onClose={this.handleModalClose}>
+            <Modal.Content>
+              <h2>Add Photo to Post</h2>
+              <Form>
+                  <input type='file' id="file" name="file" accept="image/png, image/jpeg"></input>
+              </Form>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button color='red' inverted onClick={this.handleModalClose}>
+                    <Icon name='remove' /> 
+                    Cancel
+                </Button>
+                <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById("file"))}>
+                    <Icon name='checkmark' /> 
+                    Add Photo to Post
+                </Button>
+            </Modal.Actions> 
+          </Modal>
           </Form.Field>
           <Form.Field>
           <label>Subtitle</label>
@@ -148,7 +208,7 @@ export default class StoryForm extends Component {
              />
           </Grid.Column>
           <Grid.Column>
-            <Button color="red" fluid /*floated='right'*/ onClick={this.open}>Clear Form</Button>
+            <Button color="red" fluid onClick={this.open}>Clear Form</Button>
             <Confirm open={this.state.open} onCancel={this.close} onConfirm={this.clearForm} />
           </Grid.Column>
           </Grid>

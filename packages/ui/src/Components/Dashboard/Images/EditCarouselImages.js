@@ -243,12 +243,11 @@ export default class EditCarouselImages extends Component {
                         </Button>
                         }
                         open= {this.state.addNewModalOpen}
-                        onClose={this.handleAddModalClose}
-                    >
+                        onClose={this.handleAddModalClose}>
                     <Modal.Content>
                         <h3> Add photos </h3>
                         <Form>
-                            <input type='file' id="files" name="files[]" multiple></input>
+                            <input type='file' id="files" name="files[]" multiple accept="image/png, image/jpeg"></input>
                         </Form>
                     </Modal.Content>
                     <Modal.Actions>
@@ -269,8 +268,7 @@ export default class EditCarouselImages extends Component {
                         </Button>
                         }
                         open= {this.state.addFromUploadModalOpen}
-                        onClose={this.handleAddFromModalClose}
-                    >
+                        onClose={this.handleAddFromModalClose}>
                     <Modal.Content>
                         <h3> Choose Photos </h3>
                         <Card.Group className="cardGroup" itemsPerRow = {5}>

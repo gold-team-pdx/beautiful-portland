@@ -4,7 +4,8 @@ require ('dotenv').config()
 
 export default class Login extends Component {
   render() {
-	  	let callbackHost = process.env.REACT_APP_API_ENDPOINT || ''
+		  let callbackHost = process.env.REACT_APP_API_ENDPOINT || "http://localhost:5000"
+		  console.log(callbackHost)
 		return (
 			<div style={{position:"absolute",top:"50%",left:"40%"}}>
 				<Container>
