@@ -529,74 +529,101 @@ getStoryEdit = function(req, res) {
 }
 
 editEventTemplate = function(req, res) {
-	client = this.dbClient
-	collection = client.db('events-form').collection('events')
-	let updatedEvent = new Object()
-	updatedEvent.date = 'MASTER'
-	updatedEvent.time = req.body.time
-	updatedEvent.location = req.body.location
-	updatedEvent.max_servings = req.body.max_servings
-	updatedEvent.categories = req.body.categories
-
-	collection.findOneAndReplace({ date: req.body.date }, updatedEvent, (err, doc) => {
-		if (err) {
-			console.log(err, 'Error trying to find or update master template ')
+	let client = this.dbClient
+	collection = client.db("events-form").collection("events")
+	collection.findOneAndUpdate({ date : "MASTER2" },
+	{$set: {
+		"location" : req.body.location,
+		"time" : req.body.time,
+		"max_servings" : req.body.max_servings,
+		"categories": [{
+			"name" : req.body.name,
+			"max_signups" : req.body.max_signups,
+			"min_servings" : req.body.min_servings,
+			"food" : req.body.food,
+			"min_vegan" : req.body.min_vegan
+		}]
+	}},{ upsert : true },
+	function(err,doc) {
+		if(err){
+			console.log(err, "Error trying to find master template to edit")
 			res.send({
 				status: 'FAILURE'
 			})
 			return
-		} else if (doc.value === null) {
-			console.log("Couldn't the master template")
-			res.send({
-				status: 'FAILURE'
-			})
-			return
-		} else {
-			console.log('Master template updated')
-			res.send({
-				status: 'SUCCESS'
-			})
-			return
-		}
-	})
+		}else{
+			console.log("SUCCESS! [" + req.body.name +"] has been updated")
+			res.end("Template Updated")
+		}}
+	)
 }
 
 getEventTemplate = function(req, res) {
-	client = this.dbClient
-	collection.find({ date: 'MASTER' }, { projection: { _id: 0 } }).toArray((err, docs) => {
-		if (err) {
-			console.log(err, 'Error trying to master template')
+	let client = this.dbClient
+	collection = client.db("events-form").collection("events")
+	collection.find({date: "MASTER"}, {projection:{ _id: 0}}).toArray((err, docs) => {
+		if(err) {
+			console.log(err, "Error trying to get info from master template")
 			res.send({
 				status: 'FAILURE'
 			})
 			return
-		} else if (docs[0] == null) {
-			console.log("Couldn't fulfill document request")
+		} else if(docs[0] == null) {
+			console.log("Couldn't fulfill master template request")
 			res.send({
 				status: 'FAILURE'
 			})
 			return
 		}
 
+		// console.log(docs[0])
 		let response_data = []
-		docs[0].categories.forEach((category) => {
-			var categoryObj = new Object()
-			categoryObj.name = category.name
-			categoryObj.max_signups = category.max_signups
-			categoryObj.min_servings = category.min_servings
-			categoryObj.food = category.food
-			if (categoryObj.food) {
-				categoryObj.min_vegan = category.min_vegan
-			}
+		docs[0].categories.forEach(category => {
+			var masterObj = new Object()
+			masterObj.name = category.name
+			masterObj.food = category.food
+			masterObj.max_signups = category.max_signups
+			masterObj.min_servings = category.min_servings
+			masterObj.min_vegan = category.min_vegan
+			response_data.push(masterObj)
 		})
 
 		res.send({
 			status: 'SUCCESS',
 			event_info: JSON.stringify(response_data),
-			time: docs[0].time,
 			location: docs[0].location,
+			time: docs[0].time,
 			max_servings: docs[0].max_servings
 		})
+	})
+}
+
+deleteEventTemplate = function(req, res) {
+	client = this.dbClient
+	console.log(req.body.category)
+	collection = client.db('events-form').collection('events')
+	collection.findOneAndUpdate({ date: 'MASTER2'},
+	{$pull:{
+		"categories":{
+			"name" : req.body.category
+		}
+	}}, (err, doc) => {
+		if (err) {
+			console.log(err, 'Error trying to find master template to delete')
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		} else if (doc.value === null) {
+			console.log('No master template to delete with that category')
+			res.send({
+				status: 'FAILURE'
+			})
+		} else {
+			console.log("SUCCESS! [" + req.body.category +"] has been deleted from the master template")
+			res.end("SUCCESS")
+			return
+		}
 	})
 }
 
@@ -617,3 +644,4 @@ module.exports.deletePublish = deletePublish
 module.exports.getStoryEdit = getStoryEdit
 module.exports.editEventTemplate = editEventTemplate
 module.exports.getEventTemplate = getEventTemplate
+module.exports.deleteEventTemplate = deleteEventTemplate

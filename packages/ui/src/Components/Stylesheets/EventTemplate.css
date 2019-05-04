@@ -1,0 +1,17 @@
+.input-wrapper span{
+    visibility: hidden;
+    color: #008000;
+}
+
+.input-wrapper.has-error span{
+    visibility: visible;
+    color: #FF0000;
+}
+
+.input-wrapper.has-error input{
+    color: #FF0000;
+}
+
+.input-wrapper.has-error textarea{
+    border: 1px solid #FF0000;
+}
