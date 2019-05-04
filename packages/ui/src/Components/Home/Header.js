@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
+import logo from '../../logoPhotos/bpdx_circlelogo_white.png'
 import 'semantic-ui-css/semantic.min.css'
 
 export default class Header extends Component {
@@ -42,7 +43,7 @@ export default class Header extends Component {
 				</Menu.Item>
 
 				<Menu.Item active={activeItem === 'Logo'} as={NavLink} onClick={this.handleItemClick} to="/">
-					<img src="/logo-white.png" alt="logo" />
+					<img src={logo} alt="logo" />
 				</Menu.Item>
 
 				<Menu.Item
