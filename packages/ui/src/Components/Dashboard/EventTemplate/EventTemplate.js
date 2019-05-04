@@ -124,11 +124,11 @@ export default class EventTemplate extends Component {
 				errors.max_signups = max_signupsValid ? '' : ' ✗ Please enter max signups'
 				break
 			case 'min_servings':
-                min_servingsValid = value > 0 && value <= this.props.max_servings
+                min_servingsValid = value => 0 && value <= this.props.max_servings
 				errors.min_servings = min_servingsValid ? '' : ' ✗ Please enter a valid number between 0~' + this.props.max_servings + '.'
 				break
 			case 'min_vegan':
-                min_veganValid = value < this.props.max_servings/3
+                min_veganValid = value => 0 && value < this.props.max_servings/3
 				errors.min_vegan = min_veganValid ? '' : ' ✗ Please enter min vegan.'
 				break
 			default:
@@ -210,6 +210,8 @@ export default class EventTemplate extends Component {
                                 value={this.state.max_servings}
                                 onChange={this.onChange}
                                 inline
+                                type='number'
+                                min='0'
                                 label="Max Servings"
                             />
                             <div>
@@ -250,6 +252,8 @@ export default class EventTemplate extends Component {
                                 value={this.state.max_signups }
                                 onChange={this.onChange}
                                 inline
+                                type='number'
+                                min='0'
                                 label="Maximum Signups"
                             />
                             <div>
@@ -265,6 +269,8 @@ export default class EventTemplate extends Component {
                                 value={this.state.min_servings }
                                 onChange={this.onChange}
                                 inline
+                                type='number'
+                                min='0'
                                 label="Minimum Servings"
                             />
                             <div>
@@ -280,6 +286,8 @@ export default class EventTemplate extends Component {
                                 value={this.state.min_vegan }
                                 onChange={this.onChange}
                                 inline
+                                type='number'
+                                min='0'
                                 label="Minimum Vegan"
                             />
                             <div>

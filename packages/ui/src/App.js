@@ -7,6 +7,7 @@ import VolunteerForm from './Components/Volunteer/VolunteerForm'
 import Login from './Components/Dashboard/Login'
 import AdminDashboard from './Components/Dashboard/AdminDashboard'
 import ContactUs from './Components/Contact/ContactUs.js'
+import Stories from './Components/Stories/Stories.js'
 import NoMatch from './Components/Error/NoMatch'
 import './App.css'
 
@@ -22,6 +23,7 @@ class App extends Component {
 						<Route path="/login" component={Login} />
 						<Route path="/admin-dashboard" component={AdminDashboard} />
 						<Route path="/ContactUs" component={ContactUs} />
+						<Route path="/Stories" component={Stories} />
 						<Route component={NoMatch} />
 					</Switch>
 				</Router>

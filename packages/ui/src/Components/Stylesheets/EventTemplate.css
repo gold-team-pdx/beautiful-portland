@@ -15,3 +15,11 @@
 .input-wrapper.has-error textarea{
     border: 1px solid #FF0000;
 }
+
+.react-datepicker__time-container {
+    width: 7em !important
+}
+
+.react-datepicker__time-box {
+  width:100% !important
+}
