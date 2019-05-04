@@ -1,0 +1,11 @@
+.ui.button.volunteer {
+    background:none!important;
+    border:none; 
+    padding:0!important;
+    color: black;
+    cursor:pointer;
+}
+
+.ui.button.volunteer:hover{
+    text-decoration:underline;
+}
