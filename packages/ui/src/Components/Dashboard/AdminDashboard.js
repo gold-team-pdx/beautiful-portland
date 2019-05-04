@@ -12,6 +12,7 @@ import EditStory from './Stories/EditStory'
 import EditEvent from './EditEvent'
 import Moment from 'moment'
 import UpcomingEvents from './UpcomingEvents'
+import EditEventTemplate from './EventTemplate/EditEventTemplate'
 import '../Stylesheets/AdminDashboard.css'
 import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 
@@ -73,7 +74,8 @@ export default class AdminDashboard extends Component {
                        edit={this.state.activeItem}
                        updateGrandparentID={this.updateGrandparentID}
                        editId={this.state.editId} />,
-       editStory: <EditStory editId={this.state.editId}/>
+       editStory: <EditStory editId={this.state.editId}/>,
+			 editEventTemplate: <EditEventTemplate />
 		}
        
 		if (!this.state.authenticated) {
@@ -133,6 +135,13 @@ export default class AdminDashboard extends Component {
 						<Menu vertical size="huge">
 							<Menu.Item name="events">Events</Menu.Item>
 							<Menu.Menu>
+								<Menu.Item
+									name="editEventTemplate"
+									active={activeItem === 'editEventTemplate'}
+									onClick={this.handleItemClick}
+								>
+									Edit Event Template
+								</Menu.Item>
 								<Menu.Item
 									name="addEvent"
 									active={activeItem === 'addEvent'}
