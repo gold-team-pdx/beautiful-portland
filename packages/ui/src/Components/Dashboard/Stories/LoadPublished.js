@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Accordion, Icon, Button } from 'semantic-ui-react'
 import Axios from 'axios'
+import { Link } from 'react-router-dom'
 
 export default class LoadPublished extends Component {
   constructor(props){
@@ -27,11 +28,11 @@ export default class LoadPublished extends Component {
       .catch((err) => {
          console.log(err);
       })
-      this.forceUpdate()
+      window.location.reload()
   }
 
   handleEdit = (e) => {
-    this.props.updateParent((this.props.activeItem: 'editStory'))
+    this.props.updateParent()
     this.props.updateParentID(this.props.sPublish._id)
   }
 
@@ -59,6 +60,8 @@ export default class LoadPublished extends Component {
                                <Button.Group widths={2}>
                                  <Button color='blue'
                                          name='editDraft'
+                                         as={Link}
+                                         to='/EditStory'
                                          onClick={this.handleEdit}>Edit</Button>
                                  <Button color='red'
                                          name='deleteDraft'

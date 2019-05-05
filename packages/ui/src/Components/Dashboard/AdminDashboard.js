@@ -175,6 +175,10 @@ export default class AdminDashboard extends Component {
                 component={this.viewEvents}
               />
               <Route
+                path="/EditEvent"
+                component={this.editEvent}
+              />
+              <Route
                 path="/VolunteerList"
                 component={VolunteerList}
               />
@@ -190,6 +194,10 @@ export default class AdminDashboard extends Component {
               <Route
                 path="/ViewStories"
                 component={this.viewStories}
+              />
+              <Route
+                path="/EditStory"
+                component={this.editStory}
               />
           </div>
         </div>
