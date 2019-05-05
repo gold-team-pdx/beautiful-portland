@@ -11,23 +11,25 @@ import NoMatch from './Components/Error/NoMatch'
 import './App.css'
 
 class App extends Component {
-	render() {
-		return (
-			<MyProvider>
-				<Router>
-					<Switch>
-						<Route exact path="/" component={Home} />
-						<Route path="/about" component={About} />
-						<Route path="/volunteer-form" component={VolunteerForm} />
-						<Route path="/login" component={Login} />
-						<Route path="/admin-dashboard" component={AdminDashboard} />
-						<Route path="/ContactUs" component={ContactUs} />
-						<Route component={NoMatch} />
-					</Switch>
-				</Router>
-			</MyProvider>
-		)
-	}
+  render() {
+    return (
+      <MyProvider>
+        <Router>
+          <div>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/about" component={About} />
+              <Route path="/volunteer-form" component={VolunteerForm} />
+              <Route path="/login" component={Login} />
+              <Route path="/admin-dashboard" component={AdminDashboard} />
+              <Route path="/ContactUs" component={ContactUs} />
+              <Route component={NoMatch} />
+            </Switch>
+          </div>
+        </Router>
+      </MyProvider>
+    )
+  }
 }
 
 export default App
