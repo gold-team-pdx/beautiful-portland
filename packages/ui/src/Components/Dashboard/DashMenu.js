@@ -19,7 +19,7 @@ export default class DashMenu extends Component {
               as={NavLink}
               active={activeItem === "editEventTemplate"}
               onClick={this.handleItemClick}
-              to={"/admin-dashboard/EditEventTemplate"}
+              to={"/EditEventTemplate"}
             >
               Edit Event Template
             </Menu.Item>
@@ -28,7 +28,7 @@ export default class DashMenu extends Component {
               as={NavLink}
               active={activeItem === "addEvent"}
               onClick={this.handleItemClick}
-              to={"/admin-dashboard/AddEvent"}
+              to={"/AddEvent"}
             >
               Add Event
             </Menu.Item>
@@ -37,7 +37,7 @@ export default class DashMenu extends Component {
               as={NavLink}
               active={activeItem === "viewEvents"}
               onClick={this.handleItemClick}
-              to={"/admin-dashboard/ViewUpcomingEvents"}
+              to={"/ViewUpcomingEvents"}
             >
               View Upcoming Events
             </Menu.Item>
@@ -47,7 +47,7 @@ export default class DashMenu extends Component {
             as={NavLink}
             active={activeItem === "volunteerList"}
             onClick={this.handleItemClick}
-            to={"/admin-dashboard/VolunteerList"}
+            to={"/VolunteerList"}
           >
             Volunteer List
           </Menu.Item>
@@ -58,7 +58,7 @@ export default class DashMenu extends Component {
               as={NavLink}
               active={activeItem === "editCarouselImages"}
               onClick={this.handleItemClick}
-              to={"/admin-dashboard/EditImages"}
+              to={"/EditImages"}
             >
               Edit Front Page Images
             </Menu.Item>
@@ -67,7 +67,7 @@ export default class DashMenu extends Component {
               as={NavLink}
               active={activeItem === "viewAllImages"}
               onClick={this.handleItemClick}
-              to={"/admin-dashboard/ViewImages"}
+              to={"/ViewImages"}
             >
               View All Images
             </Menu.Item>
@@ -79,7 +79,7 @@ export default class DashMenu extends Component {
               as={NavLink}
               active={activeItem === "newStory"}
               onClick={this.handleItemClick}
-              to={"/admin-dashboard/CreateStory"}
+              to={"/CreateStory"}
             >
               Create Story
             </Menu.Item>
@@ -88,7 +88,7 @@ export default class DashMenu extends Component {
               as={NavLink}
               active={activeItem === "viewStories"}
               onClick={this.handleItemClick}
-              to={"/admin-dashboard/ViewStories"}
+              to={"/ViewStories"}
             >
               View Stories
             </Menu.Item>
