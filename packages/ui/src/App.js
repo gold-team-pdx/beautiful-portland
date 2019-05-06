@@ -15,6 +15,7 @@ class App extends Component {
     return (
       <MyProvider>
         <Router>
+<<<<<<< HEAD
           <div>
             <Switch>
               <Route exact path="/" component={Home} />
@@ -26,6 +27,17 @@ class App extends Component {
               <Route component={NoMatch} />
             </Switch>
           </div>
+=======
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/about" component={About} />
+            <Route path="/volunteer-form" component={VolunteerForm} />
+            <Route path="/login" component={Login} />
+            <Route path="/admin-dashboard" component={AdminDashboard} />
+            <Route path="/ContactUs" component={ContactUs} />
+            <Route component={NoMatch} />
+          </Switch>
+>>>>>>> 7dea67e693dabc84726f64fd705e0e2af938b6fc
         </Router>
       </MyProvider>
     )
