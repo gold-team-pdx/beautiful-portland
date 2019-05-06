@@ -69,6 +69,7 @@ export default class AdminDashboard extends Component {
       newStory: <NewStory />,
       viewEvents: <UpcomingEvents updateActiveDate={this.updateActiveDate} />,
       editEvent: <EditEvent date={this.state.activeDate} />,
+      volunteerSubmissions: <VolunteerSubmissions />,
       welcomeMessage: <WelcomeMessage />,
       viewStories: (
         <ViewStories
