@@ -25,7 +25,7 @@ export default class PaginationExampleCustomization extends Component {
     } = this.state
 
     return (
-      <Grid columns={1}>
+      <Grid columns={1} centered>
         <Grid.Column>
           <Pagination
             activePage={activePage}

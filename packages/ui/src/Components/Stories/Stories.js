@@ -1,32 +1,93 @@
 import React, { Component } from 'react'
+import { Card, Button} from 'semantic-ui-react'
 import Header from '../Home/Header'
 import Pagination from './Pagination'
+import PublishStories from './PublishStories'
+import Axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
 
 export default class Home extends Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			publishStory: [],
+			version: '1'
+		}
+	}
+
+	componentDidMount = async () => {
+		Axios.get('/api/displayStory')
+        .then(res => {
+			let tempPubStory = JSON.parse(res.data.published_info)
+			console.log(tempPubStory)
+			this.setState({
+				publishStory : tempPubStory
+			})
+        })
+	}
+
+	handleVersion = () => {
+		const newVersion = this.state.version=== 2 ? 1 : 2
+		this.setState({
+			version: newVersion
+		})
+	}
+
 	render() {
-		return (
-			<div className="Home">
-			    <div style={{ flex: 1, top: 0, width: '100%', margin:"auto" }}>
-					  <Header />
+		if(this.state.version==='1'){
+			return (
+				<div className="Story">
+					<div style={{ flex: 1, top: 0, width: '100%', margin:"auto" }}>
+						<Header />
 					</div>
 
-				<div>
-					<h2 className="MissionHeader"> Our Mission </h2>
-					<h5 className="MissionStatement">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis iaculis enim a
-						auctor. Nam euismod dui in mattis vehicula. Praesent condimentum semper justo tempor aliquam.
-						Aliquam ex elit, ornare sed urna at, pulvinar pretium nisl. Aliquam eu rutrum turpis. Cras
-						finibus felis ut massa pulvinar dictum. Nulla sodales orci porttitor nisl eleifend, in convallis
-						risus sagittis. Integer sollicitudin mauris nisi, vel blandit tortor vulputate ut. Nulla
-						efficitur massa sem, sed pretium nisi efficitur quis. V estibulum hendrerit nibh eu ligula
-						mattis, at sodales nisl tempus. Pellentesque at risus a augue maximus venenatis vitae quis ante.
-					</h5>
+					<br/> <div style={{ float: "left"}}><Button primary onClick={this.handleVersion}>Version {this.state.version}</Button></div>
+					<div style={{width: '80%', margin: 'auto'}}>
+						<Card.Group centered itemsPerRow={3}>
+							{this.state.publishStory && this.state.publishStory.map((publish) =>{
+								return(
+									<PublishStories
+										key={publish.edited_timestamp}
+										publish={publish}
+										version={this.state.version}
+									/>
+								)
+							})}
+						</Card.Group>
+					</div>
+
+					<br/>
+					<div style={{margin: 'auto'}}>
+						<Pagination/>
+					</div>
 				</div>
-                <div>
-                    <Pagination/>
-                </div>
+			)
+		}
+		return (
+			<div className="Story">
+				<div style={{ flex: 1, top: 0, width: '100%', margin:"auto" }}>
+					<Header />
+				</div>
+
+				<br/> <div style={{ float: "left"}}><Button primary onClick={this.handleVersion}>Version {this.state.version}</Button></div>
+				<div style={{width: '80%', margin: 'auto'}}>
+					{this.state.publishStory && this.state.publishStory.map((publish) =>{
+						return(
+							<PublishStories
+								key={publish.edited_timestamp}
+								publish={publish}
+								version={this.state.version}
+							/>
+						)
+					})}
+				</div>
+
+				<br/>
+				<div style={{margin: 'auto'}}>
+					<Pagination/>
+				</div>
 			</div>
 		)
 	}

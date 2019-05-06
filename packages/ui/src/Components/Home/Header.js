@@ -42,7 +42,7 @@ export default class Header extends Component {
 					Volunteer Calender
 				</Menu.Item>
 
-				<Menu.Item active={activeItem === 'Logo'} as={NavLink} onClick={this.handleItemClick} to="/">
+				<Menu.Item active={activeItem === 'Logo'} as={NavLink} onClick={this.handleItemClick} to="/home">
 					<img src={logo} alt="logo" />
 				</Menu.Item>
 

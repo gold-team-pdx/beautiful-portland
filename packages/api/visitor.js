@@ -144,6 +144,42 @@ volunteerFormSubmit = function(req, res) {
     })
 }
 
+displayStory = function(req, res) {
+	let client = this.dbClient
+	collection = client.db('stories_example1').collection('published')
+	collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+		if (err) {
+			console.log(err, 'Error trying to find published Stories')
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		} else if (docs[0] == null) {
+			console.log("Couldn't fulfill Story request")
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		}
+		let response_data = []
+		docs.map((pubStory) => {
+			var publishObj = new Object()
+			publishObj._id = pubStory._id
+			publishObj.edited_timestamp = pubStory.edited_timestamp
+			publishObj.title = pubStory.title
+			publishObj.hook = pubStory.hook
+			publishObj.content = pubStory.content
+			publishObj.public_status = pubStory.public_status
+			response_data.push(pubStory)
+		})
+		res.send({
+			status: 'SUCCESS',
+			published_info: JSON.stringify(response_data)
+		})
+	})
+}
+
 module.exports.homeImages = homeImages
 module.exports.volunteerFormSubmit = volunteerFormSubmit
 module.exports.volunteerFormGetEventInfo = volunteerFormGetEventInfo
+module.exports.displayStory = displayStory

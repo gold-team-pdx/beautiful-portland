@@ -107,7 +107,7 @@ app.get('/api/logout', function(req, res) {
 app.get('/api/getImages/*', visitorHandlers.homeImages.bind({amazon: AWS}))
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
-
+app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
 
 // Admin request handlers
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
