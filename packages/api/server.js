@@ -133,6 +133,7 @@ app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({d
 app.post('/api/addPublish', ensureAuthenticated, adminHandlers.addNewPublished.bind({dbClient: client}))
 app.post('/api/deleteDraft', ensureAuthenticated, adminHandlers.deleteDraft.bind({dbClient: client}))
 app.post('/api/deletePublish', ensureAuthenticated, adminHandlers.deletePublish.bind({dbClient: client}))
+app.post('/api/addEvent', adminHandlers.postAddEvent.bind({dbClient: client}))
 app.post('/api/updateEvent', ensureAuthenticated, adminHandlers.updateEvent.bind({dbClient: client}))
 app.post('/api/deleteEvent', ensureAuthenticated, adminHandlers.deleteEvent.bind({dbClient: client}))
 app.get('/api/getEventTemplate', ensureAuthenticated, adminHandlers.getEventTemplate.bind({dbClient: client}))
