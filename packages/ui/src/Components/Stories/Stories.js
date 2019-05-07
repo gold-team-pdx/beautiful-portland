@@ -3,6 +3,7 @@ import { Card, Button} from 'semantic-ui-react'
 import Header from '../Home/Header'
 import Pagination from './Pagination'
 import PublishStories from './PublishStories'
+import PublishStories2 from './PublishStories2'
 import Axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
@@ -13,7 +14,7 @@ export default class Home extends Component {
 
 		this.state = {
 			publishStory: [],
-			version: '1'
+			version: false
 		}
 	}
 
@@ -29,14 +30,14 @@ export default class Home extends Component {
 	}
 
 	handleVersion = () => {
-		const newVersion = this.state.version=== 2 ? 1 : 2
+		const newVersion = this.state.version=== false ? true : false
 		this.setState({
 			version: newVersion
 		})
 	}
 
 	render() {
-		if(this.state.version==='1'){
+		if(this.state.version===true){
 			return (
 				<div className="Story">
 					<div style={{ flex: 1, top: 0, width: '100%', margin:"auto" }}>
@@ -75,7 +76,7 @@ export default class Home extends Component {
 				<div style={{width: '80%', margin: 'auto'}}>
 					{this.state.publishStory && this.state.publishStory.map((publish) =>{
 						return(
-							<PublishStories
+							<PublishStories2
 								key={publish.edited_timestamp}
 								publish={publish}
 								version={this.state.version}

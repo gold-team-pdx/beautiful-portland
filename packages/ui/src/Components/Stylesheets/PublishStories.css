@@ -1,0 +1,18 @@
+.body{
+    padding:5px 10px;
+    display: inline-block;
+    max-height: 160px;
+    overflow: hidden;
+    text-overflow: "...";
+    /* max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap; */
+    /* display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; */
+}
+
+.body:hover{
+    text-overflow: inherit;
+    overflow: visible;
+}
