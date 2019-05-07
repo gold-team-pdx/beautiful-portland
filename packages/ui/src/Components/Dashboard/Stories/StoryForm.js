@@ -47,13 +47,24 @@ export default class StoryForm extends Component {
 
   handlePublish = async (e) => {
     await this.setState({ publish_status : true })
-    Axios.post("/api/addPublish", this.state)
+    console.log(this.state._id)
+    if(this.state._id !== undefined && this.state._id !== '') {
+    Axios.post("/api/editedStory", this.state)
+      .then(response => {
+        console.log(response, "Story has been edited and saved to published")
+      })
+      .catch(err => {
+        console.log(err, "Try again.")
+      })
+    } else {
+      Axios.post("/api/addPublish", this.state)
       .then(response => {
         console.log(response, "Story has been published")
       })
       .catch(err => {
         console.log(err, "Try again.")
       })
+    }
     this.open()
     console.log(this.state)
   }
@@ -62,14 +73,22 @@ export default class StoryForm extends Component {
   handleSave = (e) => {
     if(this.state.publish_status) {
       this.handlePublish()
-    } else {
-      Axios.post("/api/addDraft", this.state)
+    } else if(this.state._id !== undefined && this.state._id !== '') {
+      Axios.post("/api/editedStory", this.state)
        .then(response => {
-         console.log(response, "Story saved to drafts")
+         console.log(response, "Story has been edited and saved to drafts")
        })
        .catch(err => {
          console.log(err, "Try again.")
        })
+     } else {
+      Axios.post("/api/addDraft", this.state)
+      .then(response => {
+        console.log(response, "Story saved to drafts")
+      })
+      .catch(err => {
+        console.log(err, "Try again.")
+      })
      }
     this.open()
     console.log(this.state)
