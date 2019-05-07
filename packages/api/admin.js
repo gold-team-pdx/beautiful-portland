@@ -362,7 +362,6 @@ addFromUploaded = function(req, res) {
 }
 
 addNewDraft = function(req, res) {
-	var ObjectId = require('mongodb').ObjectID
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('drafts')
 	collection.updateOne(
@@ -403,6 +402,34 @@ addNewPublished = function(req, res) {
 			if (err) throw err
 			else res.end('Story Published')
 		}
+	)
+}
+
+editedStory = function(req,res) {
+	var ObjectId = require('mongodb').ObjectID
+	let client = this.dbClient
+	if(req.body.publish_status === true){
+		collection = client.db('stories_example1').collection('published')
+	} else {
+		collection = client.db('stories_example1').collection('drafts')
+	}
+	collection.updateOne(
+		{_id: ObjectId(req.body._id)},
+		{
+			$set: {
+				edited_timestamp: new Date(),
+				publish_status: req.body.publish_status,
+				title: req.body.title,
+				hook: req.body.hook,
+				content: req.body.content
+			}
+		},
+		{ upsert: true },
+		function(err, obj) {
+			if (err) throw err
+			else res.end('Story has been edited')
+		}
+
 	)
 }
 
@@ -645,3 +672,4 @@ module.exports.getStoryEdit = getStoryEdit
 module.exports.editEventTemplate = editEventTemplate
 module.exports.getEventTemplate = getEventTemplate
 module.exports.deleteEventTemplate = deleteEventTemplate
+module.exports.editedStory = editedStory

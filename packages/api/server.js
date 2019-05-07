@@ -138,3 +138,4 @@ app.post('/api/deleteEvent', ensureAuthenticated, adminHandlers.deleteEvent.bind
 app.get('/api/getEventTemplate', ensureAuthenticated, adminHandlers.getEventTemplate.bind({dbClient: client}))
 app.post('/api/editEventTemplate', ensureAuthenticated, adminHandlers.editEventTemplate.bind({dbClient: client}))
 app.post('/api/deleteEventTemplate', ensureAuthenticated, adminHandlers.deleteEventTemplate.bind({dbClient: client}))
+app.post('/api/editedStory', ensureAuthenticated, adminHandlers.editedStory.bind({dbClient: client}))
