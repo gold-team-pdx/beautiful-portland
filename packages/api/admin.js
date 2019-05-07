@@ -84,6 +84,35 @@ getVolunteerList = function(req, res) {
 	})
 }
 
+postAddEvent = function(req, res){
+  let client = this.dbClient
+	collection = client.db("events-form").collection("events")
+  collection.find({date: "MASTER"}).toArray((err,docs) =>{
+		if(err){
+			console.log(err, "Coudln't find MASTER document")
+			res.send({
+				status: "FAILURE"
+			})
+		}else if(docs[0] == null){
+			console.log(err, "Couldn't fulfill document request")
+			res.send({
+				status: "FAILURE"
+			})
+		}else{
+ 	    docs[0]._id = require('mongodb').ObjectId()
+ 	    docs[0].date = req.body.newDate
+ 	    docs[0].time = req.body.newTime
+ 	    docs[0].coordinator = req.body.newCoorName
+ 	    docs[0].coordinator_phone = req.body.newCoorPhone
+
+		 	collection.insertOne(docs[0])
+		 	res.send({
+				 status: "SUCCESS"
+			 })
+		}
+  })
+}
+
 updateEvent = function(req, res) {
 	client = this.dbClient
 	collection = client.db('events-form').collection('events')
@@ -660,6 +689,7 @@ module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
 module.exports.addFromUploaded = addFromUploaded
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
+module.exports.postAddEvent = postAddEvent
 module.exports.updateEvent = updateEvent
 module.exports.deleteEvent = deleteEvent
 module.exports.addNewDraft = addNewDraft
