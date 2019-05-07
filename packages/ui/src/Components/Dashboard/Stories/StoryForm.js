@@ -19,6 +19,7 @@ export default class StoryForm extends Component {
       postPhoto: {},
       addModalOpen: false,
       postImageData: '',
+      openRemovePhoto: false,
     }
   }
 
@@ -91,6 +92,7 @@ export default class StoryForm extends Component {
 
   open = () => this.setState({ open: true })
   close = () => this.setState({ open: false })
+
   onChange = async (e) => {
     await this.setState({ [e.target.name]: e.target.value })
     if(this.state.title && this.state.hook && this.state.content){
@@ -102,6 +104,9 @@ export default class StoryForm extends Component {
   handleModalClose = () => this.setState({addModalOpen: false})
   handleModalOpen = () => this.setState({addModalOpen: true})
   
+  openRemovePhoto = () => this.setState({ openRemovePhoto: true })
+  closeRemovePhoto = () => this.setState({ openRemovePhoto: false })
+
   // Add Image to post
   addPhoto = (input) => {
     let reader = new FileReader()
@@ -129,10 +134,19 @@ export default class StoryForm extends Component {
     })
   }
 
+  // Remove image from post
+  removePhotoFromStory = () => {
+    this.setState({
+      postPhotoName: 'No Photo',
+      postPhoto: {},
+      postImageData: '',
+      openRemovePhoto: false,
+    })
+  }
   render() {
     return (
       <Segment>
-        <Form>
+        <Form className="storyForm">
           <Form.Field>
           <label>Title</label>
           <input name="title"
@@ -141,32 +155,61 @@ export default class StoryForm extends Component {
                  onChange={this.onChange}
           />
           </Form.Field>
-          <Form.Field>
-          {
-            this.state.postImageData !== '' && 
-            <img alt="blog" className="imageToAdd" src={this.state.postImageData}></img>
+          {this.state.postImageData === '' ? 
+            <Form.Field className="noPhotoAdded"> 
+              <Modal  trigger={<Button color="green" fluid onClick={this.handleModalOpen}>Add Photo to Post</Button>}
+                  open= {this.state.addModalOpen}
+                  onClose={this.handleModalClose}>
+                <Modal.Content>
+                  <h2>Add Photo to Post</h2>
+                  <Form>
+                      <input type='file' id="file" name="file" accept="image/png, image/jpeg"></input>
+                  </Form>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button color='red' inverted onClick={this.handleModalClose}>
+                        <Icon name='remove' /> 
+                        Cancel
+                    </Button>
+                    <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById("file"))}>
+                        <Icon name='checkmark' /> 
+                        Add Photo to Post
+                    </Button>
+                </Modal.Actions> 
+              </Modal>
+            </Form.Field> :
+            <Form.Field className="photoAdded">
+              <img alt="blog" className="imageToAdd" src={this.state.postImageData}></img>
+              <Grid stackable columns={2}>
+                <Grid.Column>
+                  <Button color="red" floated="right" fluid onClick={this.openRemovePhoto}>Remove Photo</Button>
+                  <Confirm open={this.state.openRemovePhoto} onCancel={this.closeRemovePhoto} onConfirm={this.removePhotoFromStory} />
+                </Grid.Column>
+                <Grid.Column>
+                  <Modal  trigger={<Button color="yellow" fluid floated="left" onClick={this.handleModalOpen}>Change Photo</Button>}
+                      open= {this.state.addModalOpen}
+                      onClose={this.handleModalClose}>
+                    <Modal.Content>
+                      <h2>Add Photo to Post</h2>
+                      <Form>
+                          <input type='file' id="file" name="file" accept="image/png, image/jpeg"></input>
+                      </Form>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='red' inverted onClick={this.handleModalClose}>
+                            <Icon name='remove' /> 
+                            Cancel
+                        </Button>
+                        <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById("file"))}>
+                            <Icon name='checkmark' /> 
+                            Add Photo to Post
+                        </Button>
+                    </Modal.Actions> 
+                  </Modal>
+                </Grid.Column>
+              </Grid>
+            </Form.Field>
           }
-          <Modal trigger={<Button color="green" fluid onClick={this.handleModalOpen}>Add Photo to Post</Button>}
-                 open= {this.state.addModalOpen}
-                 onClose={this.handleModalClose}>
-            <Modal.Content>
-              <h2>Add Photo to Post</h2>
-              <Form>
-                  <input type='file' id="file" name="file" accept="image/png, image/jpeg"></input>
-              </Form>
-            </Modal.Content>
-            <Modal.Actions>
-                <Button color='red' inverted onClick={this.handleModalClose}>
-                    <Icon name='remove' /> 
-                    Cancel
-                </Button>
-                <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById("file"))}>
-                    <Icon name='checkmark' /> 
-                    Add Photo to Post
-                </Button>
-            </Modal.Actions> 
-          </Modal>
-          </Form.Field>
           <Form.Field>
           <label>Subtitle</label>
           <input name="hook"
