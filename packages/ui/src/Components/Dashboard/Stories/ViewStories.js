@@ -43,7 +43,7 @@ export default class ViewStories extends Component {
   handlePublishClick = async () => await this.setState({activeItem: 'loadPublished'})
   handleDraftClick = async() => await this.setState({activeItem: 'loadDrafts'})
   updateParent = (e) =>
-    this.props.updateGrandparent((this.props.activeItem: 'editStory'))
+    this.props.updateGrandparent()
 
   updateParentID = (value) => {
      this.props.updateGrandparentID(value)

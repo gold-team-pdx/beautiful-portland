@@ -3,6 +3,7 @@ import { Button, Header, Icon, Menu, Table } from 'semantic-ui-react'
 import Moment from 'moment'
 import Axios from 'axios'
 import { Modal } from 'semantic-ui-react'
+import { Link } from "react-router-dom";
 
 class UpcomingEvents extends Component {
 	constructor(props) {
@@ -155,7 +156,7 @@ class UpcomingEvents extends Component {
 							this.state.events.map((event, index) => (
 								<Table.Row key={index}>
 									<Table.Cell width={2}>
-										<Button color="teal" onClick={() => this.props.updateActiveDate(event.date)}>
+										<Button color="teal" as={Link} to="/EditEvent" onClick={() => this.props.updateActiveDate(event.date)}>
 											{event.date}
 										</Button>
 									</Table.Cell>
