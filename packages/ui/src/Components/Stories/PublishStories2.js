@@ -58,7 +58,7 @@ export default class PublishStories extends Component {
                         </Item.Group>
                     </Grid.Column>
                 </Grid>
-                <br/>
+                <br/><br/><br/>
             </div>
         )
     }

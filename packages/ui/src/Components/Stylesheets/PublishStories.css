@@ -1,3 +1,19 @@
+.card-header{
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: "...";
+}
+
+.card-description{
+    display: inline-block;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .body{
     padding:5px 10px;
     display: inline-block;
@@ -12,7 +28,7 @@
     -webkit-box-orient: vertical; */
 }
 
-.body:hover{
+/* .body:hover{
     text-overflow: inherit;
     overflow: visible;
-}
+} */

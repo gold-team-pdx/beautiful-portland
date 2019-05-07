@@ -25,6 +25,7 @@ export default class PaginationExampleCustomization extends Component {
     } = this.state
 
     return (
+      <div style={{textAlign:'center'}}>
       <Grid columns={1}>
         <Grid.Column>
           <Pagination
@@ -82,6 +83,7 @@ export default class PaginationExampleCustomization extends Component {
           </Form>
         </Grid.Column>
       </Grid>
+      </div>
     )
   }
 }
