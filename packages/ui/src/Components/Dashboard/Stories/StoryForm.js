@@ -47,7 +47,7 @@ export default class StoryForm extends Component {
 
   handlePublish = async (e) => {
     await this.setState({ publish_status : true })
-    console.log(this.state._id)
+    /*console.log(this.state._id) TESTING */
     if(this.state._id !== undefined && this.state._id !== '') {
     Axios.post("/api/editedStory", this.state)
       .then(response => {
@@ -66,7 +66,7 @@ export default class StoryForm extends Component {
       })
     }
     this.open()
-    console.log(this.state)
+    /*console.log(this.state) TESTING */
   }
 
  /*Checks for publish_status if load through edit*/
@@ -91,7 +91,7 @@ export default class StoryForm extends Component {
       })
      }
     this.open()
-    console.log(this.state)
+    /*console.log(this.state) TESTING */
   }
 
   clearForm = () => {
