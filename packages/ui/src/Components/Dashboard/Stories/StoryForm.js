@@ -92,6 +92,8 @@ export default class StoryForm extends Component {
     await this.setState({ [e.target.name]: e.target.value })
     if(this.state.title && this.state.hook && this.state.content){
       this.setState({isEnabled : true})
+    } else {
+      this.setState({isEnabled: false})
     }
   }
 
