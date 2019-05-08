@@ -585,8 +585,6 @@ getStoryEdit = function(req, res) {
 }
 
 editEventTemplate = function (req, res) {
-	console.log('editEventTemplate called')
-	console.log(req.body)
 	let client = this.dbClient
 	let categories = []
 	req.body.categories.forEach((category) => {
