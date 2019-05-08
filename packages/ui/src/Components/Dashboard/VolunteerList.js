@@ -3,6 +3,7 @@ import Axios from 'axios'
 import _ from 'lodash'
 import { Table, Search } from 'semantic-ui-react'
 import { Button } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 import '../Stylesheets/VolunteerList.css'
 
 class VolunteerList extends Component {
@@ -67,7 +68,16 @@ class VolunteerList extends Component {
               filteredVolunteers.map(item => (
                 <Table.Row key={item.email}>
                   <Table.Cell>
-                    <Button className="volunteer">{item.name}</Button>
+                    <Button
+                      as={Link}
+                      to="/VolunteerSubmissions"
+                      onClick={() => {
+                        this.props.updateActiveEmail(item.name)
+                      }}
+                      className="volunteer"
+                    >
+                      {item.name}
+                    </Button>
                   </Table.Cell>
                   <Table.Cell>{item.email}</Table.Cell>
                   <Table.Cell>{item.phone}</Table.Cell>

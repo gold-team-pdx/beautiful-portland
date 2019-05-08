@@ -15,7 +15,7 @@ class Footer extends Component {
         >
           <Segment.Group>
             <a
-              href="https://google.com"
+              href="https://www.facebook.com/groups/fhsmobile/"
               target="_blank"
               rel="noopener noreferrer"
             >

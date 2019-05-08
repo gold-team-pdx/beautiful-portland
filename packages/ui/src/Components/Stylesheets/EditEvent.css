@@ -16,18 +16,18 @@
     border: 1px solid #FF0000;
 }
 
-.ui.toggle.checkbox input:checked + label:before {
+.ui.toggle.checkbox.deletion input:checked + label:before {
     background-color: #ff0000 !important;
 }
 
-.ui.toggle.checkbox input:checked ~ .box:before, .ui.toggle.checkbox input:checked ~ label:before {
+.ui.toggle.checkbox.deletion input:checked ~ .box:before, .ui.toggle.checkbox input:checked ~ label:before {
     background-color: #ff0000 !important;
 }
 
-.ui.toggle.checkbox input:checked ~ .box:before, .ui.toggle.checkbox input:checked ~ label:before {
+.ui.toggle.checkbox.deletion input:checked ~ .box:before, .ui.toggle.checkbox input:checked ~ label:before {
     background-color: #ff0000 !important;
 }
 
-.ui.toggle.checkbox input:focus:checked ~ .box:before, .ui.toggle.checkbox input:focus:checked ~ label:before {
+.ui.toggle.checkbox.deletion input:focus:checked ~ .box:before, .ui.toggle.checkbox input:focus:checked ~ label:before {
     background-color: #ff0000 !important;
 }
