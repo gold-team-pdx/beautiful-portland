@@ -51,10 +51,10 @@ class Footer extends Component {
               <List.Item as="a" href="/ContactUs">
                 Contact
               </List.Item>
-              <List.Item as="a" href="#">
+              <List.Item as="a" href="/about">
                 Terms and Conditions
               </List.Item>
-              <List.Item as="a" href="#">
+              <List.Item as="a" href="about">
                 Privacy Policy
               </List.Item>
             </List>
