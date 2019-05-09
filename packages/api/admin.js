@@ -463,9 +463,11 @@ editedStory = function(req,res) {
 }
 
 getPublishedStory = function(req, res) {
+	console.log("publish page " + req.query.page)
+	let skips = (req.query.page - 1) * 5
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('published')
-	collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+	collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
 		if (err) {
 			console.log(err, 'Error trying to find published Stories')
 			res.send({
@@ -498,9 +500,11 @@ getPublishedStory = function(req, res) {
 }
 
 getDraftedStories = function(req, res) {
+	console.log("draft page " + req.query.page)
+	let skips = (req.query.page - 1) * 5
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('drafts')
-	collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+	collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
 		if (err) {
 			console.log(err, 'Error trying to find drafted Stories')
 			res.send({
@@ -567,20 +571,39 @@ getStoryEdit = function(req, res) {
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('published')
 	collection.findOne({ _id: ObjectId(req.body.id) }, function(err, result) {
+	if (err) {
+		throw err
+	} else if (!result) {
+		collection = client.db('stories_example1').collection('drafts')
+		collection.findOne({ _id: ObjectId(req.body.id) }, function(e, r) {
 		if (err) {
 			throw err
-		} else if (!result) {
-			collection = client.db('stories_example1').collection('drafts')
-			collection.findOne({ _id: ObjectId(req.body.id) }, function(e, r) {
-				if (err) {
-					throw err
-				} else {
-					res.send(r)
-				}
-			})
+		} else {
+			res.send(r)
+		}
+		})
 		} else {
 			res.send(result)
 		}
+	})
+}
+
+getStoryCount = async function(req, res) {
+	let client = this.dbClient
+	let response_data = []
+	collection = client.db('stories_example1').collection('published')
+	let pubResult = await collection.countDocuments({})
+		
+	collection = client.db('stories_example1').collection('drafts')
+	    draftResult = await collection.countDocuments({})
+		var countObj = new Object()
+		countObj.draftCount = draftResult
+		countObj.publishCount = pubResult
+		response_data.push(countObj)
+	console.log(response_data)
+	res.send({
+		status: 'SUCESS',
+		count_info: JSON.stringify(response_data)
 	})
 }
 
@@ -703,3 +726,4 @@ module.exports.editEventTemplate = editEventTemplate
 module.exports.getEventTemplate = getEventTemplate
 module.exports.deleteEventTemplate = deleteEventTemplate
 module.exports.editedStory = editedStory
+module.exports.getStoryCount = getStoryCount
