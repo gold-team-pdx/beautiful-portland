@@ -10,10 +10,12 @@ export default class ViewStories extends Component {
     super(props)
 
     this.state = {
-      activeItem: 'loadDrafts',
+      activeItem: 'loadPublished',
       passEdit: false,
       publishedPage: 1,
-      draftPage:1,
+      draftPage: 1,
+      draftCount: 0,
+      publishCount: 0,
       isEnabled: false,
       draftStory : [],
       publishStory: []
@@ -21,6 +23,32 @@ export default class ViewStories extends Component {
   }
 
   componentDidMount = async () => {
+    Axios.get('/api/StoriesCount')
+     .then(res=> {
+        let tempCount = JSON.parse(res.data.count_info)
+        await this.setState({draftCount: tempCount[0].draftCount})
+        await this.setState({publishCount: tempCount[0].publishCount})
+        console.log(res)
+     })
+     
+     if(((this.state.draftCount) / this.state.draftPage * 5) < 1) {
+      await this.setState({isEnabled:false})
+     } else {
+      await this.setState({isEnabled:true})
+       this.getDraft()
+     }
+     
+     if(((this.state.publishCount) / this.state.publishPage * 5) < 1){
+       await this.setState({isEnabled:false})
+     } else {
+       await this.setState({isEnabled:true})
+       this.getPublished() 
+     }
+     
+  }
+        
+    
+  getDraft = () => {
     Axios.get('/api/draftStories', {
       params: { page: this.state.draftPage }
      })
@@ -32,36 +60,34 @@ export default class ViewStories extends Component {
         this.setState({
           draftStory : tempDraftStory
         })
-       } else {
-         this.setState({isEnabled : false})
-       }
+        } else {
+          this.setState({isEnabled : false})
+        }
       })
+  }
 
-      Axios.get('/api/publishedStories', {
-        params: { page: this.state.publishedPage }
-      })
-        .then(res => {
-          if(res.data.status !== 'FAILURE'){
-          this.setState({isEnabled:true})
-          let tempPubStory = JSON.parse(res.data.published_info)
-          console.log(tempPubStory)
-          this.setState({
-            publishStory : tempPubStory
-          })
+  getPublished = () => {
+    Axios.get('/api/publishedStories', {
+      params: { page: this.state.publishedPage }
+    })
+      .then(res => {
+        if(res.data.status !== 'FAILURE'){
+        this.setState({isEnabled:true})
+        let tempPubStory = JSON.parse(res.data.published_info)
+        console.log(tempPubStory)
+        this.setState({
+          publishStory : tempPubStory
+        })
         } else {
           this.setState({isEnabled: false})
         }
-        })
-      
-      }
-        
-    
-
+      })
+  }
+  
   handleEditClick = async () => await this.setState({passEdit: true})
   handlePublishClick = async () => await this.setState({activeItem: 'loadPublished'})
   handleDraftClick = async() => await this.setState({activeItem: 'loadDrafts'})
-  updateParent = (e) =>
-    this.props.updateGrandparent()
+  updateParent = (e) => this.props.updateGrandparent()
 
   updateParentID = (value) => {
      this.props.updateGrandparentID(value)
