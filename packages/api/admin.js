@@ -311,6 +311,34 @@ removeImagesFromFrontPage = function(req, res) {
 	})
 }
 
+// Add a photo from the stories page 
+// (only when published or saved as a draft)
+addImageIntoStories = function(req, res) {
+	let AWS = this.amazon
+	const s3 = new AWS.S3({
+		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+		s3ForcePathStyle: true,
+		accessKeyId: process.env.S3_ACCESS_KEY,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+	})
+	const bucket = 'beautiful-portland-carousel-photos'
+	let file = req.body.fileToAdd
+	console.log(file)
+	// let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+	// file.fileName = 'storyPhotos/' + file.fileName
+	// const params = {
+	// 	Bucket: bucket,
+	// 	Key: file.fileName,
+	// 	Body: buf
+	// }
+	// s3.upload(params, function(s3Err, data) {
+	// 	if (s3Err) throw s3Err
+	// 	console.log('File uploaded successfully')
+	// 	res.send('upload successful')
+	// })
+
+}
+
 // Add photo to front page from already uploaded photos.
 // To do this, we need to copy the photo from all photos
 // to /frontPage, then remove the other photo to prevent
@@ -373,7 +401,8 @@ addNewDraft = function(req, res) {
 				publish_status: req.body.publish_status,
 				title: req.body.title,
 				hook: req.body.hook,
-				content: req.body.content
+				content: req.body.content,
+				postPhotoName: req.body.postPhotoName
 			}
 		},
 		{ upsert: true },
@@ -395,7 +424,8 @@ addNewPublished = function(req, res) {
 				publish_status: req.body.publish_status,
 				title: req.body.title,
 				hook: req.body.hook,
-				content: req.body.content
+				content: req.body.content,
+				postPhotoName: req.body.postPhotoName
 			}
 		},
 		{ upsert: true },
@@ -432,6 +462,7 @@ getPublishedStory = function(req, res) {
 			publishObj.hook = pubStory.hook
 			publishObj.content = pubStory.content
 			publishObj.public_status = pubStory.public_status
+			publishObj.postPhotoName = pubStory.postPhotoName
 			response_data.push(pubStory)
 		})
 		res.send({
@@ -466,6 +497,7 @@ getDraftedStories = function(req, res) {
 			draftObj.title = draftStory.title
 			draftObj.hook = draftStory.hook
 			draftObj.content = draftStory.content
+			draftObj.postPhotoName = draftStory.postPhotoName
 			draftObj.public_status = draftStory.public_status
 			response_data.push(draftStory)
 		})
@@ -631,6 +663,7 @@ module.exports.addPhotos = addPhotos
 module.exports.removePhotos = removePhotos
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
 module.exports.addFromUploaded = addFromUploaded
+module.exports.addImageIntoStories = addImageIntoStories
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
 module.exports.updateEvent = updateEvent

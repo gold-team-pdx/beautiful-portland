@@ -123,6 +123,7 @@ app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.remove
 app.post('/api/addImagesToBucket', ensureAuthenticated, adminHandlers.addPhotos.bind({amazon: AWS}))
 app.post('/api/removeImagesFromFrontPage', ensureAuthenticated, adminHandlers.removeImagesFromFrontPage.bind({amazon: AWS}))
 app.post('/api/addImageFromUploaded', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))
+app.post('/api/addImageIntoStories', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/fullEvent', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))

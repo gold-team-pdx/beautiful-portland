@@ -28,18 +28,19 @@ export default class StoryForm extends Component {
     Axios.post('/api/getStoryEdit', { id: this.props.editId })
         .then((response) => {
          console.log(response)
+         //Axios.get('/api/getStoryPhoto')
          this.setState({
-           _id : response.data._id,
-         title :response.data.title,
-         hook :  response.data.hook,
-         content : response.data.content,
-         editedTimestamp : response.data.edited_timestamp,
-         publish_status : response.data.publish_status,
-         postPhoto: response.data.photo
+          _id : response.data._id,
+          title :response.data.title,
+          hook :  response.data.hook,
+          content : response.data.content,
+          editedTimestamp : response.data.edited_timestamp,
+          publish_status : response.data.publish_status,
+          postPhotoName: response.data.postPhotoName
+        })
       })
-    })
-       .catch((error) => {
-         console.log(error)
+      .catch((error) => {
+        console.log(error)
       })
     }
   }
@@ -54,15 +55,31 @@ export default class StoryForm extends Component {
       .catch(err => {
         console.log(err, "Try again.")
       })
-    this.open()
-    console.log(this.state)
+
+    // Only add the photo if it hasn't already been added to s3
+    // or if it has been changed
+    let fileName = this.state.postImageData.split('/').pop()
+    console.log(fileName)
+    // If the keys are different, push new file.
+    if(fileName !== this.state.postPhotoName) {
+      Axios.post('/api/addImageIntoStories', {
+        fileToAdd: this.state.postPhoto})
+        .then(res => {
+          console.log('Photo saved in s3')
+          this.clearForm()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 
  /*Checks for publish_status if load through edit*/
   handleSave = (e) => {
     if(this.state.publish_status) {
       this.handlePublish()
-    } else {
+    } 
+    else {
       Axios.post("/api/addDraft", this.state)
        .then(response => {
          console.log(response, "Story saved to drafts")
@@ -70,9 +87,24 @@ export default class StoryForm extends Component {
        .catch(err => {
          console.log(err, "Try again.")
        })
-     }
-    this.open()
-    console.log(this.state)
+      // Only add the photo if it hasn't already been added to s3
+      // or if it has been changed
+      let fileName = this.state.postImageData.split('/').pop()
+      console.log(fileName)
+      // If the keys are different, push new file.
+      if(fileName !== this.state.postPhotoName) {
+        Axios.post('/api/addImageIntoStories', {
+          fileToAdd: this.state.postPhoto})
+          .then(res => {
+            console.log('Photo saved in s3')
+            this.clearForm()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+    
   }
 
   clearForm = () => {
@@ -104,6 +136,7 @@ export default class StoryForm extends Component {
   handleModalClose = () => this.setState({addModalOpen: false})
   handleModalOpen = () => this.setState({addModalOpen: true})
   
+  // Alert modal for removing photo from post
   openRemovePhoto = () => this.setState({ openRemovePhoto: true })
   closeRemovePhoto = () => this.setState({ openRemovePhoto: false })
 
@@ -124,6 +157,7 @@ export default class StoryForm extends Component {
           "fileData": data,
           "fileName": newFileName
       }
+      // TODO: Bad practice to call set state twice -> will call separate function.
       this.setState({postImageData: data})
     }
     reader.readAsDataURL(input.files[0])
@@ -155,7 +189,10 @@ export default class StoryForm extends Component {
                  onChange={this.onChange}
           />
           </Form.Field>
-          {this.state.postImageData === '' ? 
+          { // This is a large if/else shorthand statement.
+            // IF
+            this.state.postPhotoName === 'No Photo' ? 
+            // THEN
             <Form.Field className="noPhotoAdded"> 
               <Modal  trigger={<Button color="green" fluid onClick={this.handleModalOpen}>Add Photo to Post</Button>}
                   open= {this.state.addModalOpen}
@@ -177,7 +214,10 @@ export default class StoryForm extends Component {
                     </Button>
                 </Modal.Actions> 
               </Modal>
-            </Form.Field> :
+            </Form.Field> 
+            // END THEN
+            // ELSE
+            :
             <Form.Field className="photoAdded">
               <img alt="blog" className="imageToAdd" src={this.state.postImageData}></img>
               <Grid stackable columns={2}>
@@ -209,6 +249,7 @@ export default class StoryForm extends Component {
                 </Grid.Column>
               </Grid>
             </Form.Field>
+            // END ELSE
           }
           <Form.Field>
           <label>Subtitle</label>
@@ -232,22 +273,22 @@ export default class StoryForm extends Component {
              <Button color="blue"
                      fluid
                      disabled={!this.state.isEnabled}
-                     onClick={this.handleSave}>Save</Button>
+                     onClick={this.open}>Save</Button>
              <Confirm open={this.state.open}
                       content='Your Story was saved as a draft'
                       onCancel={this.close}
-                      onConfirm={this.clearForm}
+                      onConfirm={this.handleSave}
              />
           </Grid.Column>
           <Grid.Column >
              <Button color="green"
                      fluid
                      disabled={!this.state.isEnabled}
-                     onClick={this.handlePublish}>Publish</Button>
+                     onClick={this.open}>Publish</Button>
              <Confirm open={this.state.open}
                       content='Your Story was published'
                       onCancel={this.close}
-                      onConfirm={this.clearForm}
+                      onConfirm={this.handlePublish}
              />
           </Grid.Column>
           <Grid.Column>
