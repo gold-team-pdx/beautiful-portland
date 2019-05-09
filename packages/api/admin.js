@@ -434,9 +434,10 @@ editedStory = function(req,res) {
 }
 
 getPublishedStory = function(req, res) {
+	let skips = (req.query.page - 1) * 5
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('published')
-	collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+	collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
 		if (err) {
 			console.log(err, 'Error trying to find published Stories')
 			res.send({
@@ -461,6 +462,7 @@ getPublishedStory = function(req, res) {
 			publishObj.public_status = pubStory.public_status
 			response_data.push(pubStory)
 		})
+		console.log(response_data[0])
 		res.send({
 			status: 'SUCCESS',
 			published_info: JSON.stringify(response_data)
@@ -469,9 +471,10 @@ getPublishedStory = function(req, res) {
 }
 
 getDraftedStories = function(req, res) {
+	let skips = (req.query.page - 1) * 5
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('drafts')
-	collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+	collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
 		if (err) {
 			console.log(err, 'Error trying to find drafted Stories')
 			res.send({

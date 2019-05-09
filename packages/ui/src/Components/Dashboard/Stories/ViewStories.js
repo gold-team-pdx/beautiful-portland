@@ -12,32 +12,50 @@ export default class ViewStories extends Component {
     this.state = {
       activeItem: 'loadDrafts',
       passEdit: false,
-      shouldRerender: false,
+      publishedPage: 1,
+      draftPage:1,
+      isEnabled: false,
       draftStory : [],
       publishStory: []
     }
   }
 
   componentDidMount = async () => {
-    Axios.get('/api/draftStories')
+    Axios.get('/api/draftStories', {
+      params: { page: this.state.draftPage }
+     })
       .then(res => {
+        if(res.data.status !== 'FAILURE') {
+        this.setState({isEnabled:true})
         let tempDraftStory = JSON.parse(res.data.draft_info)
         console.log(tempDraftStory)
         this.setState({
           draftStory : tempDraftStory
         })
+       } else {
+         this.setState({isEnabled : false})
+       }
       })
 
-      Axios.get('/api/publishedStories')
+      Axios.get('/api/publishedStories', {
+        params: { page: this.state.publishedPage }
+      })
         .then(res => {
+          if(res.data.status !== 'FAILURE'){
+          this.setState({isEnabled:true})
           let tempPubStory = JSON.parse(res.data.published_info)
           console.log(tempPubStory)
           this.setState({
             publishStory : tempPubStory
           })
+        } else {
+          this.setState({isEnabled: false})
+        }
         })
-        this.setState({shouldRerender : false})
-    }
+      
+      }
+        
+    
 
   handleEditClick = async () => await this.setState({passEdit: true})
   handlePublishClick = async () => await this.setState({activeItem: 'loadPublished'})
@@ -49,6 +67,41 @@ export default class ViewStories extends Component {
      this.props.updateGrandparentID(value)
      console.log(value)
    }
+
+   handleMoreStories = async () => {
+    console.log("before" + this.state.publishedPage)
+    console.log(this.state.activeItem)
+     if(this.state.activeItem === 'loadPublished'){
+       this.setState({draftPage: 1})
+      /*let nextPage = this.state.publishedPage + 1*/
+      await this.setState({publishedPage: this.state.publishedPage + 1 })
+      console.log("after" + this.state.publishedPage)
+      this.componentDidMount()
+     } else {
+       this.setState({publishedPage: 1})
+       /*let nextPage = this.state.draftPage + 1*/
+       this.setState({draftPage: this.state.draftPage + 1})
+       this.componentDidMount()
+     }
+     
+   }
+
+   handleLessStories = async () => {
+     if(this.state.activeItem === 'loadPublished') {
+       this.setState({draftPage: 1})
+       if(this.state.publishedPage > 1) {
+        await this.setState({publishedPage: this.state.publishedPage - 1})
+         this.componentDidMount()
+       }
+     } else {
+         this.setState({publishedPage: 1})
+         if(this.state.publishedPage > 1) {
+           await this.setState({draftPage: this.state.draftPage - 1})
+            this.componentDidMount()
+         }
+     }
+   }
+
 
   render () {
 
@@ -92,6 +145,21 @@ export default class ViewStories extends Component {
         </div>
            { chooseRender }
         </Segment>
+        <div>
+        <Button.Group widths={2}>
+          <Button labelPosition='left' 
+                  icon='left chevron' 
+                  content='Back' 
+                  onClick={this.handleLessStories}
+                  />
+          <Button labelPosition='right' 
+                  icon='right chevron' 
+                  content='Forward' 
+                  disabled={!this.state.isEnabled}
+                  onClick={this.handleMoreStories}
+                  />
+       </Button.Group>
+       </div>
      </div>
     )
   }
