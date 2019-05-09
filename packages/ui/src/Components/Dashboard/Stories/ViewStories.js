@@ -15,8 +15,9 @@ export default class ViewStories extends Component {
       publishedPage: 1,
       draftPage: 1,
       draftCount: 1,
-      publishCount: 0,
-      isEnabled: false,
+      publishCount: 1,
+      maxDraft: 1,
+      maxPublish:1,
       draftStory : [],
       publishStory: []
     }
@@ -28,41 +29,32 @@ export default class ViewStories extends Component {
         let tempCount = JSON.parse(res.data.count_info)
         await this.setState({draftCount: tempCount[0].draftCount})
         await this.setState({publishCount: tempCount[0].publishCount})
+        await this.setState({maxPublish: Math.ceil(this.state.publishCount/5)})
+        await this.setState({maxDraft: Math.ceil(this.state.draftCount/5)})
         console.log(res)
      })
      
-     if(((this.state.draftCount) / this.state.draftPage * 5) < 1) {
-      this.setState({isEnabled:false})
-     } else {
-       this.setState({isEnabled:true})
+     if(!(((this.state.draftCount) / this.state.draftPage * 5) < 1)) {
        this.getDraft()
      }
      
-     if(((this.state.publishCount) / this.state.publishPage * 5) < 1){
-        this.setState({isEnabled:false})
-     } else {
-        this.setState({isEnabled:true})
+     if(!(((this.state.publishCount) / this.state.publishPage * 5) < 1)) {
         this.getPublished() 
      }
-     
   }
-        
-    
+          
   getDraft = () => {
     Axios.get('/api/draftStories', {
       params: { page: this.state.draftPage }
      })
       .then(res => {
         if(res.data.status !== 'FAILURE') {
-          this.setState({isEnabled:true})
           let tempDraftStory = JSON.parse(res.data.draft_info)
           console.log(tempDraftStory)
           this.setState({
           draftStory : tempDraftStory
         })
-        } else {
-            this.setState({isEnabled : false})
-        }
+        } 
       })
   }
 
@@ -72,15 +64,12 @@ export default class ViewStories extends Component {
     })
       .then(res => {
         if(res.data.status !== 'FAILURE'){
-          this.setState({isEnabled:true})
           let tempPubStory = JSON.parse(res.data.published_info)
           console.log(tempPubStory)
           this.setState({
           publishStory : tempPubStory
         })
-        } else {
-            this.setState({isEnabled: false})
-        }
+        } 
       })
   }
   
@@ -95,19 +84,14 @@ export default class ViewStories extends Component {
    }
 
    handleMoreStories = async () => {
-    console.log("before" + this.state.publishedPage)
-    console.log(this.state.activeItem)
      if(this.state.activeItem === 'loadPublished'){
        this.setState({draftPage: 1})
        await this.setState({publishedPage: this.state.publishedPage + 1 })
-       console.log("after" + this.state.publishedPage)
        this.componentDidMount()
      } else {
-         console.log("before draft " + this.state.draftPage)
          this.setState({publishedPage: 1})
          await this.setState({draftPage: this.state.draftPage + 1})
          this.componentDidMount()
-         console.log("after" + this.state.draftPage)
      }
      
    }
@@ -116,14 +100,14 @@ export default class ViewStories extends Component {
      if(this.state.activeItem === 'loadPublished') {
        this.setState({draftPage: 1})
        if(this.state.publishedPage > 1) {
-        await this.setState({publishedPage: this.state.publishedPage - 1})
+         await this.setState({publishedPage: this.state.publishedPage - 1})
          this.componentDidMount()
        }
      } else {
          this.setState({publishedPage: 1})
          if(this.state.draftPage > 1) {
            await this.setState({draftPage: this.state.draftPage - 1})
-            this.componentDidMount()
+           this.componentDidMount()
          }
      }
    }
@@ -132,7 +116,7 @@ export default class ViewStories extends Component {
   render () {
 
     let activeItem  = this.state.activeItem
-
+    
     let chooseRender;
     if(activeItem === 'loadPublished'){
       chooseRender = (
@@ -167,7 +151,7 @@ export default class ViewStories extends Component {
             <Button name='loadDrafts'
                     active={activeItem === 'loadDrafts'}
                     onClick={this.handleDraftClick}>Drafts</Button>
-          </Button.Group>
+          </Button.Group>     
         </div>
            { chooseRender }
         </Segment>
@@ -181,7 +165,10 @@ export default class ViewStories extends Component {
           <Button labelPosition='right' 
                   icon='right chevron' 
                   content='Forward' 
-                  disabled={!this.state.isEnabled}
+                  disabled={(this.state.activeItem === 'loadPublished' &&
+                    this.state.maxPublish === this.state.publishedPage) || 
+                    (this.state.activeItem === 'loadDrafts' &&
+                    this.state.maxDraft === this.state.draftPage)}
                   onClick={this.handleMoreStories}
                   />
        </Button.Group>
