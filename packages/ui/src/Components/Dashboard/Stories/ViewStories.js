@@ -14,7 +14,7 @@ export default class ViewStories extends Component {
       passEdit: false,
       publishedPage: 1,
       draftPage: 1,
-      draftCount: 0,
+      draftCount: 1,
       publishCount: 0,
       isEnabled: false,
       draftStory : [],
@@ -24,7 +24,7 @@ export default class ViewStories extends Component {
 
   componentDidMount = async () => {
     Axios.get('/api/StoriesCount')
-     .then(res=> {
+     .then(async(res) => {
         let tempCount = JSON.parse(res.data.count_info)
         await this.setState({draftCount: tempCount[0].draftCount})
         await this.setState({publishCount: tempCount[0].publishCount})
@@ -32,17 +32,17 @@ export default class ViewStories extends Component {
      })
      
      if(((this.state.draftCount) / this.state.draftPage * 5) < 1) {
-      await this.setState({isEnabled:false})
+      this.setState({isEnabled:false})
      } else {
-      await this.setState({isEnabled:true})
+       this.setState({isEnabled:true})
        this.getDraft()
      }
      
      if(((this.state.publishCount) / this.state.publishPage * 5) < 1){
-       await this.setState({isEnabled:false})
+        this.setState({isEnabled:false})
      } else {
-       await this.setState({isEnabled:true})
-       this.getPublished() 
+        this.setState({isEnabled:true})
+        this.getPublished() 
      }
      
   }
@@ -54,14 +54,14 @@ export default class ViewStories extends Component {
      })
       .then(res => {
         if(res.data.status !== 'FAILURE') {
-        this.setState({isEnabled:true})
-        let tempDraftStory = JSON.parse(res.data.draft_info)
-        console.log(tempDraftStory)
-        this.setState({
+          this.setState({isEnabled:true})
+          let tempDraftStory = JSON.parse(res.data.draft_info)
+          console.log(tempDraftStory)
+          this.setState({
           draftStory : tempDraftStory
         })
         } else {
-          this.setState({isEnabled : false})
+            this.setState({isEnabled : false})
         }
       })
   }
@@ -72,14 +72,14 @@ export default class ViewStories extends Component {
     })
       .then(res => {
         if(res.data.status !== 'FAILURE'){
-        this.setState({isEnabled:true})
-        let tempPubStory = JSON.parse(res.data.published_info)
-        console.log(tempPubStory)
-        this.setState({
+          this.setState({isEnabled:true})
+          let tempPubStory = JSON.parse(res.data.published_info)
+          console.log(tempPubStory)
+          this.setState({
           publishStory : tempPubStory
         })
         } else {
-          this.setState({isEnabled: false})
+            this.setState({isEnabled: false})
         }
       })
   }
@@ -99,15 +99,15 @@ export default class ViewStories extends Component {
     console.log(this.state.activeItem)
      if(this.state.activeItem === 'loadPublished'){
        this.setState({draftPage: 1})
-      /*let nextPage = this.state.publishedPage + 1*/
-      await this.setState({publishedPage: this.state.publishedPage + 1 })
-      console.log("after" + this.state.publishedPage)
-      this.componentDidMount()
-     } else {
-       this.setState({publishedPage: 1})
-       /*let nextPage = this.state.draftPage + 1*/
-       this.setState({draftPage: this.state.draftPage + 1})
+       await this.setState({publishedPage: this.state.publishedPage + 1 })
+       console.log("after" + this.state.publishedPage)
        this.componentDidMount()
+     } else {
+         console.log("before draft " + this.state.draftPage)
+         this.setState({publishedPage: 1})
+         await this.setState({draftPage: this.state.draftPage + 1})
+         this.componentDidMount()
+         console.log("after" + this.state.draftPage)
      }
      
    }
@@ -121,7 +121,7 @@ export default class ViewStories extends Component {
        }
      } else {
          this.setState({publishedPage: 1})
-         if(this.state.publishedPage > 1) {
+         if(this.state.draftPage > 1) {
            await this.setState({draftPage: this.state.draftPage - 1})
             this.componentDidMount()
          }

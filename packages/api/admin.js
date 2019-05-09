@@ -434,6 +434,7 @@ editedStory = function(req,res) {
 }
 
 getPublishedStory = function(req, res) {
+	console.log("publish page " + req.query.page)
 	let skips = (req.query.page - 1) * 5
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('published')
@@ -470,6 +471,7 @@ getPublishedStory = function(req, res) {
 }
 
 getDraftedStories = function(req, res) {
+	console.log("draft page " + req.query.page)
 	let skips = (req.query.page - 1) * 5
 	let client = this.dbClient
 	collection = client.db('stories_example1').collection('drafts')
