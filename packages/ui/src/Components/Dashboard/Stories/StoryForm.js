@@ -14,7 +14,6 @@ export default class StoryForm extends Component {
       publish_status: false,
       editedTimestamp: '',
       open: false,
-      isEnabled: false,
       // Photo data
       // holds filename
       postPhotoName: 'No Photo',
@@ -50,46 +49,8 @@ export default class StoryForm extends Component {
     }
   }
 
-  componentDidUpdate = (prevState) => {
-    if(this.state.title && this.state.hook && this.state.content){
-      if(!prevState.isEnabled) {
-        this.setState({isEnabled : true})
-        return true
-      }
-      else
-        return false
-    } 
-    else {
-      this.setState({isEnabled: false})
-      return true
-    }
-  }
-
-  /* Original handle publish */
-  /*handlePublish = async (e) => {
-    await this.setState({ publish_status : true })
-    console.log(this.state._id) TESTING 
-    if(this.state._id !== undefined && this.state._id !== '') {
-      Axios.post("/api/editedStory", this.state)
-        .then(response => {
-          console.log(response, "Story has been edited and saved to published")
-        })
-        .catch(err => {
-          console.log(err, "Try again.")
-        })
-      } else {
-        Axios.post("/api/addPublish", this.state)
-        .then(response => {
-          console.log(response, "Story has been published")
-        })
-        .catch(err => {
-          console.log(err, "Try again.")
-        })
-      }
-      this.open()
-      console.log(this.state) TESTING 
-}*/
-  handlePublish = (e) => {
+  handlePublish = () => {
+    console.log(this.state._id)
     if(this.state._id !== undefined && this.state._id !== '') {
       Axios.post("/api/editedStory", this.state)
         .then(response => {
@@ -99,7 +60,8 @@ export default class StoryForm extends Component {
         .catch(err => {
           console.log(err, "Try again.")
         })
-    } else {
+    } 
+    else {
       Axios.post("/api/addPublish", this.state)
       .then(response => {
         console.log(response, "Story has been published")
@@ -107,7 +69,7 @@ export default class StoryForm extends Component {
       .catch(err => {
         console.log(err, "Try again.")
       })
-
+    }
     // Only add the photo if it hasn't already been added to s3
     // or if it has been changed
     let fileName = this.state.postImageData.split('/').pop()
@@ -124,68 +86,50 @@ export default class StoryForm extends Component {
           console.log(err)
         })
     }
-    }
-    this.open()
+    this.close()
   }
 
-/* Original Handle Save */
-/*
-Checks for publish_status if load through edit
- handleSave = (e) => {
-  if(this.state.publish_status) {
-    this.handlePublish()
-  } else if(this.state._id !== undefined && this.state._id !== '') {
-    Axios.post("/api/editedStory", this.state)
-     .then(response => {
-       console.log(response, "Story has been edited and saved to drafts")
-     })
-     .catch(err => {
-       console.log(err, "Try again.")
-     })
-   } else {
-    Axios.post("/api/addDraft", this.state)
-    .then(response => {
-      console.log(response, "Story saved to drafts")
-    })
-    .catch(err => {
-      console.log(err, "Try again.")
-    })
-   }
-  this.open()
-  /*console.log(this.state) TESTING
- }*/
  /*Checks for publish_status if load through edit*/
-  handleSave = (e) => {
+  handleSave = () => {
+    console.log(this.state._id)
     if(this.state.publish_status) {
       this.handlePublish()
     } 
+    else if(this.state._id !== undefined && this.state._id !== '') {
+      Axios.post("/api/editedStory", this.state)
+        .then(response => {
+          console.log(response, "Story has been edited and saved to drafts")
+        })
+        .catch(err => {
+          console.log(err, "Try again.")
+        })
+    } 
     else {
       Axios.post("/api/addDraft", this.state)
-    } else if(this.state._id !== undefined && this.state._id !== '') {
-      Axios.post("/api/editedStory", this.state)
-       .then(response => {
-         console.log(response, "Story has been edited and saved to drafts")
-       })
-       .catch(err => {
-         console.log(err, "Try again.")
-       })
-      // Only add the photo if it hasn't already been added to s3
-      // or if it has been changed
-      let fileName = this.state.postImageData.split('/').pop()
-      console.log(fileName)
-      // If the keys are different, push new file.
-      if(fileName !== this.state.postPhotoName) {
-        Axios.post('/api/addImageIntoStories', {
-          fileToAdd: this.state.postPhoto})
-          .then(res => {
-            console.log('Photo saved in s3')
-            this.clearForm()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
+      .then(response => {
+        console.log(response, "Story saved to drafts")
+      })
+      .catch(err => {
+        console.log(err, "Try again.")
+      })
     }
+    // Only add the photo if it hasn't already been added to s3
+    // or if it has been changed
+    let fileName = this.state.postImageData.split('/').pop()
+    console.log(fileName)
+    // If the keys are different, push new file.
+    if(fileName !== this.state.postPhotoName) {
+      Axios.post('/api/addImageIntoStories', {
+        fileToAdd: this.state.postPhoto})
+        .then(res => {
+          console.log('Photo saved in s3')
+          this.clearForm()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+    this.close()
   }
 
   clearForm = () => {
@@ -195,7 +139,6 @@ Checks for publish_status if load through edit
       content: '',
       publish_status: false,
       open: false,
-      isEnabled : false,
       postPhotoName: 'No Photo',
       postPhoto: {},
       postImageData: '' 
@@ -255,6 +198,7 @@ Checks for publish_status if load through edit
       openRemovePhoto: false,
     })
   }
+
   render() {
     return (
       <Segment>
@@ -350,23 +294,23 @@ Checks for publish_status if load through edit
           <Grid.Column>
              <Button color="blue"
                      fluid
-                     disabled={!this.state.isEnabled}
+                     disabled={!this.state.title || !this.state.hook || !this.state.content}
                      onClick={this.open}>Save</Button>
              <Confirm open={this.state.open}
                       content='Your Story was saved as a draft'
                       onCancel={this.close}
-                      onConfirm={this.handleSave}
+                      onConfirm={e => this.handleSave()}
              />
           </Grid.Column>
           <Grid.Column >
              <Button color="green"
                      fluid
-                     disabled={!this.state.isEnabled}
+                     disabled={!this.state.title || !this.state.hook || !this.state.content}
                      onClick={this.open}>Publish</Button>
              <Confirm open={this.state.open}
                       content='Your Story was published'
                       onCancel={this.close}
-                      onConfirm={this.handlePublish}
+                      onConfirm={e => this.handlePublish()}
              />
           </Grid.Column>
           <Grid.Column>
