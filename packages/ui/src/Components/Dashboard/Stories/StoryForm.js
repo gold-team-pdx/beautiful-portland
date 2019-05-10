@@ -15,10 +15,15 @@ export default class StoryForm extends Component {
       editedTimestamp: '',
       open: false,
       isEnabled: false,
+      // Photo data
+      // holds filename
       postPhotoName: 'No Photo',
+      // Holds file buffer data and filename for s3
       postPhoto: {},
-      addModalOpen: false,
+      // Holds image url or buffer data for serving image
       postImageData: '',
+      // Modal and confirm bools
+      addModalOpen: false,
       openRemovePhoto: false,
     }
   }
@@ -28,7 +33,7 @@ export default class StoryForm extends Component {
     Axios.post('/api/getStoryEdit', { id: this.props.editId })
         .then((response) => {
          console.log(response)
-         //Axios.get('/api/getStoryPhoto')
+         //TODO: get photo from s3 bucket
          this.setState({
           _id : response.data._id,
           title :response.data.title,
@@ -45,10 +50,57 @@ export default class StoryForm extends Component {
     }
   }
 
+  componentDidUpdate = (prevState) => {
+    if(this.state.title && this.state.hook && this.state.content){
+      if(!prevState.isEnabled) {
+        this.setState({isEnabled : true})
+        return true
+      }
+      else
+        return false
+    } 
+    else {
+      this.setState({isEnabled: false})
+      return true
+    }
+  }
 
-  handlePublish = async (e) => {
+  /* Original handle publish */
+  /*handlePublish = async (e) => {
     await this.setState({ publish_status : true })
-    Axios.post("/api/addPublish", this.state)
+    console.log(this.state._id) TESTING 
+    if(this.state._id !== undefined && this.state._id !== '') {
+      Axios.post("/api/editedStory", this.state)
+        .then(response => {
+          console.log(response, "Story has been edited and saved to published")
+        })
+        .catch(err => {
+          console.log(err, "Try again.")
+        })
+      } else {
+        Axios.post("/api/addPublish", this.state)
+        .then(response => {
+          console.log(response, "Story has been published")
+        })
+        .catch(err => {
+          console.log(err, "Try again.")
+        })
+      }
+      this.open()
+      console.log(this.state) TESTING 
+}*/
+  handlePublish = (e) => {
+    if(this.state._id !== undefined && this.state._id !== '') {
+      Axios.post("/api/editedStory", this.state)
+        .then(response => {
+          console.log(response, "Story has been edited and saved to published")
+          this.setState({ publish_status : true })
+        })
+        .catch(err => {
+          console.log(err, "Try again.")
+        })
+    } else {
+      Axios.post("/api/addPublish", this.state)
       .then(response => {
         console.log(response, "Story has been published")
       })
@@ -72,8 +124,36 @@ export default class StoryForm extends Component {
           console.log(err)
         })
     }
+    }
+    this.open()
   }
 
+/* Original Handle Save */
+/*
+Checks for publish_status if load through edit
+ handleSave = (e) => {
+  if(this.state.publish_status) {
+    this.handlePublish()
+  } else if(this.state._id !== undefined && this.state._id !== '') {
+    Axios.post("/api/editedStory", this.state)
+     .then(response => {
+       console.log(response, "Story has been edited and saved to drafts")
+     })
+     .catch(err => {
+       console.log(err, "Try again.")
+     })
+   } else {
+    Axios.post("/api/addDraft", this.state)
+    .then(response => {
+      console.log(response, "Story saved to drafts")
+    })
+    .catch(err => {
+      console.log(err, "Try again.")
+    })
+   }
+  this.open()
+  /*console.log(this.state) TESTING
+ }*/
  /*Checks for publish_status if load through edit*/
   handleSave = (e) => {
     if(this.state.publish_status) {
@@ -81,8 +161,10 @@ export default class StoryForm extends Component {
     } 
     else {
       Axios.post("/api/addDraft", this.state)
+    } else if(this.state._id !== undefined && this.state._id !== '') {
+      Axios.post("/api/editedStory", this.state)
        .then(response => {
-         console.log(response, "Story saved to drafts")
+         console.log(response, "Story has been edited and saved to drafts")
        })
        .catch(err => {
          console.log(err, "Try again.")
@@ -104,7 +186,6 @@ export default class StoryForm extends Component {
           })
       }
     }
-    
   }
 
   clearForm = () => {
@@ -125,11 +206,8 @@ export default class StoryForm extends Component {
   open = () => this.setState({ open: true })
   close = () => this.setState({ open: false })
 
-  onChange = async (e) => {
-    await this.setState({ [e.target.name]: e.target.value })
-    if(this.state.title && this.state.hook && this.state.content){
-      this.setState({isEnabled : true})
-    }
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
   }
 
   // Image Modal Functions
