@@ -26,6 +26,9 @@ export default class VolunteerForm extends Component {
 
 	onSubmit = (data) => {
 		data.date = this.state.date
+		let cleaned = ('' + data.volunteer_phone).replace(/\D/g, '').match(/^(\d{3})(\d{3})(\d{4})$/)
+		data.volunteer_phone = cleaned[1] + '-' + cleaned[2] + '-' + cleaned[3]
+		
 		Axios.post('/api/form', data)
 			.then((response) => {
 				console.log(response, 'Form Submitted')
