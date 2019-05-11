@@ -91,7 +91,11 @@ export default class VolunteerForm extends Component {
 						/>
 					</Container>
 				) : (
-					<Redirect to="/" />
+					<Container>
+						<Header as="h2" style={{ marginTop: '20px' }}>
+							There is no event scheduled for this date
+						</Header>
+					</Container>
 				)}
 			</div>
 		)
