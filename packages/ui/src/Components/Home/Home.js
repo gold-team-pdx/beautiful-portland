@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import Slider from './Slider'
 import DonateButton from './DonateButton'
-import Header from './Header'
-import Footer from './Footer'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
 import HomeLayout from '../Layouts/HomeLayout'

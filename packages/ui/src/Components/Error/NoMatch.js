@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from 'semantic-ui-react'
 import HomeLayout from '../Layouts/HomeLayout'
-import '../Stylesheets/Error.css'
 
 class NoMatch extends Component {
   render() {

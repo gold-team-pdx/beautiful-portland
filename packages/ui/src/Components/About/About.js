@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Accordion, Container, Header, Icon, Divider } from 'semantic-ui-react'
-import '../Stylesheets/About.css'
 import HomeLayout from '../Layouts/HomeLayout'
 class About extends Component {
   state = {

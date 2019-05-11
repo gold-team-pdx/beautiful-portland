@@ -1,5 +1,4 @@
 .Main{
-
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -14,8 +13,8 @@
 }
 
 .Footer{
- position: relative;;
-left:0;
-bottom:0;
-right:0;
+    position: relative;;
+    left:0;
+    bottom:0;
+    right:0;
 }
