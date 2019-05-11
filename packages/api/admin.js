@@ -352,20 +352,18 @@ addImageIntoStories = function(req, res) {
 	})
 	const bucket = 'beautiful-portland-carousel-photos'
 	let file = req.body.fileToAdd
-	console.log(file)
-	// let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-	// file.fileName = 'storyPhotos/' + file.fileName
-	// const params = {
-	// 	Bucket: bucket,
-	// 	Key: file.fileName,
-	// 	Body: buf
-	// }
-	// s3.upload(params, function(s3Err, data) {
-	// 	if (s3Err) throw s3Err
-	// 	console.log('File uploaded successfully')
-	// 	res.send('upload successful')
-	// })
-
+	let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+	file.fileName = 'storyPhotos/' + file.fileName
+	const params = {
+		Bucket: bucket,
+		Key: file.fileName,
+		Body: buf
+	}
+	s3.upload(params, function(s3Err, data) {
+		if (s3Err) throw s3Err
+		console.log('File uploaded successfully')
+		res.send('upload successful')
+	})
 }
 
 // Add photo to front page from already uploaded photos.

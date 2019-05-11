@@ -50,7 +50,7 @@ export default class ViewStories extends Component {
       .then(res => {
         if(res.data.status !== 'FAILURE') {
           let tempDraftStory = JSON.parse(res.data.draft_info)
-          console.log(tempDraftStory)
+          // console.log(tempDraftStory)
           this.setState({
           draftStory : tempDraftStory
         })
@@ -65,7 +65,7 @@ export default class ViewStories extends Component {
       .then(res => {
         if(res.data.status !== 'FAILURE'){
           let tempPubStory = JSON.parse(res.data.published_info)
-          console.log(tempPubStory)
+          // console.log(tempPubStory)
           this.setState({
           publishStory : tempPubStory
         })
@@ -80,7 +80,7 @@ export default class ViewStories extends Component {
 
   updateParentID = (value) => {
      this.props.updateGrandparentID(value)
-     console.log(value)
+    //  console.log(value)
    }
 
    handleMoreStories = async () => {

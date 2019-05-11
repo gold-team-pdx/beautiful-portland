@@ -40,7 +40,8 @@ export default class LoadDrafts extends Component {
       title : this.props.sDraft.title,
       hook : this.props.sDraft.hook,
       content : this.props.sDraft.content,
-      publish_status: true
+      publish_status: true,
+      postPhotoName: this.props.sDraft.postPhotoName
     }
     Axios.post('/api/addPublish', data)
     .then(response => {

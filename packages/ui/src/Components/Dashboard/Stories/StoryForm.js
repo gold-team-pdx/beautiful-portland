@@ -13,7 +13,9 @@ export default class StoryForm extends Component {
       content: '',
       publish_status: false,
       editedTimestamp: '',
-      open: false,
+      openSave: false,
+      openPublish: false,
+      openClear: false,
       // Photo data
       // holds filename
       postPhotoName: 'No Photo',
@@ -31,8 +33,8 @@ export default class StoryForm extends Component {
     if(this.props.editId !== undefined) {
     Axios.post('/api/getStoryEdit', { id: this.props.editId })
         .then((response) => {
-         console.log(response)
-         //TODO: get photo from s3 bucket
+         //Get photo from s3 bucket to serve
+         this.getPhotoFromS3(response.data.postPhotoName)
          this.setState({
           _id : response.data._id,
           title :response.data.title,
@@ -50,11 +52,11 @@ export default class StoryForm extends Component {
   }
 
   handlePublish = () => {
-    console.log(this.state._id)
     if(this.state._id !== undefined && this.state._id !== '') {
       Axios.post("/api/editedStory", this.state)
         .then(response => {
           console.log(response, "Story has been edited and saved to published")
+          this.addToS3Bucket()
           this.setState({ publish_status : true })
         })
         .catch(err => {
@@ -65,33 +67,17 @@ export default class StoryForm extends Component {
       Axios.post("/api/addPublish", this.state)
       .then(response => {
         console.log(response, "Story has been published")
+        this.addToS3Bucket()
       })
       .catch(err => {
         console.log(err, "Try again.")
       })
     }
-    // Only add the photo if it hasn't already been added to s3
-    // or if it has been changed
-    let fileName = this.state.postImageData.split('/').pop()
-    console.log(fileName)
-    // If the keys are different, push new file.
-    if(fileName !== this.state.postPhotoName) {
-      Axios.post('/api/addImageIntoStories', {
-        fileToAdd: this.state.postPhoto})
-        .then(res => {
-          console.log('Photo saved in s3')
-          this.clearForm()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-    this.close()
+    this.handleClosePublish()
   }
 
  /*Checks for publish_status if load through edit*/
   handleSave = () => {
-    console.log(this.state._id)
     if(this.state.publish_status) {
       this.handlePublish()
     } 
@@ -99,6 +85,7 @@ export default class StoryForm extends Component {
       Axios.post("/api/editedStory", this.state)
         .then(response => {
           console.log(response, "Story has been edited and saved to drafts")
+          this.addToS3Bucket()
         })
         .catch(err => {
           console.log(err, "Try again.")
@@ -108,28 +95,14 @@ export default class StoryForm extends Component {
       Axios.post("/api/addDraft", this.state)
       .then(response => {
         console.log(response, "Story saved to drafts")
+        this.addToS3Bucket()
       })
       .catch(err => {
         console.log(err, "Try again.")
       })
     }
-    // Only add the photo if it hasn't already been added to s3
-    // or if it has been changed
-    let fileName = this.state.postImageData.split('/').pop()
-    console.log(fileName)
-    // If the keys are different, push new file.
-    if(fileName !== this.state.postPhotoName) {
-      Axios.post('/api/addImageIntoStories', {
-        fileToAdd: this.state.postPhoto})
-        .then(res => {
-          console.log('Photo saved in s3')
-          this.clearForm()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-    this.close()
+    this.clearForm()
+    this.handleCloseSave()
   }
 
   clearForm = () => {
@@ -143,11 +116,20 @@ export default class StoryForm extends Component {
       postPhoto: {},
       postImageData: '' 
     })
-    this.close()
+    this.handleCloseClear()
  }
 
-  open = () => this.setState({ open: true })
-  close = () => this.setState({ open: false })
+  // Handles save confirm boolean
+  handleOpenSave = () => this.setState({ openSave: true })
+  handleCloseSave = () => this.setState({ openSave: false })
+
+  // Handles open confirm boolean
+  handleOpenPublish = () => this.setState({ openPublish: true })
+  handleClosePublish = () => this.setState({ openPublish: false })
+
+  // Handles clearform confirm boolean
+  handleOpenClear = () => this.setState({ openClear: true })
+  handleCloseClear = () => this.setState({ openClear: false })
 
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value })
@@ -160,6 +142,43 @@ export default class StoryForm extends Component {
   // Alert modal for removing photo from post
   openRemovePhoto = () => this.setState({ openRemovePhoto: true })
   closeRemovePhoto = () => this.setState({ openRemovePhoto: false })
+
+  // Add image to s3 bucket
+  addToS3Bucket = () => {
+    // Only add the photo if it hasn't already been added to s3
+    // or if it has been changed
+    let fileName = this.state.postImageData.split('/').pop()
+    console.log(fileName === this.state.postPhotoName)
+    // If the keys are different, push new file.
+    if(fileName !== this.state.postPhotoName) {
+      Axios.post('/api/addImageIntoStories', {
+        fileToAdd: this.state.postPhoto
+        })
+        .then(res => {
+          console.log('Photo saved in s3')
+          this.clearForm()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  }
+
+  // Retrieving an image from s3 to add to post
+  getPhotoFromS3 = (fileKey) => {
+    Axios.get('/api/getImageForStory', {
+      params: {
+        fileName: fileKey
+      }
+    })
+    .then(res => {
+      console.log(res)
+      this.setState({postImageData: res.data})
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
   // Add Image to post
   addPhoto = (input) => {
@@ -178,15 +197,14 @@ export default class StoryForm extends Component {
           "fileData": data,
           "fileName": newFileName
       }
-      // TODO: Bad practice to call set state twice -> will call separate function.
-      this.setState({postImageData: data})
+      this.setState({
+        postImageData: data, 
+        postPhotoName: newFileName,
+        postPhoto: newFile 
+      })
     }
     reader.readAsDataURL(input.files[0])
-    this.setState({
-      postPhotoName: newFileName,
-      postPhoto: newFile,
-      addModalOpen: false
-    })
+    this.handleModalClose()
   }
 
   // Remove image from post
@@ -295,27 +313,27 @@ export default class StoryForm extends Component {
              <Button color="blue"
                      fluid
                      disabled={!this.state.title || !this.state.hook || !this.state.content}
-                     onClick={this.open}>Save</Button>
-             <Confirm open={this.state.open}
-                      content='Your Story was saved as a draft'
-                      onCancel={this.close}
-                      onConfirm={e => this.handleSave()}
+                     onClick={this.handleOpenSave}>Save</Button>
+             <Confirm open={this.state.openSave}
+                      content='Your Story will be saved as a draft'
+                      onCancel={this.handleCloseSave}
+                      onConfirm={this.handleSave}
              />
           </Grid.Column>
           <Grid.Column >
              <Button color="green"
                      fluid
                      disabled={!this.state.title || !this.state.hook || !this.state.content}
-                     onClick={this.open}>Publish</Button>
-             <Confirm open={this.state.open}
-                      content='Your Story was published'
-                      onCancel={this.close}
-                      onConfirm={e => this.handlePublish()}
+                     onClick={this.handleOpenPublish}>Publish</Button>
+             <Confirm open={this.state.openPublish}
+                      content='Your Story will be published'
+                      onCancel={this.handleClosePublish}
+                      onConfirm={this.handlePublish}
              />
           </Grid.Column>
           <Grid.Column>
-            <Button color="red" fluid onClick={this.open}>Clear Form</Button>
-            <Confirm open={this.state.open} onCancel={this.close} onConfirm={this.clearForm} />
+            <Button color="red" fluid onClick={this.handleOpenClear}>Clear Form</Button>
+            <Confirm open={this.state.openClear} onCancel={this.handleCloseClear} onConfirm={this.clearForm} />
           </Grid.Column>
           </Grid>
         </Form>

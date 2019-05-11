@@ -105,6 +105,7 @@ app.get('/api/logout', function(req, res) {
 
 // Visitor request handlers
 app.get('/api/getImages/*', visitorHandlers.homeImages.bind({amazon: AWS}))
+app.get('/api/getImageForStory', visitorHandlers.getImageForStory.bind({amazon: AWS}))
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
 
@@ -118,12 +119,14 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
   })
 })
 
-
+// Image admin functions
 app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.removePhotos.bind({amazon: AWS}))
 app.post('/api/addImagesToBucket', ensureAuthenticated, adminHandlers.addPhotos.bind({amazon: AWS}))
 app.post('/api/removeImagesFromFrontPage', ensureAuthenticated, adminHandlers.removeImagesFromFrontPage.bind({amazon: AWS}))
 app.post('/api/addImageFromUploaded', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))
-app.post('/api/addImageIntoStories', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))
+app.post('/api/addImageIntoStories', ensureAuthenticated, adminHandlers.addImageIntoStories.bind({amazon: AWS}))
+
+// DB admin functions
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/fullEvent', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
