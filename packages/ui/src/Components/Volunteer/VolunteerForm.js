@@ -9,7 +9,7 @@ export default class VolunteerForm extends Component {
   constructor(props) {
     super(props)
 
-    let params = new URLSearchParams(this.props.location.search)
+    	let params = new URLSearchParams(this.props.location.search)
     if (params.get('date') === null) {
       params.append('date', new Moment().format('MM-DD-YY'))
     }
