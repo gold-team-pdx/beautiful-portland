@@ -706,6 +706,46 @@ deleteEventTemplate = function(req, res) {
     })
 }
 
+getVolunteerHistory = async function(req, res) {
+  try {
+    let response_data = []
+    client = this.dbClient
+    collection = client.db('events-form').collection('events')
+    let cursor = collection.aggregate([
+      {$match: {'categories.submissions.volunteer_email': req.body.email}},
+      {$unwind: '$categories'},
+      {$match: {'categories.submissions.volunteer_email': req.body.email}},
+      {$unwind: '$categories.submissions'},
+      {$match: {'categories.submissions.volunteer_email': req.body.email}}
+    ])
+		
+    while(await cursor.hasNext()) {
+      let doc = await cursor.next()
+      response_data.push({
+        date: doc.date,
+        name: doc.categories.submissions.volunteer_name,
+        email: doc.categories.submissions.volunteer_email,
+        type: doc.categories.name,
+        desc: doc.categories.submissions.description,
+        servings: doc.categories.submissions.servings,
+        vegan: doc.categories.submissions.vegan,
+        vegetarian: doc.categories.submissions.vegetarian,
+        gluten_free: doc.categories.submissions.gluten_free
+      })
+    }
+
+    res.send({
+      sub_info: response_data,
+      status: 'SUCCESS'
+    })
+  } catch (err) {
+    console.log('Error retrieving volunteer history', err)
+    res.send({
+      status: 'FAILURE'
+    })
+  }
+}
+
 module.exports.addPhotos = addPhotos
 module.exports.removePhotos = removePhotos
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
@@ -727,3 +767,4 @@ module.exports.getEventTemplate = getEventTemplate
 module.exports.deleteEventTemplate = deleteEventTemplate
 module.exports.editedStory = editedStory
 module.exports.getStoryCount = getStoryCount
+module.exports.getVolunteerHistory = getVolunteerHistory

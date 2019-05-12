@@ -72,7 +72,7 @@ class VolunteerList extends Component {
                       as={Link}
                       to="/VolunteerSubmissions"
                       onClick={() => {
-                        this.props.updateActiveEmail(item.name)
+                        this.props.updateActiveEmail(item.email)
                       }}
                       className="volunteer"
                     >
