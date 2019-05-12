@@ -80,28 +80,6 @@ export default class VolunteerForm extends Component {
 	}
 
 	render() {
-<<<<<<< HEAD
-		return (
-			<div>
-				
-					<Container>
-						<Header as="h4" style={{ marginTop: '20px' }}>
-							Dinner Sign-Up{' '}
-						</Header>
-						<Header as="h4">Volunteer Coordinator: {this.state.coordinator}</Header>
-						<Header as="h4">Volunteer Coordinator Phone: {this.state.coordinator_phone}</Header>
-						<Header as="h4">Location: {this.state.location}</Header>
-						<Header as="h4">Date: {this.state.date} </Header>
-						<Item
-							onSubmit={this.onSubmit}
-							event_info={this.state.event_info}
-							max_servings={this.state.max_servings}
-						/>
-					</Container>
-				) : (
-					<Container>
-						<Header as="h2" style={{ marginTop: '20px' }}>
-=======
 	  return (
 	    <div>
 	      {this.state.validEvent ? (
@@ -122,7 +100,6 @@ export default class VolunteerForm extends Component {
 	      ) : (
 	        <Container>
 	          <Header as="h2" style={{ marginTop: '20px' }}>
->>>>>>> 248133f3925e5ed6da98c581c7c475cab2a53316
 							There is no event scheduled for this date
 	          </Header>
 	        </Container>
