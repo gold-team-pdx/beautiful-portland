@@ -9,13 +9,13 @@ export default class VolunteerForm extends Component {
 	constructor(props) {
 		super(props)
 
-		let params = new URLSearchParams(this.props.location.search)
+		/*let params = new URLSearchParams(this.props.location.search)
 		if (params.get('date') === null) {
 			params.append('date', new Moment().format('MM-DD-YY'))
-		}
+		}*/
 		this.state = {
 			validEvent: true,
-			date: params.get('date'),
+			date: '5-9-19',
 			coordinator: '',
 			coordinator_phone: '',
 			location: '',
@@ -72,24 +72,24 @@ export default class VolunteerForm extends Component {
 	render() {
 		return (
 			<div>
-				{this.state.validEvent ? (
+				
 					<Container>
-						<Header as="h2" style={{ marginTop: '20px' }}>
+						<Header as="h4" style={{ marginTop: '20px' }}>
 							Dinner Sign-Up{' '}
 						</Header>
-						<Header as="h2">Volunteer Coordinator: {this.state.coordinator}</Header>
-						<Header as="h2">Volunteer Coordinator Phone: {this.state.coordinator_phone}</Header>
-						<Header as="h2">Location: {this.state.location}</Header>
-						<Header as="h2">Date: {this.state.date} </Header>
+						<Header as="h4">Volunteer Coordinator: {this.state.coordinator}</Header>
+						<Header as="h4">Volunteer Coordinator Phone: {this.state.coordinator_phone}</Header>
+						<Header as="h4">Location: {this.state.location}</Header>
+						<Header as="h4">Date: {this.state.date} </Header>
 						<Item
 							onSubmit={this.onSubmit}
 							event_info={this.state.event_info}
 							max_servings={this.state.max_servings}
 						/>
 					</Container>
-				) : (
-					<Redirect to="/" />
-				)}
+				
+				
+				
 			</div>
 		)
 	}
