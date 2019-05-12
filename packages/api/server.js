@@ -15,15 +15,15 @@ const visitorHandlers = require('./visitor')
 const adminHandlers = require('./admin')
 
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+  require('dotenv').config()
 }
 
 app.use(bodyParser.json({limit:'50mb', extended: true}))
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
 }))
 app.use(cookieParser())
 app.use(passport.initialize())
@@ -32,10 +32,10 @@ app.use(passport.session())
 //Connects to MongoDB
 const client = new MongoClient(uri, { useNewUrlParser: true })
 client.connect((err) => {
-    if (err) {
-        console.log(err, "Connection to db failed")
-        return
-    }
+  if (err) {
+    console.log(err, 'Connection to db failed')
+    return
+  }
 })
 
 // Console.log to show server up and running in terminal
@@ -43,27 +43,27 @@ app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
 // serialize the user for the session
 passport.serializeUser(function(user, done) {
-    done(null, user)
+  done(null, user)
 })
 
 // deserialize the user
 passport.deserializeUser(function(obj, done) {
-    done(null, obj)
+  done(null, obj)
 })
 
 // passport config
 passport.use(new GoogleStrategy(
-    authConfig.google,
-    function(accessToken, refreshToken, profile, done) {
-      return done(null, profile)
-    }
+  authConfig.google,
+  function(accessToken, refreshToken, profile, done) {
+    return done(null, profile)
+  }
 ))
 
 // let google to authentication the admin
 app.get('/auth/google',
   passport.authenticate('google', {
     scope: ['openid', 'email', 'profile']
-}))
+  }))
 
 // the callback after google authenticated the admin
 app.get('/auth/google/callback',
