@@ -11,8 +11,14 @@ getImageForStory = function(req, res) {
     let key = 'storyPhotos/' + req.query.fileName
     try {
         let url = s3.getSignedUrl('getObject', {Bucket: bucket, Key: key})
-        console.log('file retrieved successfully')
-        res.send(url)
+        if(url.indexOf('undefined') === -1) {
+            console.log('file retrieved successfully')
+            res.send(url)
+        }
+        else {
+            console.log('File not found!')
+            res.send('No Photo')
+        }
     } catch (err) {
         console.log('ERROR could not locate file : ' + JSON.stringify(err))
     }

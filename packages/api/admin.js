@@ -366,6 +366,35 @@ addImageIntoStories = function(req, res) {
 	})
 }
 
+removeImageFromStories = function(req, res) {
+	let AWS = this.amazon
+	const s3 = new AWS.S3({
+		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+		s3ForcePathStyle: true,
+		accessKeyId: process.env.S3_ACCESS_KEY,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+	})
+	const bucket = 'beautiful-portland-carousel-photos'
+	let fileToDelete = 'storyPhotos/' + req.body.fileToRemove
+	console.log(fileToDelete)
+	const params = {
+		Bucket: bucket,
+		Key: fileToDelete
+	}
+	try {
+		s3.headObject(params).promise()
+		console.log('File Found in S3')
+		try {
+			s3.deleteObject(params).promise()
+			console.log('file deleted Successfully')
+		} catch (err) {
+			console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+		}
+	} catch (err) {
+		console.log('File not Found ERROR : ' + err.code)
+	}
+}
+
 // Add photo to front page from already uploaded photos.
 // To do this, we need to copy the photo from all photos
 // to /frontPage, then remove the other photo to prevent
@@ -465,6 +494,7 @@ addNewPublished = function(req, res) {
 editedStory = function(req,res) {
 	var ObjectId = require('mongodb').ObjectID
 	let client = this.dbClient
+	console.log(req.body.publish_status)
 	if(req.body.publish_status === true){
 		collection = client.db('stories_example1').collection('published')
 	} else {
@@ -478,7 +508,8 @@ editedStory = function(req,res) {
 				publish_status: req.body.publish_status,
 				title: req.body.title,
 				hook: req.body.hook,
-				content: req.body.content
+				content: req.body.content,
+				postPhotoName: req.body.postPhotoName
 			}
 		},
 		{ upsert: true },
@@ -741,6 +772,7 @@ module.exports.removePhotos = removePhotos
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
 module.exports.addFromUploaded = addFromUploaded
 module.exports.addImageIntoStories = addImageIntoStories
+module.exports.removeImageFromStories = removeImageFromStories
 module.exports.getFullEventInfo = getFullEventInfo
 module.exports.getVolunteerList = getVolunteerList
 module.exports.postAddEvent = postAddEvent

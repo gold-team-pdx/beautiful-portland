@@ -23,18 +23,22 @@ export default class StoryForm extends Component {
       postPhoto: {},
       // Holds image url or buffer data for serving image
       postImageData: '',
+      // Holds old image to remove 
+      oldPhotoName: '',
       // Modal and confirm bools
       addModalOpen: false,
       openRemovePhoto: false,
+      deleteId: 0
     }
   }
 
   componentDidMount = () => {
     if(this.props.editId !== undefined) {
-    Axios.post('/api/getStoryEdit', { id: this.props.editId })
+      Axios.post('/api/getStoryEdit', { id: this.props.editId })
         .then((response) => {
          //Get photo from s3 bucket to serve
-         this.getPhotoFromS3(response.data.postPhotoName)
+         if(response.data.postPhotoName !== 'No Photo')
+          this.getPhotoFromS3(response.data.postPhotoName)
          this.setState({
           _id : response.data._id,
           title :response.data.title,
@@ -52,22 +56,50 @@ export default class StoryForm extends Component {
   }
 
   handlePublish = () => {
+    // Object spread syntax, immediately sets publish_status to true,
+    // but doesn't set state of object
+    let data = {
+      ...this.state, publish_status: true
+    }
+    // Sets state for later
+    this.setState({publish_status: true})
     if(this.state._id !== undefined && this.state._id !== '') {
-      Axios.post("/api/editedStory", this.state)
+      Axios.post("/api/editedStory", data)
         .then(response => {
           console.log(response, "Story has been edited and saved to published")
-          this.addToS3Bucket()
-          this.setState({ publish_status : true })
+          this.handleDelete()
+          // Handles removing uneeded photos from s3 bucket
+          if(this.state.oldPhotoName !== '') {
+            this.removeFromS3Bucket()
+          }
+          // Handles adding new photos to s3 bucket AND
+          // does a clearForm()
+          if(this.state.postPhotoName !== 'No Photo') {
+            this.addToS3Bucket()
+          }
+          else {
+            this.clearForm()
+          }
+         
         })
         .catch(err => {
           console.log(err, "Try again.")
         })
     } 
     else {
-      Axios.post("/api/addPublish", this.state)
+      Axios.post("/api/addPublish", data)
       .then(response => {
         console.log(response, "Story has been published")
-        this.addToS3Bucket()
+        this.handleDelete()
+        if(this.state.oldPhotoName !== '') {
+          this.removeFromS3Bucket()
+        }
+        if(this.state.postPhotoName !== 'No Photo') {
+          this.addToS3Bucket()
+        }
+        else {
+          this.clearForm()
+        }
       })
       .catch(err => {
         console.log(err, "Try again.")
@@ -85,7 +117,15 @@ export default class StoryForm extends Component {
       Axios.post("/api/editedStory", this.state)
         .then(response => {
           console.log(response, "Story has been edited and saved to drafts")
-          this.addToS3Bucket()
+          if(this.state.oldPhotoName !== '') {
+            this.removeFromS3Bucket()
+          }
+          if(this.state.postPhotoName !== 'No Photo') {
+            this.addToS3Bucket()
+          }
+          else {
+            this.clearForm()
+          }
         })
         .catch(err => {
           console.log(err, "Try again.")
@@ -95,14 +135,32 @@ export default class StoryForm extends Component {
       Axios.post("/api/addDraft", this.state)
       .then(response => {
         console.log(response, "Story saved to drafts")
-        this.addToS3Bucket()
+        if(this.state.oldPhotoName !== '') {
+          this.removeFromS3Bucket()
+        }
+        if(this.state.postPhotoName !== 'No Photo') {
+          this.addToS3Bucket()
+        }
+        else {
+          this.clearForm()
+        }
       })
       .catch(err => {
         console.log(err, "Try again.")
       })
     }
-    this.clearForm()
     this.handleCloseSave()
+  }
+
+  handleDelete = () => {
+    console.log("Deleting draft with id: " + this.state._id)
+    Axios.post('/api/deleteDraft', {deleteId: this.state._id})
+      .then(res => {
+         console.log(res.data);
+      })
+      .catch((err) => {
+         console.log(err);
+      })
   }
 
   clearForm = () => {
@@ -148,7 +206,6 @@ export default class StoryForm extends Component {
     // Only add the photo if it hasn't already been added to s3
     // or if it has been changed
     let fileName = this.state.postImageData.split('/').pop()
-    console.log(fileName === this.state.postPhotoName)
     // If the keys are different, push new file.
     if(fileName !== this.state.postPhotoName) {
       Axios.post('/api/addImageIntoStories', {
@@ -164,6 +221,19 @@ export default class StoryForm extends Component {
     }
   }
 
+  // Removes old photos from s3 bucket that will not be used
+  // for a blog post 
+  removeFromS3Bucket = () => {
+    Axios.post('/api/removeImageFromStories', {
+      fileToRemove: this.state.oldPhotoName
+    })
+    .then(res => {
+      this.setState({oldPhotoName: ''})
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
   // Retrieving an image from s3 to add to post
   getPhotoFromS3 = (fileKey) => {
     Axios.get('/api/getImageForStory', {
@@ -172,7 +242,6 @@ export default class StoryForm extends Component {
       }
     })
     .then(res => {
-      console.log(res)
       this.setState({postImageData: res.data})
     })
     .catch(err => {
@@ -186,6 +255,7 @@ export default class StoryForm extends Component {
     let name = input.value.toString().split(/(\\|\/)/g).pop().split('.')[0]
     let data = ''
     let newFile = {}
+    let oldPhoto = ''
     let newFileName = name + '&' + Date.now() + '&' + this.state.title
     reader.onerror = () => {
         reader.abort()
@@ -197,10 +267,15 @@ export default class StoryForm extends Component {
           "fileData": data,
           "fileName": newFileName
       }
+      // If there is an old photo, save the name to delete later
+      if(this.state.postPhotoName !== 'No Photo') {
+        oldPhoto = this.state.postPhotoName
+      }
       this.setState({
         postImageData: data, 
         postPhotoName: newFileName,
-        postPhoto: newFile 
+        postPhoto: newFile, 
+        oldPhotoName: oldPhoto
       })
     }
     reader.readAsDataURL(input.files[0])
@@ -209,10 +284,13 @@ export default class StoryForm extends Component {
 
   // Remove image from post
   removePhotoFromStory = () => {
+    // If there was a photo, save to remove later
+    let oldPhoto = this.state.postPhotoName
     this.setState({
       postPhotoName: 'No Photo',
       postPhoto: {},
       postImageData: '',
+      oldPhotoName: oldPhoto,
       openRemovePhoto: false,
     })
   }
