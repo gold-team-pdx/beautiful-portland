@@ -13,27 +13,27 @@ class VolunteerSubmissions extends Component {
 
   componentDidMount() {
     Axios.post('/api/volunteerHistory', {email: this.props.email})
-    .then(res => {
-      let tempSubs = res.data.sub_info
+      .then(res => {
+        let tempSubs = res.data.sub_info
 
-      tempSubs.forEach(e => {
-        e.sortDate = moment(e.date, 'MM-DD-YY')
-      })
+        tempSubs.forEach(e => {
+          e.sortDate = moment(e.date, 'MM-DD-YY')
+        })
 
-      tempSubs.sort((older, newer) => {
-        if(moment(older.sortDate).isBefore(moment(newer.sortDate))) {
-          return 1
-        } else {
-          return -1
-        }
-      })
+        tempSubs.sort((older, newer) => {
+          if(moment(older.sortDate).isBefore(moment(newer.sortDate))) {
+            return 1
+          } else {
+            return -1
+          }
+        })
 
-      this.setState({
-        submissions: tempSubs
+        this.setState({
+          submissions: tempSubs
+        })
+      }).catch(err => {
+        console.log('Error retrieving volunteer history', err)
       })
-    }).catch(err => {
-      console.log('Error retrieving volunteer history', err)
-    })
   }
 
   renderIcon = value => {
@@ -94,19 +94,19 @@ class VolunteerSubmissions extends Component {
         <Header as="h2">{stats.name}</Header>
         <div>
           <Header as="h3">Stats</Header>
-        <Table celled textAlign={'center'} selectable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Total Events</Table.HeaderCell>
-              <Table.HeaderCell>Top 3 Categories</Table.HeaderCell>
-              <Table.HeaderCell>Avgerage Servings</Table.HeaderCell>
-              <Table.HeaderCell>% Vegan</Table.HeaderCell>
-              <Table.HeaderCell>% Vegetarian</Table.HeaderCell>
-              <Table.HeaderCell>% Gluten-Free</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {stats.events > 0 &&
+          <Table celled textAlign={'center'} selectable>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Total Events</Table.HeaderCell>
+                <Table.HeaderCell>Top 3 Categories</Table.HeaderCell>
+                <Table.HeaderCell>Avgerage Servings</Table.HeaderCell>
+                <Table.HeaderCell>% Vegan</Table.HeaderCell>
+                <Table.HeaderCell>% Vegetarian</Table.HeaderCell>
+                <Table.HeaderCell>% Gluten-Free</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {stats.events > 0 &&
               <Table.Row>
                 <Table.Cell>{stats.events}</Table.Cell>
                 <Table.Cell>
@@ -121,29 +121,29 @@ class VolunteerSubmissions extends Component {
                 <Table.Cell>{stats.vegetarian_pct}</Table.Cell>
                 <Table.Cell>{stats.gf_pct}</Table.Cell>
               </Table.Row>
-            }
-          </Table.Body>
-        </Table>
+              }
+            </Table.Body>
+          </Table>
         </div>
         <hr></hr>
         <div>
-        <Header as="h3">Signup History</Header>
-        <Table celled textAlign={'center'} selectable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Date</Table.HeaderCell>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Email</Table.HeaderCell>
-              <Table.HeaderCell>Category</Table.HeaderCell>
-              <Table.HeaderCell>Description</Table.HeaderCell>
-              <Table.HeaderCell>Servings</Table.HeaderCell>
-              <Table.HeaderCell>Vegan</Table.HeaderCell>
-              <Table.HeaderCell>Vegetarian</Table.HeaderCell>
-              <Table.HeaderCell>Gluten-Free</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.state.submissions &&
+          <Header as="h3">Signup History</Header>
+          <Table celled textAlign={'center'} selectable>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Date</Table.HeaderCell>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell>Email</Table.HeaderCell>
+                <Table.HeaderCell>Category</Table.HeaderCell>
+                <Table.HeaderCell>Description</Table.HeaderCell>
+                <Table.HeaderCell>Servings</Table.HeaderCell>
+                <Table.HeaderCell>Vegan</Table.HeaderCell>
+                <Table.HeaderCell>Vegetarian</Table.HeaderCell>
+                <Table.HeaderCell>Gluten-Free</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {this.state.submissions &&
               this.state.submissions.map(volunteer => (
                 <Table.Row key={volunteer.date + volunteer.desc}>
                   <Table.Cell>{volunteer.date}</Table.Cell>
@@ -161,8 +161,8 @@ class VolunteerSubmissions extends Component {
                   </Table.Cell>
                 </Table.Row>
               ))}
-          </Table.Body>
-        </Table>
+            </Table.Body>
+          </Table>
         </div>
       </div>
     )

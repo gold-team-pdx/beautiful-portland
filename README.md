@@ -72,6 +72,21 @@ for the sake of our build tools).
 - To avoid consuming resources on your machine when you're done running a dev build,
   run `yarn stop` to shut down the docker container.
 
+## precommit hooks
+
+For code consistency, we have a very basic `eslint` config set to scan and fix with the 
+yarn script `yarn lint`. For convenience, this script is run as a precommit hook,
+and all changes are staged in `git`. However, be aware that this means that any files
+that you do not want to commit upstream should be properly gitignored or stashed 
+prior to running `git commit`, lest they be staged by the precommit hook. You should still
+`git add` your changed files ahead of time, or `git` may abandon the commit because
+it doesn't see any changes.
+
+The precommit also runs a 'yarn audit --fix', in an attempt to stay on top of any known
+vulnerabilities in our npm packages. This is a good precaution, but we should still be
+vigilant to any vulnerability warnings we might see in github or elsewhere, as `yarn audit`
+is not perfect.
+
 ## docker container
 
 The local dev build includes a docker container that emulates an aws s3 bucket. 
