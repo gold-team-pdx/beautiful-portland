@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import MyProvider from './Components/Context/MyProvider'
 import Home from './Components/Home/Home'
 import About from './Components/About/About'
 import VolunteerForm from './Components/Volunteer/VolunteerForm'
@@ -14,7 +13,7 @@ import VolunteerCalendar from './Components/Home/VolunteerCalendar';
 class App extends Component {
   render() {
     return (
-      <MyProvider>
+      <div className="App">
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
@@ -27,7 +26,7 @@ class App extends Component {
             <Route component={NoMatch} />
           </Switch>
         </Router>
-      </MyProvider>
+      </div>
     )
   }
 }

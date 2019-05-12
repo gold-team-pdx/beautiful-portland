@@ -142,3 +142,4 @@ app.post('/api/editEventTemplate', ensureAuthenticated, adminHandlers.editEventT
 app.post('/api/deleteEventTemplate', ensureAuthenticated, adminHandlers.deleteEventTemplate.bind({dbClient: client}))
 app.post('/api/editedStory', ensureAuthenticated, adminHandlers.editedStory.bind({dbClient: client}))
 app.get('/api/storiesCount', ensureAuthenticated, adminHandlers.getStoryCount.bind({dbClient: client}))
+app.post('/api/volunteerHistory', ensureAuthenticated, adminHandlers.getVolunteerHistory.bind({dbClient: client}))
