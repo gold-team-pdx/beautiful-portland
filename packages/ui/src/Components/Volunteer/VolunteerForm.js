@@ -9,15 +9,6 @@ export default class VolunteerForm extends Component {
 	constructor(props) {
 		super(props)
 
-<<<<<<< HEAD
-		/*let params = new URLSearchParams(this.props.location.search)
-		if (params.get('date') === null) {
-			params.append('date', new Moment().format('MM-DD-YY'))
-		}*/
-		this.state = {
-			validEvent: true,
-			date: '5-9-19',
-=======
 		let dateToUse
 
 		if(this.props.date) {
@@ -32,7 +23,6 @@ export default class VolunteerForm extends Component {
 		this.state = {
 			validEvent: true,
 			date: dateToUse,
->>>>>>> 0d03a98f370dbe31d66ba78a451c8692cc8d21a2
 			coordinator: '',
 			coordinator_phone: '',
 			location: '',
@@ -107,11 +97,6 @@ export default class VolunteerForm extends Component {
 							max_servings={this.state.max_servings}
 						/>
 					</Container>
-<<<<<<< HEAD
-				
-				
-				
-=======
 				) : (
 					<Container>
 						<Header as="h2" style={{ marginTop: '20px' }}>
@@ -119,7 +104,6 @@ export default class VolunteerForm extends Component {
 						</Header>
 					</Container>
 				)}
->>>>>>> 0d03a98f370dbe31d66ba78a451c8692cc8d21a2
 			</div>
 		)
 	}
