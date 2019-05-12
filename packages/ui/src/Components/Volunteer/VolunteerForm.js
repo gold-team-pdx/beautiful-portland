@@ -13,7 +13,6 @@ export default class VolunteerForm extends Component {
     if (params.get('date') === null) {
       params.append('date', new Moment().format('MM-DD-YY'))
     }
-    // dum dee dum test test
     this.state = {
       validEvent: true,
       date: params.get('date'),
