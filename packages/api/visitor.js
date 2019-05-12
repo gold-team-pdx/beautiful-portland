@@ -144,6 +144,47 @@ volunteerFormSubmit = function(req, res) {
     })
 }
 
+eventCalendar = function(req, res) {
+    let client = this.dbClient
+    collection = client.db("events-form").collection("events") 
+    collection.find({}).toArray((err, docs) => {
+        if(err) {
+            console.log(err, "Error trying to find document")
+            res.send({
+                status: 'FAILURE'
+            })
+            return
+        } else if(docs.length === 0) {
+            console.log("Couldn't fulfill a document request")
+            res.send({
+                status: 'FAILURE'
+            })
+            return
+        }
+
+        let response_data = []
+		docs.forEach(info => {
+            var eventObj = new Object()
+            eventObj._id = info._id
+			eventObj.title = "Free Hot Soup"
+			eventObj.location = info.location
+            eventObj.start = info.date
+            eventObj.end = info.date
+            eventObj.time = info.time
+            eventObj.allDay = false
+            eventObj.coordinator = info.coordinator
+            eventObj.coordinator_phone = info.coordinator_phone
+			response_data.push(eventObj)
+		})
+
+		res.send({
+			status: 'SUCCESS',
+			event_info: JSON.stringify(response_data)
+		})
+    })
+}
+
 module.exports.homeImages = homeImages
 module.exports.volunteerFormSubmit = volunteerFormSubmit
 module.exports.volunteerFormGetEventInfo = volunteerFormGetEventInfo
+module.exports.eventCalendar = eventCalendar
