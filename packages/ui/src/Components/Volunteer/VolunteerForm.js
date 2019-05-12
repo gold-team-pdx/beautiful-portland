@@ -9,13 +9,20 @@ export default class VolunteerForm extends Component {
 	constructor(props) {
 		super(props)
 
-		let params = new URLSearchParams(this.props.location.search)
-		if (params.get('date') === null) {
-			params.append('date', new Moment().format('MM-DD-YY'))
+		let dateToUse
+
+		if(this.props.date) {
+			dateToUse = this.props.date
+		} else {
+			let params = new URLSearchParams(this.props.location.search)
+			if (params.get('date') === null) {
+				params.append('date', new Moment().format('MM-DD-YY'))
+			}
+			dateToUse = params.get('date')
 		}
 		this.state = {
 			validEvent: true,
-			date: params.get('date'),
+			date: dateToUse,
 			coordinator: '',
 			coordinator_phone: '',
 			location: '',
