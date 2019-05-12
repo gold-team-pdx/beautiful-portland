@@ -5,14 +5,14 @@ require ('dotenv').config()
 export default class Login extends Component {
   render() {
 	  	let callbackHost = process.env.REACT_APP_API_ENDPOINT || ''
-		return (
-			<div style={{position:"absolute",top:"50%",left:"40%"}}>
-				<Container>
-					<a href={`${callbackHost}/auth/google`} style={{color:"white"}}>
-						<Button size='massive' color='google plus'><Icon name='google' />Admin Login</Button>
-					</a>
-				</Container>
-			</div>
-		)
-	}
+    return (
+      <div style={{position:'absolute',top:'50%',left:'40%'}}>
+        <Container>
+          <a href={`${callbackHost}/auth/google`} style={{color:'white'}}>
+            <Button size='massive' color='google plus'><Icon name='google' />Admin Login</Button>
+          </a>
+        </Container>
+      </div>
+    )
+  }
 }
