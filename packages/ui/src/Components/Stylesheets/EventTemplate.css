@@ -1,10 +1,10 @@
 .input-wrapper span{
-    visibility: hidden;
+    /* visibility: hidden; */
     color: #008000;
 }
 
 .input-wrapper.has-error span{
-    visibility: visible;
+    /* visibility: visible; */
     color: #FF0000;
 }
 

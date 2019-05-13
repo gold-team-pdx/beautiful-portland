@@ -64,7 +64,7 @@ class VolunteerList extends Component {
           </Table.Header>
           <Table.Body>
             {// If not volunteers is not empty, go ahead and map it to table
-            filteredVolunteers &&
+              filteredVolunteers &&
               filteredVolunteers.map(item => (
                 <Table.Row key={item.email}>
                   <Table.Cell>
@@ -72,7 +72,7 @@ class VolunteerList extends Component {
                       as={Link}
                       to="/VolunteerSubmissions"
                       onClick={() => {
-                        this.props.updateActiveEmail(item.name)
+                        this.props.updateActiveEmail(item.email)
                       }}
                       className="volunteer"
                     >

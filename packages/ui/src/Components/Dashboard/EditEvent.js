@@ -117,28 +117,28 @@ class EditEvent extends Component {
     let coordinator_phoneValid = this.state.coordinator_phoneValid
 
     switch (fieldName) {
-      case 'location':
-        locationValid = value.length > 2
-        errors.location = locationValid
-          ? ''
-          : ' ✗ Please enter a vaild Location.'
-        break
-      case 'coordinator':
-        coordinatorValid = value.length > 2
-        errors.coordinator = coordinatorValid
-          ? ''
-          : ' ✗ Please enter a vaild Name.'
-        break
-      case 'coordinator_phone':
-        coordinator_phoneValid = value.match(
-          /^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/i
-        )
-        errors.coordinator_phone = coordinator_phoneValid
-          ? ''
-          : ' ✗ Please enter a vaild Phone Number.'
-        break
-      default:
-        break
+    case 'location':
+      locationValid = value.length > 2
+      errors.location = locationValid
+        ? ''
+        : ' ✗ Please enter a vaild Location.'
+      break
+    case 'coordinator':
+      coordinatorValid = value.length > 2
+      errors.coordinator = coordinatorValid
+        ? ''
+        : ' ✗ Please enter a vaild Name.'
+      break
+    case 'coordinator_phone':
+      coordinator_phoneValid = value.match(
+        /^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/i
+      )
+      errors.coordinator_phone = coordinator_phoneValid
+        ? ''
+        : ' ✗ Please enter a vaild Phone Number.'
+      break
+    default:
+      break
     }
 
     this.setState(

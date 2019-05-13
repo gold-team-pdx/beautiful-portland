@@ -28,7 +28,6 @@ export default class StoryForm extends Component {
       // Modal and confirm bools
       addModalOpen: false,
       openRemovePhoto: false,
-      deleteId: 0
     }
   }
 
@@ -300,12 +299,12 @@ export default class StoryForm extends Component {
       <Segment>
         <Form className="storyForm">
           <Form.Field>
-          <label>Title</label>
-          <input name="title"
-                 placeholder="Title"
-                 value={this.state.title}
-                 onChange={this.onChange}
-          />
+            <label>Title</label>
+            <input name="title"
+              placeholder="Title"
+              value={this.state.title}
+              onChange={this.onChange}
+            />
           </Form.Field>
           { // This is a large if/else shorthand statement.
             // IF

@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { Menu } from "semantic-ui-react";
-import { NavLink } from "react-router-dom";
+import React, { Component } from 'react'
+import { Menu } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
 
 export default class DashMenu extends Component {
   state = {};
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
-    const activeItem = this.state;
+    const activeItem = this.state
 
     return (
       <div className="dashMenu">
@@ -17,27 +17,27 @@ export default class DashMenu extends Component {
             <Menu.Item
               name="editEventTemplate"
               as={NavLink}
-              active={activeItem === "editEventTemplate"}
+              active={activeItem === 'editEventTemplate'}
               onClick={this.handleItemClick}
-              to={"/EditEventTemplate"}
+              to={'/EditEventTemplate'}
             >
               Edit Event Template
             </Menu.Item>
             <Menu.Item
               name="addEvent"
               as={NavLink}
-              active={activeItem === "addEvent"}
+              active={activeItem === 'addEvent'}
               onClick={this.handleItemClick}
-              to={"/AddEvent"}
+              to={'/AddEvent'}
             >
               Add Event
             </Menu.Item>
             <Menu.Item
               name="viewEvents"
               as={NavLink}
-              active={activeItem === "viewEvents"}
+              active={activeItem === 'viewEvents'}
               onClick={this.handleItemClick}
-              to={"/ViewUpcomingEvents"}
+              to={'/ViewUpcomingEvents'}
             >
               View Upcoming Events
             </Menu.Item>
@@ -45,9 +45,9 @@ export default class DashMenu extends Component {
           <Menu.Item
             name="volunteerList"
             as={NavLink}
-            active={activeItem === "volunteerList"}
+            active={activeItem === 'volunteerList'}
             onClick={this.handleItemClick}
-            to={"/VolunteerList"}
+            to={'/VolunteerList'}
           >
             Volunteer List
           </Menu.Item>
@@ -56,18 +56,18 @@ export default class DashMenu extends Component {
             <Menu.Item
               name="editCarouselImages"
               as={NavLink}
-              active={activeItem === "editCarouselImages"}
+              active={activeItem === 'editCarouselImages'}
               onClick={this.handleItemClick}
-              to={"/EditImages"}
+              to={'/EditImages'}
             >
               Edit Front Page Images
             </Menu.Item>
             <Menu.Item
               name="viewAllImages"
               as={NavLink}
-              active={activeItem === "viewAllImages"}
+              active={activeItem === 'viewAllImages'}
               onClick={this.handleItemClick}
-              to={"/ViewImages"}
+              to={'/ViewImages'}
             >
               View All Images
             </Menu.Item>
@@ -77,24 +77,24 @@ export default class DashMenu extends Component {
             <Menu.Item
               name="newStory"
               as={NavLink}
-              active={activeItem === "newStory"}
+              active={activeItem === 'newStory'}
               onClick={this.handleItemClick}
-              to={"/CreateStory"}
+              to={'/CreateStory'}
             >
               Create Story
             </Menu.Item>
             <Menu.Item
               name="viewStories"
               as={NavLink}
-              active={activeItem === "viewStories"}
+              active={activeItem === 'viewStories'}
               onClick={this.handleItemClick}
-              to={"/ViewStories"}
+              to={'/ViewStories'}
             >
               View Stories
             </Menu.Item>
           </Menu.Menu>
         </Menu>
       </div>
-    );
+    )
   }
 }
