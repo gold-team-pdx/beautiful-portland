@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "cd ../../ ; yarn bootstrap",
-    "start": "set env REACT_APP_API_ENDPOINT=http://localhost:5000 && react-scripts start",
+    "start": "REACT_APP_API_ENDPOINT=http://localhost:5000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
