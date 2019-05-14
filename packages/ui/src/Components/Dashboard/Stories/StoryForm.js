@@ -35,22 +35,22 @@ export default class StoryForm extends Component {
     if(this.props.editId !== undefined) {
       Axios.post('/api/getStoryEdit', { id: this.props.editId })
         .then((response) => {
-         //Get photo from s3 bucket to serve
-         if(response.data.postPhotoName !== 'No Photo')
-          this.getPhotoFromS3(response.data.postPhotoName)
-         this.setState({
-          _id : response.data._id,
-          title :response.data.title,
-          hook :  response.data.hook,
-          content : response.data.content,
-          editedTimestamp : response.data.edited_timestamp,
-          publish_status : response.data.publish_status,
-          postPhotoName: response.data.postPhotoName
+          //Get photo from s3 bucket to serve
+          if(response.data.postPhotoName !== 'No Photo')
+            this.getPhotoFromS3(response.data.postPhotoName)
+          this.setState({
+            _id : response.data._id,
+            title :response.data.title,
+            hook :  response.data.hook,
+            content : response.data.content,
+            editedTimestamp : response.data.edited_timestamp,
+            publish_status : response.data.publish_status,
+            postPhotoName: response.data.postPhotoName
+          })
         })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 
@@ -63,9 +63,9 @@ export default class StoryForm extends Component {
     // Sets state for later
     this.setState({publish_status: true})
     if(this.state._id !== undefined && this.state._id !== '') {
-      Axios.post("/api/editedStory", data)
+      Axios.post('/api/editedStory', data)
         .then(response => {
-          console.log(response, "Story has been edited and saved to published")
+          console.log(response, 'Story has been edited and saved to published')
           this.handleDelete()
           // Handles removing uneeded photos from s3 bucket
           if(this.state.oldPhotoName !== '') {
@@ -82,40 +82,14 @@ export default class StoryForm extends Component {
          
         })
         .catch(err => {
-          console.log(err, "Try again.")
+          console.log(err, 'Try again.')
         })
     } 
     else {
-      Axios.post("/api/addPublish", data)
-      .then(response => {
-        console.log(response, "Story has been published")
-        this.handleDelete()
-        if(this.state.oldPhotoName !== '') {
-          this.removeFromS3Bucket()
-        }
-        if(this.state.postPhotoName !== 'No Photo') {
-          this.addToS3Bucket()
-        }
-        else {
-          this.clearForm()
-        }
-      })
-      .catch(err => {
-        console.log(err, "Try again.")
-      })
-    }
-    this.handleClosePublish()
-  }
-
- /*Checks for publish_status if load through edit*/
-  handleSave = () => {
-    if(this.state.publish_status) {
-      this.handlePublish()
-    } 
-    else if(this.state._id !== undefined && this.state._id !== '') {
-      Axios.post("/api/editedStory", this.state)
+      Axios.post('/api/addPublish', data)
         .then(response => {
-          console.log(response, "Story has been edited and saved to drafts")
+          console.log(response, 'Story has been published')
+          this.handleDelete()
           if(this.state.oldPhotoName !== '') {
             this.removeFromS3Bucket()
           }
@@ -127,38 +101,64 @@ export default class StoryForm extends Component {
           }
         })
         .catch(err => {
-          console.log(err, "Try again.")
+          console.log(err, 'Try again.')
+        })
+    }
+    this.handleClosePublish()
+  }
+
+  /*Checks for publish_status if load through edit*/
+  handleSave = () => {
+    if(this.state.publish_status) {
+      this.handlePublish()
+    } 
+    else if(this.state._id !== undefined && this.state._id !== '') {
+      Axios.post('/api/editedStory', this.state)
+        .then(response => {
+          console.log(response, 'Story has been edited and saved to drafts')
+          if(this.state.oldPhotoName !== '') {
+            this.removeFromS3Bucket()
+          }
+          if(this.state.postPhotoName !== 'No Photo') {
+            this.addToS3Bucket()
+          }
+          else {
+            this.clearForm()
+          }
+        })
+        .catch(err => {
+          console.log(err, 'Try again.')
         })
     } 
     else {
-      Axios.post("/api/addDraft", this.state)
-      .then(response => {
-        console.log(response, "Story saved to drafts")
-        if(this.state.oldPhotoName !== '') {
-          this.removeFromS3Bucket()
-        }
-        if(this.state.postPhotoName !== 'No Photo') {
-          this.addToS3Bucket()
-        }
-        else {
-          this.clearForm()
-        }
-      })
-      .catch(err => {
-        console.log(err, "Try again.")
-      })
+      Axios.post('/api/addDraft', this.state)
+        .then(response => {
+          console.log(response, 'Story saved to drafts')
+          if(this.state.oldPhotoName !== '') {
+            this.removeFromS3Bucket()
+          }
+          if(this.state.postPhotoName !== 'No Photo') {
+            this.addToS3Bucket()
+          }
+          else {
+            this.clearForm()
+          }
+        })
+        .catch(err => {
+          console.log(err, 'Try again.')
+        })
     }
     this.handleCloseSave()
   }
 
   handleDelete = () => {
-    console.log("Deleting draft with id: " + this.state._id)
+    console.log('Deleting draft with id: ' + this.state._id)
     Axios.post('/api/deleteDraft', {deleteId: this.state._id})
       .then(res => {
-         console.log(res.data);
+        console.log(res.data)
       })
       .catch((err) => {
-         console.log(err);
+        console.log(err)
       })
   }
 
@@ -174,7 +174,7 @@ export default class StoryForm extends Component {
       postImageData: '' 
     })
     this.handleCloseClear()
- }
+  }
 
   // Handles save confirm boolean
   handleOpenSave = () => this.setState({ openSave: true })
@@ -209,7 +209,7 @@ export default class StoryForm extends Component {
     if(fileName !== this.state.postPhotoName) {
       Axios.post('/api/addImageIntoStories', {
         fileToAdd: this.state.postPhoto
-        })
+      })
         .then(res => {
           console.log('Photo saved in s3')
           this.clearForm()
@@ -226,12 +226,12 @@ export default class StoryForm extends Component {
     Axios.post('/api/removeImageFromStories', {
       fileToRemove: this.state.oldPhotoName
     })
-    .then(res => {
-      this.setState({oldPhotoName: ''})
-    })
-    .catch(err => {
-      console.log(err)
-    })
+      .then(res => {
+        this.setState({oldPhotoName: ''})
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
   // Retrieving an image from s3 to add to post
   getPhotoFromS3 = (fileKey) => {
@@ -240,12 +240,12 @@ export default class StoryForm extends Component {
         fileName: fileKey
       }
     })
-    .then(res => {
-      this.setState({postImageData: res.data})
-    })
-    .catch(err => {
-      console.log(err)
-    })
+      .then(res => {
+        this.setState({postImageData: res.data})
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   // Add Image to post
@@ -257,14 +257,14 @@ export default class StoryForm extends Component {
     let oldPhoto = ''
     let newFileName = name + '&' + Date.now() + '&' + this.state.title
     reader.onerror = () => {
-        reader.abort()
-        console.log("Problem parsing input file")
+      reader.abort()
+      console.log('Problem parsing input file')
     }
     reader.onload = e => {
       data = e.target.result
       newFile = {
-          "fileData": data,
-          "fileName": newFileName
+        'fileData': data,
+        'fileName': newFileName
       }
       // If there is an old photo, save the name to delete later
       if(this.state.postPhotoName !== 'No Photo') {
@@ -310,108 +310,108 @@ export default class StoryForm extends Component {
             // IF
             this.state.postPhotoName === 'No Photo' ? 
             // THEN
-            <Form.Field className="noPhotoAdded"> 
-              <Modal  trigger={<Button color="green" fluid onClick={this.handleModalOpen}>Add Photo to Post</Button>}
+              <Form.Field className="noPhotoAdded"> 
+                <Modal  trigger={<Button color="green" fluid onClick={this.handleModalOpen}>Add Photo to Post</Button>}
                   open= {this.state.addModalOpen}
                   onClose={this.handleModalClose}>
-                <Modal.Content>
-                  <h2>Add Photo to Post</h2>
-                  <Form>
+                  <Modal.Content>
+                    <h2>Add Photo to Post</h2>
+                    <Form>
                       <input type='file' id="file" name="file" accept="image/png, image/jpeg"></input>
-                  </Form>
-                </Modal.Content>
-                <Modal.Actions>
+                    </Form>
+                  </Modal.Content>
+                  <Modal.Actions>
                     <Button color='red' inverted onClick={this.handleModalClose}>
-                        <Icon name='remove' /> 
+                      <Icon name='remove' /> 
                         Cancel
                     </Button>
-                    <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById("file"))}>
-                        <Icon name='checkmark' /> 
+                    <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById('file'))}>
+                      <Icon name='checkmark' /> 
                         Add Photo to Post
                     </Button>
-                </Modal.Actions> 
-              </Modal>
-            </Form.Field> 
+                  </Modal.Actions> 
+                </Modal>
+              </Form.Field> 
             // END THEN
             // ELSE
-            :
-            <Form.Field className="photoAdded">
-              <img alt="blog" className="imageToAdd" src={this.state.postImageData}></img>
-              <Grid stackable columns={2}>
-                <Grid.Column>
-                  <Button color="red" floated="right" fluid onClick={this.openRemovePhoto}>Remove Photo</Button>
-                  <Confirm open={this.state.openRemovePhoto} onCancel={this.closeRemovePhoto} onConfirm={this.removePhotoFromStory} />
-                </Grid.Column>
-                <Grid.Column>
-                  <Modal  trigger={<Button color="yellow" fluid floated="left" onClick={this.handleModalOpen}>Change Photo</Button>}
+              :
+              <Form.Field className="photoAdded">
+                <img alt="blog" className="imageToAdd" src={this.state.postImageData}></img>
+                <Grid stackable columns={2}>
+                  <Grid.Column>
+                    <Button color="red" floated="right" fluid onClick={this.openRemovePhoto}>Remove Photo</Button>
+                    <Confirm open={this.state.openRemovePhoto} onCancel={this.closeRemovePhoto} onConfirm={this.removePhotoFromStory} />
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Modal  trigger={<Button color="yellow" fluid floated="left" onClick={this.handleModalOpen}>Change Photo</Button>}
                       open= {this.state.addModalOpen}
                       onClose={this.handleModalClose}>
-                    <Modal.Content>
-                      <h2>Add Photo to Post</h2>
-                      <Form>
+                      <Modal.Content>
+                        <h2>Add Photo to Post</h2>
+                        <Form>
                           <input type='file' id="file" name="file" accept="image/png, image/jpeg"></input>
-                      </Form>
-                    </Modal.Content>
-                    <Modal.Actions>
+                        </Form>
+                      </Modal.Content>
+                      <Modal.Actions>
                         <Button color='red' inverted onClick={this.handleModalClose}>
-                            <Icon name='remove' /> 
+                          <Icon name='remove' /> 
                             Cancel
                         </Button>
-                        <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById("file"))}>
-                            <Icon name='checkmark' /> 
+                        <Button color='green' inverted onClick={e => this.addPhoto(document.getElementById('file'))}>
+                          <Icon name='checkmark' /> 
                             Add Photo to Post
                         </Button>
-                    </Modal.Actions> 
-                  </Modal>
-                </Grid.Column>
-              </Grid>
-            </Form.Field>
+                      </Modal.Actions> 
+                    </Modal>
+                  </Grid.Column>
+                </Grid>
+              </Form.Field>
             // END ELSE
           }
           <Form.Field>
-          <label>Subtitle</label>
-          <input name="hook"
-                 placeholder="Subtitle"
-                 value={this.state.hook}
-                 onChange={this.onChange}
-         />
-         </Form.Field>
-         <Form.Field>
-         <label>Content</label>
-         <TextArea name="content"
-                   placeholder='Your Story'
-                   rows="15"
-                   value={this.state.content}
-                   onChange={this.onChange}
-         />
-         </Form.Field>
-         <Grid stackable columns={3}>
-          <Grid.Column>
-             <Button color="blue"
-                     fluid
-                     disabled={!this.state.title || !this.state.hook || !this.state.content}
-                     onClick={this.handleOpenSave}>Save</Button>
-             <Confirm open={this.state.openSave}
-                      content='Your Story will be saved as a draft'
-                      onCancel={this.handleCloseSave}
-                      onConfirm={this.handleSave}
-             />
-          </Grid.Column>
-          <Grid.Column >
-             <Button color="green"
-                     fluid
-                     disabled={!this.state.title || !this.state.hook || !this.state.content}
-                     onClick={this.handleOpenPublish}>Publish</Button>
-             <Confirm open={this.state.openPublish}
-                      content='Your Story will be published'
-                      onCancel={this.handleClosePublish}
-                      onConfirm={this.handlePublish}
-             />
-          </Grid.Column>
-          <Grid.Column>
-            <Button color="red" fluid onClick={this.handleOpenClear}>Clear Form</Button>
-            <Confirm open={this.state.openClear} onCancel={this.handleCloseClear} onConfirm={this.clearForm} />
-          </Grid.Column>
+            <label>Subtitle</label>
+            <input name="hook"
+              placeholder="Subtitle"
+              value={this.state.hook}
+              onChange={this.onChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Content</label>
+            <TextArea name="content"
+              placeholder='Your Story'
+              rows="15"
+              value={this.state.content}
+              onChange={this.onChange}
+            />
+          </Form.Field>
+          <Grid stackable columns={3}>
+            <Grid.Column>
+              <Button color="blue"
+                fluid
+                disabled={!this.state.title || !this.state.hook || !this.state.content}
+                onClick={this.handleOpenSave}>Save</Button>
+              <Confirm open={this.state.openSave}
+                content='Your Story will be saved as a draft'
+                onCancel={this.handleCloseSave}
+                onConfirm={this.handleSave}
+              />
+            </Grid.Column>
+            <Grid.Column >
+              <Button color="green"
+                fluid
+                disabled={!this.state.title || !this.state.hook || !this.state.content}
+                onClick={this.handleOpenPublish}>Publish</Button>
+              <Confirm open={this.state.openPublish}
+                content='Your Story will be published'
+                onCancel={this.handleClosePublish}
+                onConfirm={this.handlePublish}
+              />
+            </Grid.Column>
+            <Grid.Column>
+              <Button color="red" fluid onClick={this.handleOpenClear}>Clear Form</Button>
+              <Confirm open={this.state.openClear} onCancel={this.handleCloseClear} onConfirm={this.clearForm} />
+            </Grid.Column>
           </Grid>
         </Form>
       </Segment>

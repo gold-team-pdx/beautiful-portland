@@ -1,27 +1,27 @@
 // Get image presigned URL for blog post photos
 getImageForStory = function(req, res) {
-	let AWS = this.amazon
-    const s3 = new AWS.S3({
-        endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-        s3ForcePathStyle: true,
-        accessKeyId: process.env.S3_ACCESS_KEY,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-    })
-    const bucket = 'beautiful-portland-carousel-photos'
-    let key = 'storyPhotos/' + req.query.fileName
-    try {
-        let url = s3.getSignedUrl('getObject', {Bucket: bucket, Key: key})
-        if(url.indexOf('undefined') === -1) {
-            console.log('file retrieved successfully')
-            res.send(url)
-        }
-        else {
-            console.log('File not found!')
-            res.send('No Photo')
-        }
-    } catch (err) {
-        console.log('ERROR could not locate file : ' + JSON.stringify(err))
+  let AWS = this.amazon
+  const s3 = new AWS.S3({
+    endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+    s3ForcePathStyle: true,
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+  })
+  const bucket = 'beautiful-portland-carousel-photos'
+  let key = 'storyPhotos/' + req.query.fileName
+  try {
+    let url = s3.getSignedUrl('getObject', {Bucket: bucket, Key: key})
+    if(url.indexOf('undefined') === -1) {
+      console.log('file retrieved successfully')
+      res.send(url)
     }
+    else {
+      console.log('File not found!')
+      res.send('No Photo')
+    }
+  } catch (err) {
+    console.log('ERROR could not locate file : ' + JSON.stringify(err))
+  }
 }
 
 // Get request to S3 container to get photos for image carousel
@@ -171,43 +171,45 @@ volunteerFormSubmit = function(req, res) {
 }
 
 eventCalendar = function(req, res) {
-    let client = this.dbClient
-    collection = client.db("events-form").collection("events") 
-    collection.find({}).toArray((err, docs) => {
-        if(err) {
-            console.log(err, "Error trying to find document")
-            res.send({
-                status: 'FAILURE'
-            })
-            return
-        } else if(docs.length === 0) {
-            console.log("Couldn't fulfill a document request")
-            res.send({
-                status: 'FAILURE'
-            })
-            return
-        }
+  let client = this.dbClient
+  collection = client.db('events-form').collection('events') 
+  collection.find({}).toArray((err, docs) => {
+    if(err) {
+      console.log(err, 'Error trying to find document')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs.length === 0) {
+      console.log('Couldn\'t fulfill a document request')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
 
-        let response_data = []
-		docs.forEach(info => {
-            var eventObj = new Object()
-            eventObj._id = info._id
-			eventObj.title = "Free Hot Soup"
-			eventObj.location = info.location
-            eventObj.start = info.date
-            eventObj.end = info.date
-            eventObj.time = info.time
-            eventObj.allDay = false
-            eventObj.coordinator = info.coordinator
-            eventObj.coordinator_phone = info.coordinator_phone
-			response_data.push(eventObj)
-		})
-
-		res.send({
-			status: 'SUCCESS',
-			event_info: JSON.stringify(response_data)
-		})
+    let response_data = []
+    docs.forEach(info => {
+      if(info.date !== 'MASTER') {
+        var eventObj = new Object()
+        eventObj._id = info._id
+        eventObj.title = 'Free Hot Soup'
+        eventObj.location = info.location
+        eventObj.start = info.date
+        eventObj.end = info.date
+        eventObj.time = info.time
+        eventObj.allDay = false
+        eventObj.coordinator = info.coordinator
+        eventObj.coordinator_phone = info.coordinator_phone
+        response_data.push(eventObj)
+      }
     })
+
+    res.send({
+      status: 'SUCCESS',
+      event_info: JSON.stringify(response_data)
+    })
+  })
 }
 
 module.exports.homeImages = homeImages

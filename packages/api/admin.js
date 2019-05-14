@@ -343,56 +343,56 @@ removeImagesFromFrontPage = function(req, res) {
 // Add a photo from the stories page 
 // (only when published or saved as a draft)
 addImageIntoStories = function(req, res) {
-	let AWS = this.amazon
-	const s3 = new AWS.S3({
-		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-		s3ForcePathStyle: true,
-		accessKeyId: process.env.S3_ACCESS_KEY,
-		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-	})
-	const bucket = 'beautiful-portland-carousel-photos'
-	let file = req.body.fileToAdd
-	let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-	file.fileName = 'storyPhotos/' + file.fileName
-	const params = {
-		Bucket: bucket,
-		Key: file.fileName,
-		Body: buf
-	}
-	s3.upload(params, function(s3Err, data) {
-		if (s3Err) throw s3Err
-		console.log('File uploaded successfully')
-		res.send('upload successful')
-	})
+  let AWS = this.amazon
+  const s3 = new AWS.S3({
+    endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+    s3ForcePathStyle: true,
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+  })
+  const bucket = 'beautiful-portland-carousel-photos'
+  let file = req.body.fileToAdd
+  let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+  file.fileName = 'storyPhotos/' + file.fileName
+  const params = {
+    Bucket: bucket,
+    Key: file.fileName,
+    Body: buf
+  }
+  s3.upload(params, function(s3Err, data) {
+    if (s3Err) throw s3Err
+    console.log('File uploaded successfully')
+    res.send('upload successful')
+  })
 }
 
 removeImageFromStories = function(req, res) {
-	let AWS = this.amazon
-	const s3 = new AWS.S3({
-		endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
-		s3ForcePathStyle: true,
-		accessKeyId: process.env.S3_ACCESS_KEY,
-		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
-	})
-	const bucket = 'beautiful-portland-carousel-photos'
-	let fileToDelete = 'storyPhotos/' + req.body.fileToRemove
-	console.log(fileToDelete)
-	const params = {
-		Bucket: bucket,
-		Key: fileToDelete
-	}
-	try {
-		s3.headObject(params).promise()
-		console.log('File Found in S3')
-		try {
-			s3.deleteObject(params).promise()
-			console.log('file deleted Successfully')
-		} catch (err) {
-			console.log('ERROR in file Deleting : ' + JSON.stringify(err))
-		}
-	} catch (err) {
-		console.log('File not Found ERROR : ' + err.code)
-	}
+  let AWS = this.amazon
+  const s3 = new AWS.S3({
+    endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+    s3ForcePathStyle: true,
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+  })
+  const bucket = 'beautiful-portland-carousel-photos'
+  let fileToDelete = 'storyPhotos/' + req.body.fileToRemove
+  console.log(fileToDelete)
+  const params = {
+    Bucket: bucket,
+    Key: fileToDelete
+  }
+  try {
+    s3.headObject(params).promise()
+    console.log('File Found in S3')
+    try {
+      s3.deleteObject(params).promise()
+      console.log('file deleted Successfully')
+    } catch (err) {
+      console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+    }
+  } catch (err) {
+    console.log('File not Found ERROR : ' + err.code)
+  }
 }
 
 // Add photo to front page from already uploaded photos.
@@ -446,155 +446,155 @@ addFromUploaded = function(req, res) {
 }
 
 addNewDraft = function(req, res) {
-	let client = this.dbClient
-	collection = client.db('stories_example1').collection('drafts')
-	collection.updateOne(
-		{ edited_timestamp: req.body.edited_timestamp },
-		{
-			$set: {
-				edited_timestamp: new Date(),
-				publish_status: req.body.publish_status,
-				title: req.body.title,
-				hook: req.body.hook,
-				content: req.body.content,
-				postPhotoName: req.body.postPhotoName
-			}
-		},
-		{ upsert: true },
-		function(err, obj) {
-			if (err) throw err
-			else res.end('Draft Saved')
-		}
-	)
+  let client = this.dbClient
+  collection = client.db('stories_example1').collection('drafts')
+  collection.updateOne(
+    { edited_timestamp: req.body.edited_timestamp },
+    {
+      $set: {
+        edited_timestamp: new Date(),
+        publish_status: req.body.publish_status,
+        title: req.body.title,
+        hook: req.body.hook,
+        content: req.body.content,
+        postPhotoName: req.body.postPhotoName
+      }
+    },
+    { upsert: true },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Draft Saved')
+    }
+  )
 }
 
 addNewPublished = function(req, res) {
-	let client = this.dbClient
-	collection = client.db('stories_example1').collection('published')
-	collection.updateOne(
-		{ edited_timestamp: req.body.edited_timestamp },
-		{
-			$set: {
-				edited_timestamp: new Date(),
-				publish_status: req.body.publish_status,
-				title: req.body.title,
-				hook: req.body.hook,
-				content: req.body.content,
-				postPhotoName: req.body.postPhotoName
-			}
-		},
-		{ upsert: true },
-		function(err, obj) {
-			if (err) throw err
-			else res.end('Story Published')
-		}
-	)
+  let client = this.dbClient
+  collection = client.db('stories_example1').collection('published')
+  collection.updateOne(
+    { edited_timestamp: req.body.edited_timestamp },
+    {
+      $set: {
+        edited_timestamp: new Date(),
+        publish_status: req.body.publish_status,
+        title: req.body.title,
+        hook: req.body.hook,
+        content: req.body.content,
+        postPhotoName: req.body.postPhotoName
+      }
+    },
+    { upsert: true },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Story Published')
+    }
+  )
 }
 
 editedStory = function(req,res) {
-	var ObjectId = require('mongodb').ObjectID
-	let client = this.dbClient
-	console.log(req.body.publish_status)
-	if(req.body.publish_status === true){
-		collection = client.db('stories_example1').collection('published')
-	} else {
-		collection = client.db('stories_example1').collection('drafts')
-	}
-	collection.updateOne(
-		{_id: ObjectId(req.body._id)},
-		{
-			$set: {
-				edited_timestamp: new Date(),
-				publish_status: req.body.publish_status,
-				title: req.body.title,
-				hook: req.body.hook,
-				content: req.body.content,
-				postPhotoName: req.body.postPhotoName
-			}
-		},
-		{ upsert: true },
-		function(err, obj) {
-			if (err) throw err
-			else res.end('Story has been edited')
-		}
+  var ObjectId = require('mongodb').ObjectID
+  let client = this.dbClient
+  console.log(req.body.publish_status)
+  if(req.body.publish_status === true){
+    collection = client.db('stories_example1').collection('published')
+  } else {
+    collection = client.db('stories_example1').collection('drafts')
+  }
+  collection.updateOne(
+    {_id: ObjectId(req.body._id)},
+    {
+      $set: {
+        edited_timestamp: new Date(),
+        publish_status: req.body.publish_status,
+        title: req.body.title,
+        hook: req.body.hook,
+        content: req.body.content,
+        postPhotoName: req.body.postPhotoName
+      }
+    },
+    { upsert: true },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Story has been edited')
+    }
 
-	)
+  )
 }
 
 getPublishedStory = function(req, res) {
-	console.log("publish page " + req.query.page)
-	let skips = (req.query.page - 1) * 5
-	let client = this.dbClient
-	collection = client.db('stories_example1').collection('published')
-	collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
-		if (err) {
-			console.log(err, 'Error trying to find published Stories')
-			res.send({
-				status: 'FAILURE'
-			})
-			return
-		} else if (docs[0] == null) {
-			console.log("Couldn't fufill Story request")
-			res.send({
-				status: 'FAILURE'
-			})
-			return
-		}
-		let response_data = []
-		docs.map((pubStory) => {
-			var publishObj = new Object()
-			publishObj._id = pubStory._id
-			publishObj.edited_timestamp = pubStory.edited_timestamp
-			publishObj.title = pubStory.title
-			publishObj.hook = pubStory.hook
-			publishObj.content = pubStory.content
-			publishObj.public_status = pubStory.public_status
-			publishObj.postPhotoName = pubStory.postPhotoName
-			response_data.push(pubStory)
-		})
-		res.send({
-			status: 'SUCCESS',
-			published_info: JSON.stringify(response_data)
-		})
-	})
+  console.log('publish page ' + req.query.page)
+  let skips = (req.query.page - 1) * 5
+  let client = this.dbClient
+  collection = client.db('stories_example1').collection('published')
+  collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
+    if (err) {
+      console.log(err, 'Error trying to find published Stories')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if (docs[0] == null) {
+      console.log('Couldn\'t fufill Story request')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    let response_data = []
+    docs.map((pubStory) => {
+      var publishObj = new Object()
+      publishObj._id = pubStory._id
+      publishObj.edited_timestamp = pubStory.edited_timestamp
+      publishObj.title = pubStory.title
+      publishObj.hook = pubStory.hook
+      publishObj.content = pubStory.content
+      publishObj.public_status = pubStory.public_status
+      publishObj.postPhotoName = pubStory.postPhotoName
+      response_data.push(pubStory)
+    })
+    res.send({
+      status: 'SUCCESS',
+      published_info: JSON.stringify(response_data)
+    })
+  })
 }
 
 getDraftedStories = function(req, res) {
-	console.log("draft page " + req.query.page)
-	let skips = (req.query.page - 1) * 5
-	let client = this.dbClient
-	collection = client.db('stories_example1').collection('drafts')
-	collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
-		if (err) {
-			console.log(err, 'Error trying to find drafted Stories')
-			res.send({
-				status: 'FAILURE'
-			})
-			return
-		} else if (docs[0] == null) {
-			console.log("Couldn't fufill Story request")
-			res.send({
-				status: 'FAILURE'
-			})
-			return
-		}
-		let response_data = []
-		docs.map((draftStory) => {
-			var draftObj = new Object()
-			draftObj.original_timestamp = draftStory._id.getTimestamp()
-			draftObj.edited_timestamp = draftStory.edited_timestamp
-			draftObj.title = draftStory.title
-			draftObj.hook = draftStory.hook
-			draftObj.content = draftStory.content
-			draftObj.postPhotoName = draftStory.postPhotoName
-			draftObj.public_status = draftStory.public_status
-			response_data.push(draftStory)
-		})
-		res.send({
-			status: 'SUCCESS',
-			draft_info: JSON.stringify(response_data)
-		})
-	})
+  console.log('draft page ' + req.query.page)
+  let skips = (req.query.page - 1) * 5
+  let client = this.dbClient
+  collection = client.db('stories_example1').collection('drafts')
+  collection.find().sort({ _id: -1 }).skip(skips).limit(5).toArray((err, docs) => {
+    if (err) {
+      console.log(err, 'Error trying to find drafted Stories')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if (docs[0] == null) {
+      console.log('Couldn\'t fufill Story request')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    let response_data = []
+    docs.map((draftStory) => {
+      var draftObj = new Object()
+      draftObj.original_timestamp = draftStory._id.getTimestamp()
+      draftObj.edited_timestamp = draftStory.edited_timestamp
+      draftObj.title = draftStory.title
+      draftObj.hook = draftStory.hook
+      draftObj.content = draftStory.content
+      draftObj.postPhotoName = draftStory.postPhotoName
+      draftObj.public_status = draftStory.public_status
+      response_data.push(draftStory)
+    })
+    res.send({
+      status: 'SUCCESS',
+      draft_info: JSON.stringify(response_data)
+    })
+  })
 }
 
 deleteDraft = function(req, res) {
