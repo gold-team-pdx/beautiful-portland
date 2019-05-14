@@ -23,8 +23,9 @@ export default class VolunteerCalendar extends Component {
             allDay: false,
             coordinator: '',
             coordinator_phone: ''
-
-        }]
+        }],
+        eventDay: '',
+        CURRENT: new moment().format('MM-DD-YY')
       }
     }
 
@@ -42,8 +43,13 @@ export default class VolunteerCalendar extends Component {
             console.log(err, "Error Retrieving Events")
           })
     }
-  
+
     render() {
+        var validEvent
+        if(this.state.eventDay !== ''){
+            validEvent = <VolunteerForm date={this.state.eventDay} />
+        }
+
       return (
         <div style={{marginTop: 30}}> 
           <Grid centered columns={1}>
@@ -59,8 +65,22 @@ export default class VolunteerCalendar extends Component {
                     defaultView='month'
                     views={['month']}
                     defaultDate={new Date()}
+                    onSelectEvent={event => this.setState({eventDay: event.start})}
+                    eventPropGetter={event => ({
+                        style: {
+                            backgroundColor: moment(event.start).isBefore(this.state.CURRENT)
+                                             ? "#808080"
+                                             : "#3174ad",
+                            pointerEvents: moment(event.start).isBefore(this.state.CURRENT)
+                                             ? "none"
+                                             : "auto"
+                        }
+                    })}
                    />
                 </div>
+             </Grid.Row>
+             <Grid.Row>
+                 { validEvent }
              </Grid.Row>
             </Grid>
         </div>
