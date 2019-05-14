@@ -50,12 +50,7 @@ export default class VolunteerCalendar extends Component {
     }
 
     render() {
-        var validEvent
-        if(this.state.eventDay !== ''){
-            validEvent = <VolunteerForm date={this.state.eventDay} />
-        }
-
-      return (
+       return (
         <div style={{marginTop: 30}}> 
           <Grid centered columns={1}>
              <Grid.Row>
