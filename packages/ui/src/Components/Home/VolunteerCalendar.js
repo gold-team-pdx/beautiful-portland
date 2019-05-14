@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import BigCalendar from 'react-big-calendar'
 import Axios from 'axios'
-import { Grid, Header } from 'semantic-ui-react'
+import { Grid, Header, Modal, Button } from 'semantic-ui-react'
 import VolunteerForm from '../Volunteer/VolunteerForm'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -25,7 +25,8 @@ export default class VolunteerCalendar extends Component {
             coordinator_phone: ''
         }],
         eventDay: '',
-        CURRENT: new moment().format('MM-DD-YY')
+        CURRENT: new moment().format('MM-DD-YY'),
+        isOpen: false
       }
     }
 
@@ -42,6 +43,10 @@ export default class VolunteerCalendar extends Component {
           .catch(err => {
             console.log(err, "Error Retrieving Events")
           })
+    }
+
+    handleClose = () => {
+        this.setState({isOpen: false})
     }
 
     render() {
@@ -65,7 +70,7 @@ export default class VolunteerCalendar extends Component {
                     defaultView='month'
                     views={['month']}
                     defaultDate={new Date()}
-                    onSelectEvent={event => this.setState({eventDay: event.start})}
+                    onSelectEvent={event => this.setState({eventDay: event.start, isOpen: true  })}
                     eventPropGetter={event => ({
                         style: {
                             backgroundColor: moment(event.start).isBefore(this.state.CURRENT)
@@ -79,10 +84,13 @@ export default class VolunteerCalendar extends Component {
                    />
                 </div>
              </Grid.Row>
-             <Grid.Row>
-                 { validEvent }
-             </Grid.Row>
+             
             </Grid>
+            <Modal open={this.state.isOpen} onClose={this.handleClose}>
+                <Modal.Content>
+                     <VolunteerForm date={this.state.eventDay} />
+                </Modal.Content>
+            </Modal>
         </div>
       )
     }
