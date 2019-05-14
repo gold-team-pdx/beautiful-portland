@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Card, Button} from 'semantic-ui-react'
+import { Card, Button } from 'semantic-ui-react'
 import Header from '../Home/Header'
 import Pagination from './Pagination'
 import PublishStories from './PublishStories'
 import PublishStories2 from './PublishStories2'
-import PublishStories3 from './PublishStories3'
+import PublishStories3 from './PublishStories4'
+import PublishStories4 from './PublishStories3'
 import Axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
@@ -64,6 +65,7 @@ export default class Home extends Component {
 										key={publish.edited_timestamp}
 										publish={publish}
 										version={this.state.version}
+										url={publish.title}
 									/>
 								)
 							})}
@@ -142,7 +144,7 @@ export default class Home extends Component {
 					<div style={{width: '80%', margin: 'auto'}}>
 						{this.state.publishStory && this.state.publishStory.map((publish) =>{
 							return(
-								<PublishStories2
+								<PublishStories4
 									key={publish.edited_timestamp}
 									publish={publish}
 									version={this.state.version}
