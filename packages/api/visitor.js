@@ -1,3 +1,29 @@
+// Get image presigned URL for blog post photos
+getImageForStory = function(req, res) {
+	let AWS = this.amazon
+    const s3 = new AWS.S3({
+        endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+        s3ForcePathStyle: true,
+        accessKeyId: process.env.S3_ACCESS_KEY,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+    })
+    const bucket = 'beautiful-portland-carousel-photos'
+    let key = 'storyPhotos/' + req.query.fileName
+    try {
+        let url = s3.getSignedUrl('getObject', {Bucket: bucket, Key: key})
+        if(url.indexOf('undefined') === -1) {
+            console.log('file retrieved successfully')
+            res.send(url)
+        }
+        else {
+            console.log('File not found!')
+            res.send('No Photo')
+        }
+    } catch (err) {
+        console.log('ERROR could not locate file : ' + JSON.stringify(err))
+    }
+}
+
 // Get request to S3 container to get photos for image carousel
 // Returns a list of presigned image urls from the s3 bucket.
 homeImages = function(req, res) {
@@ -188,3 +214,4 @@ module.exports.homeImages = homeImages
 module.exports.volunteerFormSubmit = volunteerFormSubmit
 module.exports.volunteerFormGetEventInfo = volunteerFormGetEventInfo
 module.exports.eventCalendar = eventCalendar
+module.exports.getImageForStory = getImageForStory
