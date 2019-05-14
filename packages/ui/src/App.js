@@ -8,7 +8,7 @@ import AdminDashboard from './Components/Dashboard/AdminDashboard'
 import ContactUs from './Components/Contact/ContactUs.js'
 import NoMatch from './Components/Error/NoMatch'
 import './App.css'
-import VolunteerCalendar from './Components/Home/VolunteerCalendar';
+import VolunteerCalendar from './Components/Home/VolunteerCalendar'
 
 class App extends Component {
   render() {

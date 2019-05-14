@@ -240,19 +240,19 @@ export default class EditCarouselImages extends Component {
             <Button className='addNewPhotos' icon labelPosition='left' size="medium" onClick={this.handleAddModalOpen}>
               <Icon name='add' />
                             Add New Photos
-                        </Button>
-                        }
-                        open= {this.state.addNewModalOpen}
-                        onClose={this.handleAddModalClose}>
-                    <Modal.Content>
-                        <h3> Add photos </h3>
-                        <Form>
-                            <input type='file' id="files" name="files[]" multiple accept="image/png, image/jpeg"></input>
-                        </Form>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button color='red' inverted onClick={this.handleAddModalClose}>
-                            <Icon name='remove' /> 
+            </Button>
+          }
+          open= {this.state.addNewModalOpen}
+          onClose={this.handleAddModalClose}>
+            <Modal.Content>
+              <h3> Add photos </h3>
+              <Form>
+                <input type='file' id="files" name="files[]" multiple accept="image/png, image/jpeg"></input>
+              </Form>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button color='red' inverted onClick={this.handleAddModalClose}>
+                <Icon name='remove' /> 
                             Cancel
               </Button>
               <Button color='green' inverted onClick={e => this.addPhotos(document.getElementById('files'))}>
@@ -265,27 +265,27 @@ export default class EditCarouselImages extends Component {
             <Button className='addFromUploaded' icon labelPosition='left' size="medium" onClick={this.handleAddFromModalOpen}>
               <Icon name='add' />
                             Add Photos From Uploaded
-                        </Button>
-                        }
-                        open= {this.state.addFromUploadModalOpen}
-                        onClose={this.handleAddFromModalClose}>
-                    <Modal.Content>
-                        <h3> Choose Photos </h3>
-                        <Card.Group className="cardGroup" itemsPerRow = {5}>
-                            {
-                                this.state.imagesNotOnFrontPage.length > 0 && this.state.imagesNotOnFrontPage.map(item => (
-                                    <Card 
-                                        image={item.imageUrl} 
-                                        onClick={e => {this.handlePhotoClickInModal(item)}}
-                                        className={item.checked ? 'clicked' : 'notClicked'} 
-                                    />
-                                ))
-                            }
-                        </Card.Group>       
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button color='red' inverted onClick={this.handleAddFromModalClose}>
-                            <Icon name='remove' /> 
+            </Button>
+          }
+          open= {this.state.addFromUploadModalOpen}
+          onClose={this.handleAddFromModalClose}>
+            <Modal.Content>
+              <h3> Choose Photos </h3>
+              <Card.Group className="cardGroup" itemsPerRow = {5}>
+                {
+                  this.state.imagesNotOnFrontPage.length > 0 && this.state.imagesNotOnFrontPage.map(item => (
+                    <Card 
+                      image={item.imageUrl} 
+                      onClick={e => {this.handlePhotoClickInModal(item)}}
+                      className={item.checked ? 'clicked' : 'notClicked'} 
+                    />
+                  ))
+                }
+              </Card.Group>       
+            </Modal.Content>
+            <Modal.Actions>
+              <Button color='red' inverted onClick={this.handleAddFromModalClose}>
+                <Icon name='remove' /> 
                             Cancel
               </Button>
               <Button color='green' inverted onClick={this.addPhotosFromUploaded}>

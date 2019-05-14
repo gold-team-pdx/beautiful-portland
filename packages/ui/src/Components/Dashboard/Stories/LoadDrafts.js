@@ -22,7 +22,7 @@ export default class LoadDrafts extends Component {
   }
 
   handleDelete = () => {
-    console.log("Deleting draft with id: " + this.props.sDraft._id)
+    console.log('Deleting draft with id: ' + this.props.sDraft._id)
     Axios.post('/api/deleteDraft', {deleteId: this.props.sDraft._id})
       .then(res => {
         console.log(res.data)

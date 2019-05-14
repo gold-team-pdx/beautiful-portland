@@ -7,7 +7,7 @@ export default class ContactUs extends Component {
   render() {
     return (
       <HomeLayout>
-        <div style={{marginTop: "15%"}}>
+        <div style={{marginTop: '15%'}}>
           <Grid textAlign="center">
             <Grid.Row centered >
               <Header as="h1" color="blue">CONTACT US</Header>
