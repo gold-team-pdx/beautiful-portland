@@ -37,7 +37,7 @@ export default class Header extends Component {
           as={NavLink}
           active={activeItem === 'Volunteer Calender'}
           onClick={this.handleItemClick}
-          to="/volunteer-form"
+          to="/volunteerCalendar"
         >
           Volunteer Calender
         </Menu.Item>

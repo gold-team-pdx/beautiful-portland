@@ -108,6 +108,7 @@ app.get('/api/getImages/*', visitorHandlers.homeImages.bind({amazon: AWS}))
 app.get('/api/getImageForStory', visitorHandlers.getImageForStory.bind({amazon: AWS}))
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
+app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: client}))
 
 
 // Admin request handlers
