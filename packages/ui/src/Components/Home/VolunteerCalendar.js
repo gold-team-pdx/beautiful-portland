@@ -26,7 +26,7 @@ export default class VolunteerCalendar extends Component {
         coordinator_phone: ''
       }],
       eventDay: '',
-      CURRENT: new moment(),
+      CURRENT: new moment().format('LL'),
       isOpen: false
     }
   }
