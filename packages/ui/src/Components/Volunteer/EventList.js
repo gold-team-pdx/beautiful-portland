@@ -1,6 +1,6 @@
-import React, { Component } from "react"
-import { Table, Container, Header } from "semantic-ui-react"
-import Axios from "axios"
+import React, { Component } from 'react'
+import { Table, Container, Header } from 'semantic-ui-react'
+import Axios from 'axios'
 
 class EventList extends Component {
   constructor(props) {
@@ -21,23 +21,23 @@ class EventList extends Component {
   }
 
   async componentDidMount() {
-    let path = "/api/volunteerInformation?date=" + this.props.date
+    let path = '/api/volunteerInformation?date=' + this.props.date
     Axios.get(path)
       .then(res => {
         let persons = []
-        if (res.data["event_info"]) {
-          let data = JSON.parse(res.data["event_info"])
+        if (res.data['event_info']) {
+          let data = JSON.parse(res.data['event_info'])
           data.map(person => persons.push(person))
           this.setState({ volunteers: persons })
         }
       })
       .catch(err => {
-        console.log(err, "Error Retrieving List")
+        console.log(err, 'Error Retrieving List')
       })
   }
 
   render() {
-      return(
+    return(
       <div>
         <Container>
           <h1>Volunteers</h1>
@@ -78,7 +78,7 @@ class EventList extends Component {
           </Table>
         </Container>
       </div>
-      )
+    )
   }
 }
 

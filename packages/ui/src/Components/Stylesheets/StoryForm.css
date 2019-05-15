@@ -1,0 +1,22 @@
+.storyForm {
+    justify-content: center;
+}
+
+.ui.form .field.photoAdded {
+    margin:auto;
+}
+
+.ui.fluid.button {
+    height: 100%;
+}
+
+.photoAdded {
+    max-width: 50%;
+}
+
+.imageToAdd {
+    max-width:100%;
+    height: auto;
+    display: block;
+    margin-bottom: 10px;
+}
