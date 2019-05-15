@@ -41,7 +41,7 @@ export default class PublishStories extends Component {
                     <Modal.Description>
                     <Image size='massive' src='https://www.visittheusa.com/sites/default/files/styles/hero_m_1300x700/public/images/hero_media_image/2017-04/048df232dcf31e992cb9143f695f416e.jpeg?itok=8AQcj59p'/><br/>
                     <Container text>
-                        <Header as='h1'>{this.state.title}
+                        <Header as='h1'><div className='capitalize'>{this.state.title}</div>
                             <Header.Subheader><Icon name='calendar'/>Last Edited: {this.state.date}</Header.Subheader>
                         </Header>
                         <Header as='h3'><i>{this.state.publishStory.hook}</i></Header>
