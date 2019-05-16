@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import BigCalendar from 'react-big-calendar'
 import Axios from 'axios'
-import { Grid, Modal } from 'semantic-ui-react'
+import { Grid, Modal, Button } from 'semantic-ui-react'
 import VolunteerForm from '../Volunteer/VolunteerForm'
 import HomeLayout from '../Layouts/HomeLayout'
+import CalendarFAQ from '../Home/CalendarFAQ'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 moment.locale('en-GB')
@@ -57,9 +58,16 @@ export default class VolunteerCalendar extends Component {
     render() {
       return (
         <HomeLayout>
-          <div> 
+          <div>
             <Grid centered columns={1}>
-            
+              <Grid.Row>
+              <Modal trigger={<Button color='teal'>Volunteering Frequently Asked Questions</Button>}>
+                 <Modal.Header>Frequently Asked Questions</Modal.Header>
+                   <Modal.Content>
+                      <CalendarFAQ />
+                   </Modal.Content>
+              </Modal>
+              </Grid.Row>
               <Grid.Row>
                 <div style={{ height: 700, width: 900}}>
                   <BigCalendar
@@ -83,7 +91,6 @@ export default class VolunteerCalendar extends Component {
                   />
                 </div>
               </Grid.Row>
-             
             </Grid>
             <Modal open={this.state.isOpen} onClose={this.handleClose}>
               <Modal.Content>
@@ -91,7 +98,7 @@ export default class VolunteerCalendar extends Component {
               </Modal.Content>
             </Modal>
           </div>
-        </HomeLayout>
+          </HomeLayout>
       )
     }
 }
