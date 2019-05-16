@@ -109,7 +109,8 @@ app.get('/api/getImageForStory', visitorHandlers.getImageForStory.bind({amazon: 
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
 app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: client}))
-
+app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
+app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client}))
 
 // Admin request handlers
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
