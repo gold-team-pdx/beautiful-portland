@@ -46,7 +46,7 @@ export default class Header extends Component {
           active={activeItem === 'Logo'}
           as={NavLink}
           onClick={this.handleItemClick}
-          to="/"
+          to="/Home"
         >
           <img src={logo} alt="logo" />
         </Menu.Item>
