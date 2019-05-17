@@ -15,7 +15,7 @@
     "lint": "run-p lint:api lint:ui",
     "lint:api": "cd packages/api && yarn eslint --fix ./",
     "lint:ui": "cd packages/ui && yarn eslint --fix ./src",
-    "precommit": "yarn lint && git add .",
+    "precommit": "yarn lint && yarn audit --fix && git add .",
     "start": "run-p start:ui start:api",
     "start:api": "cd packages/api && yarn start",
     "start:ui": "cd packages/ui && yarn start",
