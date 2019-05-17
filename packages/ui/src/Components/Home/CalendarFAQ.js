@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Segment, List } from 'semantic-ui-react'
+import { List } from 'semantic-ui-react'
 
 
 

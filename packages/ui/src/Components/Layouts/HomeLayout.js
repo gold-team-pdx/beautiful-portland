@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Footer from '../Home/Footer'
 import Header from '../Home/Header'
-import NavBar from '../Home/MobileNavbar'
 import '../Stylesheets/HomeLayout.css'
 
 class HomeLayout extends Component {
