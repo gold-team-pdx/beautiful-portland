@@ -33,7 +33,8 @@
     "semantic-ui-react": "^0.86.0"
   },
   "resolutions": {
-    "lerna/**/tar": "^4.4.8"
+    "lerna/**/tar": "^4.4.8",
+    "lerna/**/fstream": "^1.0.12"
   },
   "devDependencies": {
     "eslint-plugin-react": "^7.13.0",

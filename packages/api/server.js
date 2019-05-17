@@ -109,7 +109,8 @@ app.get('/api/getImageForStory', visitorHandlers.getImageForStory.bind({amazon: 
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
 app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: client}))
-
+app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
+app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client}))
 
 // Admin request handlers
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
@@ -132,7 +133,7 @@ app.post('/api/removeImageFromStories', ensureAuthenticated, adminHandlers.remov
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/fullEvent', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
-app.get('/api/publishedStories', ensureAuthenticated, adminHandlers.getPublishedStory.bind({dbClient: client}))
+app.get('/api/publishedStories', adminHandlers.getPublishedStory.bind({dbClient: client}))
 app.get('/api/draftStories', ensureAuthenticated, adminHandlers.getDraftedStories.bind({dbClient: client}))
 app.post('/api/getStoryEdit', ensureAuthenticated, adminHandlers.getStoryEdit.bind({dbClient: client}))
 app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({dbClient: client}))
@@ -146,5 +147,5 @@ app.get('/api/getEventTemplate', ensureAuthenticated, adminHandlers.getEventTemp
 app.post('/api/editEventTemplate', ensureAuthenticated, adminHandlers.editEventTemplate.bind({dbClient: client}))
 app.post('/api/deleteEventTemplate', ensureAuthenticated, adminHandlers.deleteEventTemplate.bind({dbClient: client}))
 app.post('/api/editedStory', ensureAuthenticated, adminHandlers.editedStory.bind({dbClient: client}))
-app.get('/api/storiesCount', ensureAuthenticated, adminHandlers.getStoryCount.bind({dbClient: client}))
+app.get('/api/storiesCount', adminHandlers.getStoryCount.bind({dbClient: client}))
 app.post('/api/volunteerHistory', ensureAuthenticated, adminHandlers.getVolunteerHistory.bind({dbClient: client}))

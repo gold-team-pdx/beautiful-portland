@@ -33,13 +33,13 @@ export default class Header extends Component {
           About
         </Menu.Item>
         <Menu.Item
-          name="Volunteer Calender"
+          name="Volunteer Calendar"
           as={NavLink}
-          active={activeItem === 'Volunteer Calender'}
+          active={activeItem === 'Volunteer Calendar'}
           onClick={this.handleItemClick}
           to="/volunteerCalendar"
         >
-          Volunteer Calender
+          Volunteer Calendar
         </Menu.Item>
 
         <Menu.Item
