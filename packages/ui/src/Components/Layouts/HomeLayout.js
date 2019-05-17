@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import Footer from '../Home/Footer'
 import Header from '../Home/Header'
+import NavBar from '../Home/MobileNavbar'
 import '../Stylesheets/HomeLayout.css'
 
 class HomeLayout extends Component {
   render() {
     return (
-      <div>
+      <div className="Site">
         <div className="Header">
-          <Header />
+          <NavBar />
         </div>
-        <div className="Main">{this.props.children}</div>
+        <div className="Site-content">{this.props.children}</div>
         <div className="Footer">
           <Footer />
         </div>
