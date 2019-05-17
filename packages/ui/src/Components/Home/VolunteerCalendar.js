@@ -61,12 +61,12 @@ export default class VolunteerCalendar extends Component {
           <div>
             <Grid centered columns={1}>
               <Grid.Row>
-              <Modal trigger={<Button color='teal'>Volunteering Frequently Asked Questions</Button>}>
-                 <Modal.Header>Frequently Asked Questions</Modal.Header>
-                   <Modal.Content>
-                      <CalendarFAQ />
-                   </Modal.Content>
-              </Modal>
+                <Modal trigger={<Button color='teal'>Volunteering Frequently Asked Questions</Button>}>
+                  <Modal.Header>Frequently Asked Questions</Modal.Header>
+                  <Modal.Content>
+                    <CalendarFAQ />
+                  </Modal.Content>
+                </Modal>
               </Grid.Row>
               <Grid.Row>
                 <div style={{ height: 700, width: 900}}>
@@ -98,7 +98,7 @@ export default class VolunteerCalendar extends Component {
               </Modal.Content>
             </Modal>
           </div>
-          </HomeLayout>
+        </HomeLayout>
       )
     }
 }
