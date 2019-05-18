@@ -20,7 +20,8 @@ export default class Header extends Component {
         style={{
           flexShrink: 100000, //don't allow flexbox to shrink it
           borderRadius: 0, //clear semantic-ui style
-          margin: 0 //clear semantic-ui style
+          margin: 0, //clear semantic-ui style
+          backgroundColor: '#4cc7e1', //change to theme color
         }}
       >
         <Menu.Item
@@ -29,6 +30,7 @@ export default class Header extends Component {
           active={activeItem === 'About'}
           onClick={this.handleItemClick}
           to="/about"
+          style={{fontWeight: 1000}}
         >
           About
         </Menu.Item>
@@ -38,6 +40,7 @@ export default class Header extends Component {
           active={activeItem === 'Volunteer Calendar'}
           onClick={this.handleItemClick}
           to="/volunteerCalendar"
+          style={{fontWeight: 1000}}
         >
           Volunteer Calendar
         </Menu.Item>
@@ -47,6 +50,8 @@ export default class Header extends Component {
           as={NavLink}
           onClick={this.handleItemClick}
           to="/"
+          exact path= '/'
+          style={{fontWeight: 1000}}
         >
           <img src={logo} alt="logo" />
         </Menu.Item>
@@ -57,6 +62,7 @@ export default class Header extends Component {
           active={activeItem === 'Stories'}
           onClick={this.handleItemClick}
           to="/Stories"
+          style={{fontWeight: 1000}}
         >
           Stories
         </Menu.Item>
@@ -66,6 +72,7 @@ export default class Header extends Component {
           active={activeItem === 'Contact Us'}
           onClick={this.handleItemClick}
           to="/ContactUs"
+          style={{fontWeight: 1000}}
         >
           Contact Us
         </Menu.Item>
