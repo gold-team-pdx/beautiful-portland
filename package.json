@@ -12,6 +12,10 @@
     "build:api": "cd packages/api && yarn build",
     "clean": "run-p clean:api",
     "clean:api": "cd packages/api && yarn clean",
+    "lint": "run-p lint:api lint:ui",
+    "lint:api": "cd packages/api && yarn eslint --fix ./",
+    "lint:ui": "cd packages/ui && yarn eslint --fix ./src",
+    "precommit": "yarn lint && yarn audit --fix && git add .",
     "start": "run-p start:ui start:api",
     "start:api": "cd packages/api && yarn start",
     "start:ui": "cd packages/ui && yarn start",
@@ -29,6 +33,11 @@
     "semantic-ui-react": "^0.86.0"
   },
   "resolutions": {
-    "lerna/**/tar": "^4.4.8"
+    "lerna/**/tar": "^4.4.8",
+    "lerna/**/fstream": "^1.0.12"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.13.0",
+    "husky": "^2.2.0"
   }
 }

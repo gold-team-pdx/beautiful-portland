@@ -7,7 +7,7 @@ import Moment from 'moment'
 import '../Stylesheets/AdminDashboard.css'
 import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 import DashMenu from './DashMenu'
-import EditEventTemplate from './EventTemplate/EditEventTemplate';
+import EditEventTemplate from './EventTemplate/EditEventTemplate'
 import AddEvent from './AddEvent'
 import UpcomingEvents from './UpcomingEvents'
 import VolunteerList from './VolunteerList'
@@ -17,12 +17,14 @@ import NewStory from './Stories/NewStory'
 import ViewStories from './Stories/ViewStories'
 import EditEvent from './EditEvent'
 import EditStory from './Stories/EditStory'
+import VolunteerSubmissions from './VolunteerSubmissions'
 
 export default class AdminDashboard extends Component {
   state = {
     // Default active content
     activeItem: 'welcomeMessage',
     activeDate: new Moment().format('MM-DD-YY'),
+    activeEmail: '',
     adminName: 'Anonymous',
     authenticated: false,
     message: 'Please Login',
@@ -31,24 +33,31 @@ export default class AdminDashboard extends Component {
   async componentDidMount() {
     //Need to generate and fill volunteer list from databases
     Axios.get('/api/admin-dashboard')
-      .then((res) => {
+      .then(res => {
         this.setState({
           adminName: res.data.userInfo.displayName,
           authenticated: res.data.authenticated,
           message: res.data.message
         })
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err)
       })
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
-  updateActiveDate = (date) => {
+  updateActiveDate = date => {
     this.setState({
       activeDate: date,
       activeItem: 'editEvent'
+    })
+  }
+
+  updateActiveEmail = email => {
+    this.setState({
+      activeEmail: email,
+      activeItem: 'volunteerSubmissions'
     })
   }
 
@@ -80,9 +89,7 @@ export default class AdminDashboard extends Component {
   }
 
   viewEvents = () => {
-    return (
-      <UpcomingEvents updateActiveDate={this.updateActiveDate} />
-    )
+    return <UpcomingEvents updateActiveDate={this.updateActiveDate} />
   }
 
   viewStories = () => {
@@ -91,20 +98,25 @@ export default class AdminDashboard extends Component {
         updateGrandparent={this.updateGrandparent}
         edit={this.state.activeItem}
         updateGrandparentID={this.updateGrandparentID}
-        editId={this.state.editId} />
+        editId={this.state.editId}
+      />
     )
+  }
+
+  volunteerList = () => {
+    return <VolunteerList updateActiveEmail={this.updateActiveEmail} />
+  }
+
+  volunteerSubmissions = () => {
+    return <VolunteerSubmissions email={this.state.activeEmail} />
   }
 
   editEvent = () => {
-    return (
-      <EditEvent date={this.state.activeDate} />
-    )
+    return <EditEvent date={this.state.activeDate} />
   }
 
   editStory = () => {
-    return (
-      <EditStory editId={this.state.editId} />
-    )
+    return <EditStory editId={this.state.editId} />
   }
 
   render() {
@@ -113,7 +125,34 @@ export default class AdminDashboard extends Component {
     if (!this.state.authenticated) {
       return (
         <HashRouter>
-        <div>
+          <div>
+            <Menu size="huge" inverted color="teal">
+              <Menu.Item>
+                <Image src={logo} size="small" />
+              </Menu.Item>
+              <Menu.Menu position="right">
+                <Menu.Item>
+                  {/* We could change this to be whichever user is logged in */}
+                  Hi {this.state.adminName}
+                </Menu.Item>
+                <Menu.Item
+                  name="logout"
+                  active={activeItem === 'logout'}
+                  onClick={this.handleItemClick}
+                >
+                  Logout
+                </Menu.Item>
+              </Menu.Menu>
+            </Menu>
+            <Route path="/" component={this.loginPrompt} />
+          </div>
+        </HashRouter>
+      )
+    }
+
+    return (
+      <HashRouter>
+        <div className="adminDash">
           <Menu size="huge" inverted color="teal">
             <Menu.Item>
               <Image src={logo} size="small" />
@@ -131,78 +170,31 @@ export default class AdminDashboard extends Component {
                 Logout
               </Menu.Item>
             </Menu.Menu>
-            </Menu>
-            <Route path="/" component={this.loginPrompt} />
-          </div>
-          </HashRouter>
-      )
-    }
-
-    return (
-      <HashRouter>
-      <div className="adminDash">
-        <Menu size="huge" inverted color="teal">
-          <Menu.Item>
-            <Image src={logo} size="small" />
-          </Menu.Item>
-          <Menu.Menu position="right">
-            <Menu.Item>
-              {/* We could change this to be whichever user is logged in */}
-              Hi {this.state.adminName}
-            </Menu.Item>
-            <Menu.Item
-              name="logout"
-              active={activeItem === "logout"}
-              onClick={this.handleItemClick}
-            >
-              Logout
-            </Menu.Item>
-          </Menu.Menu>
-        </Menu>
-        <div className="adminView">
-          <DashMenu />
-          {/* <Header as='h1'> {this.state.message} </Header> */}
-          {/* Changed these to divs so we can work some CSS magic on them */}
+          </Menu>
+          <div className="adminView">
+            <DashMenu />
+            {/* <Header as='h1'> {this.state.message} </Header> */}
+            {/* Changed these to divs so we can work some CSS magic on them */}
             <div className="adminPageContent">
               <Route exact path="/" component={WelcomeMessage} />
-              <Route
-                path="/EditEventTemplate"
-                component={EditEventTemplate}
-              />
+              <Route path="/EditEventTemplate" component={EditEventTemplate} />
               <Route path="/AddEvent" component={AddEvent} />
+              <Route path="/ViewUpcomingEvents" component={this.viewEvents} />
+              <Route path="/EditEvent" component={this.editEvent} />
+              <Route path="/VolunteerList" component={this.volunteerList} />
               <Route
-                path="/ViewUpcomingEvents"
-                component={this.viewEvents}
+                path="/VolunteerSubmissions"
+                component={this.volunteerSubmissions}
               />
-              <Route
-                path="/EditEvent"
-                component={this.editEvent}
-              />
-              <Route
-                path="/VolunteerList"
-                component={VolunteerList}
-              />
-              <Route
-                path="/EditImages"
-                component={EditCarouselImages}
-              />
-              <Route
-                path="/ViewImages"
-                component={ViewAllImages}
-              />
+              <Route path="/EditImages" component={EditCarouselImages} />
+              <Route path="/ViewImages" component={ViewAllImages} />
               <Route path="/CreateStory" component={NewStory} />
-              <Route
-                path="/ViewStories"
-                component={this.viewStories}
-              />
-              <Route
-                path="/EditStory"
-                component={this.editStory}
-              />
+              <Route path="/ViewStories" component={this.viewStories} />
+              <Route path="/EditStory" component={this.editStory} />
+            </div>
           </div>
         </div>
-        </div>
-        </HashRouter>
+      </HashRouter>
     )
   }
 }

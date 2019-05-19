@@ -1,10 +1,10 @@
 .input-wrapper span{
-    visibility: hidden;
+    /* visibility: hidden; */
     color: #008000;
 }
 
 .input-wrapper.has-error span{
-    visibility: visible;
+    /* visibility: visible; */
     color: #FF0000;
 }
 
@@ -14,4 +14,12 @@
 
 .input-wrapper.has-error textarea{
     border: 1px solid #FF0000;
+}
+
+.react-datepicker__time-container {
+    width: 7em !important
+}
+
+.react-datepicker__time-box {
+  width:100% !important
 }

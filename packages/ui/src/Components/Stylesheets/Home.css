@@ -1,9 +1,10 @@
 .Home {
-    position: absolute;
+    /*
     display: flex;
     flex-direction: column;
     max-height: 1000px;
     width: 100vw;
+    */
 }
 
 .Logo {
@@ -42,7 +43,7 @@
     margin-left: 250px;
     margin-right: 250px;
     margin-bottom: 30px;
-    padding-bottom: 40px;
+    padding-bottom: 30px;
 }
 
 .DonateButton {

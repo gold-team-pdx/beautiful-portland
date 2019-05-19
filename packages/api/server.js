@@ -15,15 +15,15 @@ const visitorHandlers = require('./visitor')
 const adminHandlers = require('./admin')
 
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+  require('dotenv').config()
 }
 
 app.use(bodyParser.json({limit:'50mb', extended: true}))
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
 }))
 app.use(cookieParser())
 app.use(passport.initialize())
@@ -32,10 +32,10 @@ app.use(passport.session())
 //Connects to MongoDB
 const client = new MongoClient(uri, { useNewUrlParser: true })
 client.connect((err) => {
-    if (err) {
-        console.log(err, "Connection to db failed")
-        return
-    }
+  if (err) {
+    console.log(err, 'Connection to db failed')
+    return
+  }
 })
 
 // Console.log to show server up and running in terminal
@@ -43,27 +43,27 @@ app.listen(port, () => console.log('Listening on port ' + port + '...'))
 
 // serialize the user for the session
 passport.serializeUser(function(user, done) {
-    done(null, user)
+  done(null, user)
 })
 
 // deserialize the user
 passport.deserializeUser(function(obj, done) {
-    done(null, obj)
+  done(null, obj)
 })
 
 // passport config
 passport.use(new GoogleStrategy(
-    authConfig.google,
-    function(accessToken, refreshToken, profile, done) {
-      return done(null, profile)
-    }
+  authConfig.google,
+  function(accessToken, refreshToken, profile, done) {
+    return done(null, profile)
+  }
 ))
 
 // let google to authentication the admin
 app.get('/auth/google',
   passport.authenticate('google', {
     scope: ['openid', 'email', 'profile']
-}))
+  }))
 
 // the callback after google authenticated the admin
 app.get('/auth/google/callback',
@@ -105,9 +105,12 @@ app.get('/api/logout', function(req, res) {
 
 // Visitor request handlers
 app.get('/api/getImages/*', visitorHandlers.homeImages.bind({amazon: AWS}))
+app.get('/api/getImageForStory', visitorHandlers.getImageForStory.bind({amazon: AWS}))
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
-
+app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: client}))
+app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
+app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client}))
 
 // Admin request handlers
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
@@ -118,15 +121,19 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
   })
 })
 
-
+// Image admin functions
 app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.removePhotos.bind({amazon: AWS}))
 app.post('/api/addImagesToBucket', ensureAuthenticated, adminHandlers.addPhotos.bind({amazon: AWS}))
 app.post('/api/removeImagesFromFrontPage', ensureAuthenticated, adminHandlers.removeImagesFromFrontPage.bind({amazon: AWS}))
 app.post('/api/addImageFromUploaded', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))
+app.post('/api/addImageIntoStories', ensureAuthenticated, adminHandlers.addImageIntoStories.bind({amazon: AWS}))
+app.post('/api/removeImageFromStories', ensureAuthenticated, adminHandlers.removeImageFromStories.bind({amazon: AWS}))
+
+// DB admin functions
 app.get('/api/volunteerInformation', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/fullEvent', ensureAuthenticated, adminHandlers.getFullEventInfo.bind({dbClient: client}))
 app.get('/api/volunteerList', ensureAuthenticated, adminHandlers.getVolunteerList.bind({dbClient: client}))
-app.get('/api/publishedStories', ensureAuthenticated, adminHandlers.getPublishedStory.bind({dbClient: client}))
+app.get('/api/publishedStories', adminHandlers.getPublishedStory.bind({dbClient: client}))
 app.get('/api/draftStories', ensureAuthenticated, adminHandlers.getDraftedStories.bind({dbClient: client}))
 app.post('/api/getStoryEdit', ensureAuthenticated, adminHandlers.getStoryEdit.bind({dbClient: client}))
 app.post('/api/addDraft', ensureAuthenticated, adminHandlers.addNewDraft.bind({dbClient: client}))
@@ -140,3 +147,5 @@ app.get('/api/getEventTemplate', ensureAuthenticated, adminHandlers.getEventTemp
 app.post('/api/editEventTemplate', ensureAuthenticated, adminHandlers.editEventTemplate.bind({dbClient: client}))
 app.post('/api/deleteEventTemplate', ensureAuthenticated, adminHandlers.deleteEventTemplate.bind({dbClient: client}))
 app.post('/api/editedStory', ensureAuthenticated, adminHandlers.editedStory.bind({dbClient: client}))
+app.get('/api/storiesCount', adminHandlers.getStoryCount.bind({dbClient: client}))
+app.post('/api/volunteerHistory', ensureAuthenticated, adminHandlers.getVolunteerHistory.bind({dbClient: client}))

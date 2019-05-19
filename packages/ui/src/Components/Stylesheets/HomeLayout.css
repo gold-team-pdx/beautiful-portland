@@ -1,0 +1,18 @@
+.Site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.Site-content {
+    flex: 1 0 auto;
+}
+
+.Header{
+    top: 0;
+    margin-bottom: 15px;
+}
+
+.Footer{
+    margin-top: 15px;
+}
