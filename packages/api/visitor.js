@@ -282,6 +282,30 @@ getOneStory = function(req, res) {
   })
 }
 
+getContent= function(req, res) {
+  let client = this.dbClient
+  collection = client.db('beautiful-portland').collection('site-content')
+  collection.findOne({type: req.query.type}, (err, doc) => {
+    if(err) {
+      console.log(err, 'Error looking for content')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(!doc) {
+      console.log(err, 'Content not found')
+      res.send({
+        status: 'FAILURE'
+      })
+    }
+
+    res.send({
+      status: 'SUCCESS',
+      content: doc.content
+    })
+  })
+}
+
 module.exports.homeImages = homeImages
 module.exports.volunteerFormSubmit = volunteerFormSubmit
 module.exports.volunteerFormGetEventInfo = volunteerFormGetEventInfo
@@ -289,3 +313,4 @@ module.exports.eventCalendar = eventCalendar
 module.exports.getImageForStory = getImageForStory
 module.exports.displayStory = displayStory
 module.exports.getOneStory = getOneStory
+module.exports.getContent = getContent

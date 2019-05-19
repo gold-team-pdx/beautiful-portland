@@ -4,8 +4,27 @@ import DonateButton from './DonateButton'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
 import HomeLayout from '../Layouts/HomeLayout'
+import Axios from 'axios'
 
 export default class Home extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      mission_stmt: ''
+    }
+  }
+
+  componentDidMount() {
+    Axios.get('/api/content', {params: {type: 'Mission Statement'}})
+      .then(res => {
+        if(res.data) {
+          this.setState({mission_stmt: res.data.content})
+        }
+      }).catch(err => {
+        console.log(err, 'Couldn\'t get data from server')
+      })
+  }
+
   render() {
     return (
       <HomeLayout>
@@ -20,17 +39,7 @@ export default class Home extends Component {
           <div>
             <h2 className="MissionHeader"> Our Mission </h2>
             <h5 className="MissionStatement">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Pellentesque lobortis iaculis enim a auctor. Nam euismod dui in
-              mattis vehicula. Praesent condimentum semper justo tempor aliquam.
-              Aliquam ex elit, ornare sed urna at, pulvinar pretium nisl.
-              Aliquam eu rutrum turpis. Cras finibus felis ut massa pulvinar
-              dictum. Nulla sodales orci porttitor nisl eleifend, in convallis
-              risus sagittis. Integer sollicitudin mauris nisi, vel blandit
-              tortor vulputate ut. Nulla efficitur massa sem, sed pretium nisi
-              efficitur quis. V estibulum hendrerit nibh eu ligula mattis, at
-              sodales nisl tempus. Pellentesque at risus a augue maximus
-              venenatis vitae quis ante.
+              {this.state.mission_stmt}
             </h5>
           </div>
         </div>
