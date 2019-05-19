@@ -1,6 +1,29 @@
 import React, { Component } from 'react'
 import { Accordion, Container, Header, Icon, Divider } from 'semantic-ui-react'
 import HomeLayout from '../Layouts/HomeLayout'
+
+// Sitewide Text Styles
+const paragraphStyles = {
+  fontFamily: 'Nunito', 
+  color: '#000b91', 
+  fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+} 
+
+const headerStyles = {
+  fontFamily: 'Nunito',
+  color: '#000b91',  
+  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
+}
+
+const dropdownStyles = {
+  fontFamily: 'Nunito', 
+  color: '#000b91', 
+  fontSize: 'calc(12px + (20 - 12) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+}
+
 class About extends Component {
   state = {
     activeIndex: -1
@@ -20,10 +43,12 @@ class About extends Component {
         <div className="About">
           <Container>
             <div style={{ marginTop: '20px' }}>
-              <Header as="h1">About Us</Header>
+              <Header as="h1" style={headerStyles}>
+                About Us
+              </Header>
             </div>
             <Divider />
-            <p>
+            <p style={paragraphStyles}>
               Ut et purus sapien. Nunc lacus elit, mollis vel eros non,
               consectetur faucibus magna. Pellentesque ornare dolor at sem
               commodo rutrum. Nunc nisl sapien, vulputate in massa et,
@@ -41,12 +66,14 @@ class About extends Component {
                 active={activeIndex === 0}
                 index={0}
                 onClick={this.handleClick}
+                style={paragraphStyles}
               >
                 <Icon name="dropdown" />
                 Policies
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
-                <p>
+                <p style={dropdownStyles}
+                >
                   Ut dictum rhoncus mi. Sed venenatis tristique sem, sit amet
                   porta tellus. Nunc auctor vehicula erat ut feugiat. Praesent
                   tempus mollis elit vitae blandit. Suspendisse fermentum quam
@@ -59,7 +86,7 @@ class About extends Component {
                   varius sed. Quisque sed consequat odio, sit amet viverra
                   dolor.
                 </p>
-                <p>
+                <p style={dropdownStyles}>
                   To learn more about our policies visit{' '}
                   <a
                     href="http://google.com"
@@ -75,12 +102,13 @@ class About extends Component {
                 active={activeIndex === 1}
                 index={1}
                 onClick={this.handleClick}
+                style={paragraphStyles}
               >
                 <Icon name="dropdown" />
                 Financials
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 1}>
-                <p>
+                <p style={dropdownStyles}>
                   Ut dictum rhoncus mi. Sed venenatis tristique sem, sit amet
                   porta tellus. Nunc auctor vehicula erat ut feugiat. Praesent
                   tempus mollis elit vitae blandit. Suspendisse fermentum quam
@@ -93,7 +121,7 @@ class About extends Component {
                   varius sed. Quisque sed consequat odio, sit amet viverra
                   dolor.
                 </p>
-                <p>
+                <p style={dropdownStyles}>
                   To learn more about our financials visit{' '}
                   <a
                     href="http://google.com"
@@ -109,12 +137,13 @@ class About extends Component {
                 active={activeIndex === 2}
                 index={2}
                 onClick={this.handleClick}
+                style={paragraphStyles}
               >
                 <Icon name="dropdown" />
                 History
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 2}>
-                <p>
+                <p style={dropdownStyles}>
                   Ut dictum rhoncus mi. Sed venenatis tristique sem, sit amet
                   porta tellus. Nunc auctor vehicula erat ut feugiat. Praesent
                   tempus mollis elit vitae blandit. Suspendisse fermentum quam
@@ -127,7 +156,7 @@ class About extends Component {
                   varius sed. Quisque sed consequat odio, sit amet viverra
                   dolor.
                 </p>
-                <p>
+                <p style={dropdownStyles}>
                   To learn more about our history visit{' '}
                   <a
                     href="http://google.com"

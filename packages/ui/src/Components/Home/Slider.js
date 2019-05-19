@@ -37,8 +37,6 @@ export default class Slider extends Component {
       })
         .then((res) => {
           urls = res.data
-          console.log(urls)
-          console.log(urls.length)
           // Else, set the urls to the default image urls given (TESTING ONLY)
           if(urls.length === 0) {
             urls = defaultImages
@@ -75,7 +73,7 @@ export default class Slider extends Component {
       // changes the index of the rest of the images
       let [first, ...rest] = this.state.images
       let images = [...rest, first]
-      return this.setState({
+      this.setState({
         images: images,
         currentImageIndex: 0,
         counter: 0
@@ -85,11 +83,11 @@ export default class Slider extends Component {
     render() {
       return (
         <div className="slider">
-          <div className="slider-wrapper" onClick= {this.nextSlide}>
+          <div className="slider-wrapper">
             {
               this.state.images.length > 0 && this.state.images.map((image, i) => (
                 <Slide
-                  key={i}
+                  slideNum={i}
                   image={image}
                 />
               ))

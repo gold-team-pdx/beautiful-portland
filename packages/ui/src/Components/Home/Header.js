@@ -1,9 +1,18 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Menu } from 'semantic-ui-react'
-import logo from '../../logoPhotos/bpdx_circlelogo_white.png'
+import { Menu, Image } from 'semantic-ui-react'
+import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 import 'semantic-ui-css/semantic.min.css'
 
+const buttonStyles = {
+  fontWeight: 1000, 
+  fontSize: '130%', 
+  color: '#000b91', 
+  fontFamily: 'Varela Round',
+  textWrap: 'break-word',
+  fontSize: 'calc(18px + (24 - 18) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
+}
 export default class Header extends Component {
   state = {}
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
@@ -13,8 +22,7 @@ export default class Header extends Component {
 
     return (
       <Menu
-        inverted
-        color={'teal'}
+        secondary
         size="large"
         widths={5}
         style={{
@@ -30,7 +38,7 @@ export default class Header extends Component {
           active={activeItem === 'About'}
           onClick={this.handleItemClick}
           to="/about"
-          style={{fontWeight: 1000}}
+          style={buttonStyles}
         >
           About
         </Menu.Item>
@@ -40,7 +48,7 @@ export default class Header extends Component {
           active={activeItem === 'Volunteer Calendar'}
           onClick={this.handleItemClick}
           to="/volunteerCalendar"
-          style={{fontWeight: 1000}}
+          style={buttonStyles}
         >
           Volunteer Calendar
         </Menu.Item>
@@ -49,9 +57,10 @@ export default class Header extends Component {
           active={activeItem === 'Logo'}
           as={NavLink}
           onClick={this.handleItemClick}
-          to="/Home"
+          to='/'
+          exact path='/'
         >
-          <img src={logo} alt="logo" />
+          <Image src={logo} alt="logo"></Image>
         </Menu.Item>
 
         <Menu.Item
@@ -59,8 +68,8 @@ export default class Header extends Component {
           as={NavLink}
           active={activeItem === 'Stories'}
           onClick={this.handleItemClick}
-          to="/Stories"
-          style={{fontWeight: 1000}}
+          to='/Stories'
+          style={buttonStyles}
         >
           Stories
         </Menu.Item>
@@ -70,7 +79,7 @@ export default class Header extends Component {
           active={activeItem === 'Contact Us'}
           onClick={this.handleItemClick}
           to="/ContactUs"
-          style={{fontWeight: 1000}}
+          style={buttonStyles}
         >
           Contact Us
         </Menu.Item>

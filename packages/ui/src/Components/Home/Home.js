@@ -10,7 +10,6 @@ export default class Home extends Component {
     return (
       <HomeLayout>
         <div className="Home">
-          <div className="Logo">{/* <h1 className="Logo"></h1> */}</div>
           <div className="ImageCarousel">
             <Slider />
           </div>
