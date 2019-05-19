@@ -18,7 +18,7 @@ export default class Header extends Component {
         size="large"
         widths={5}
         style={{
-          flexShrink: 100000, //don't allow flexbox to shrink it
+          //flexShrink: 100000, //don't allow flexbox to shrink it
           borderRadius: 0, //clear semantic-ui style
           margin: 0 //clear semantic-ui style
         }}
@@ -46,7 +46,7 @@ export default class Header extends Component {
           active={activeItem === 'Logo'}
           as={NavLink}
           onClick={this.handleItemClick}
-          to="/"
+          to="/Home"
         >
           <img src={logo} alt="logo" />
         </Menu.Item>
