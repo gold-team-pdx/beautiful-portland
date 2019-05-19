@@ -51,6 +51,15 @@ export default class DashMenu extends Component {
           >
             Volunteer List
           </Menu.Item>
+          <Menu.Item
+            name="editContent"
+            as={NavLink}
+            active={activeItem === 'editContent'}
+            onClick={this.handleItemClick}
+            to={'/EditContent'}
+          >
+            Edit Website Content
+          </Menu.Item>
           <Menu.Item name="Images">Images</Menu.Item>
           <Menu.Menu>
             <Menu.Item

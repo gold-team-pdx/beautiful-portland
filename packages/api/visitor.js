@@ -285,25 +285,48 @@ getOneStory = function(req, res) {
 getContent= function(req, res) {
   let client = this.dbClient
   collection = client.db('beautiful-portland').collection('site-content')
-  collection.findOne({type: req.query.type}, (err, doc) => {
-    if(err) {
-      console.log(err, 'Error looking for content')
-      res.send({
-        status: 'FAILURE'
-      })
-      return
-    } else if(!doc) {
-      console.log(err, 'Content not found')
-      res.send({
-        status: 'FAILURE'
-      })
-    }
+  if(req.query.type === 'all') {
+    collection.find({}, {projection: {_id: 0}}).toArray((err, docs) => {
+      if(err) {
+        console.log(err, 'Error looking for content')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      } else if(docs.length === 0) {
+        console.log('Content not found')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      }
 
-    res.send({
-      status: 'SUCCESS',
-      content: doc.content
+      res.send({
+        status: 'SUCCESS',
+        content: docs
+      })
     })
-  })
+  } else {
+    collection.findOne({type: req.query.type}, (err, doc) => {
+      if(err) {
+        console.log(err, 'Error looking for content')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      } else if(!doc) {
+        console.log(err, 'Content not found')
+        res.send({
+          status: 'FAILURE'
+        })
+      }
+
+      res.send({
+        status: 'SUCCESS',
+        content: doc.content
+      })
+    })
+  }
 }
 
 module.exports.homeImages = homeImages
