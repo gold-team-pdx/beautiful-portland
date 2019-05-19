@@ -5,12 +5,13 @@ import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
 import HomeLayout from '../Layouts/HomeLayout'
 import Axios from 'axios'
+import RichTextEditor from 'react-rte'
 
 export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      mission_stmt: ''
+      mission_stmt: RichTextEditor.createEmptyValue()
     }
   }
 
@@ -18,7 +19,7 @@ export default class Home extends Component {
     Axios.get('/api/content', {params: {type: 'Mission Statement'}})
       .then(res => {
         if(res.data) {
-          this.setState({mission_stmt: res.data.content})
+          this.setState({mission_stmt: RichTextEditor.createValueFromString(res.data.content, 'markdown')})
         }
       }).catch(err => {
         console.log(err, 'Couldn\'t get data from server')
@@ -38,9 +39,11 @@ export default class Home extends Component {
           </div>
           <div>
             <h2 className="MissionHeader"> Our Mission </h2>
-            <h5 className="MissionStatement">
-              {this.state.mission_stmt}
-            </h5>
+            <RichTextEditor
+              className="MissionStatement"
+              value={this.state.mission_stmt}
+              readOnly={true}
+            />
           </div>
         </div>
       </HomeLayout>
