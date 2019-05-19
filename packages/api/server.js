@@ -111,6 +111,7 @@ app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client
 app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: client}))
 app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
 app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client}))
+app.get('/api/getFAQ', visitorHandlers.getFAQ.bind({dbClient: client}))
 
 // Admin request handlers
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
@@ -149,3 +150,4 @@ app.post('/api/deleteEventTemplate', ensureAuthenticated, adminHandlers.deleteEv
 app.post('/api/editedStory', ensureAuthenticated, adminHandlers.editedStory.bind({dbClient: client}))
 app.get('/api/storiesCount', adminHandlers.getStoryCount.bind({dbClient: client}))
 app.post('/api/volunteerHistory', ensureAuthenticated, adminHandlers.getVolunteerHistory.bind({dbClient: client}))
+// app.post('/api/editedFAQ', ensureAuthenticated, adminHandlers.editedFAQ.bind({dbClient: client}))
