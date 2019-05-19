@@ -18,7 +18,7 @@ import ViewStories from './Stories/ViewStories'
 import EditEvent from './EditEvent'
 import EditStory from './Stories/EditStory'
 import VolunteerSubmissions from './VolunteerSubmissions'
-import EventTemplateTable from './EventTemplate/eventTemplateTable'
+import EventTemplateTable from './EventTemplate/EventTemplateTable'
 
 export default class AdminDashboard extends Component {
   state = {

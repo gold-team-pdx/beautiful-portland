@@ -669,12 +669,13 @@ getStoryCount = async function(req, res) {
 }
 
 editEventTemplate = function(req, res) {
+  console.log(req.body.name)
   let client = this.dbClient
   collection = client.db('events-form').collection('events')
-  collection.findOneAndUpdate({ date : 'MASTER2' },
-    {$set: {
-      'location' : req.body.location,
-      'time' : req.body.time,
+  collection.replaceOne({ date : 'MASTER2' },
+    {
+      'location' : 'Director Park',
+      'time' : '6:00pm',
       'max_servings' : req.body.max_servings,
       'categories': [{
         'name' : req.body.name,
@@ -683,7 +684,7 @@ editEventTemplate = function(req, res) {
         'food' : req.body.food,
         'min_vegan' : req.body.min_vegan
       }]
-    }},{ upsert : true },
+    },{ upsert : true },
     function(err,doc) {
       if(err){
         console.log(err, 'Error trying to find master template to edit')
@@ -692,7 +693,7 @@ editEventTemplate = function(req, res) {
         })
         return
       }else{
-        console.log('SUCCESS! [' + req.body.name +'] has been updated')
+        console.log('SUCCESS! [' + req.body +'] has been updated')
         res.end('Template Updated')
       }}
   )
