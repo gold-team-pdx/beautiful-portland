@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Segment, Form, Grid, Button, Confirm, Dropdown } from 'semantic-ui-react'
+import { Segment, Form, Grid, Button, Confirm, Menu } from 'semantic-ui-react'
 import Axios from 'axios'
 import RichTextEditor from 'react-rte'
 import '../Stylesheets/EditContent.css'
@@ -10,7 +10,7 @@ class EditContent extends Component {
     this.state = {
       value: RichTextEditor.createEmptyValue(),
       all_content: [],
-      current_type: 'Mission Statement',
+      current_type: '',
       saveOpen: false,
       clearOpen: false
     }
@@ -28,16 +28,8 @@ class EditContent extends Component {
     Axios.get('/api/content', {params: {type: 'all'}})
       .then(res => {
         if(res.data.content) {
-          let data = res.data.content.map(e => {
-            let r = {}
-            r.key = e.type
-            r.text = e.type
-            r.value = e.type
-            r.markup = e.content
-            return r
-          })
           this.setState({
-            all_content: data 
+            all_content: res.data.content
           })
         }
       }).catch(err => {
@@ -45,13 +37,13 @@ class EditContent extends Component {
       })
   }
 
-  typeChange = (e, { value, options }) => {
-    let temp = options.find(e => {
-      return value === e.value
+  typeChange = (e, { name }) => {
+    let temp = this.state.all_content.find(e => {
+      return name === e.type
     })
     this.setState({
-      value: RichTextEditor.createValueFromString(temp.markup, 'markdown'),
-      current_type: temp.value
+      value: RichTextEditor.createValueFromString(temp.content, 'markdown'),
+      current_type: temp.type
     })
   }
 
@@ -76,11 +68,19 @@ class EditContent extends Component {
           <Form className="editContent">
             <Form.Field>
               <label>Content Type: </label>
-              <Form.Dropdown
-                onChange={this.typeChange}
-                options={this.state.all_content}
-                selection
-              />
+              <Menu>
+                {this.state.all_content.map(e => {
+                  return (
+                    <Menu.Item
+                      key={e.type}
+                      name={e.type}
+                      text={e.type}
+                      active={this.state.current_type === e.type}
+                      onClick={this.typeChange}
+                    />
+                  )
+                })}
+              </Menu>
             </Form.Field>
                       
             <Form.Field>
@@ -93,7 +93,7 @@ class EditContent extends Component {
             
             <Grid stackable columns={2}>
               <Grid.Column>
-                <Button color="blue" fluid disabled={!this.state.value} onClick={this.onSaveOpen}>Save</Button>
+                <Button color="blue" fluid disabled={this.state.current_type === ''} onClick={this.onSaveOpen}>Save</Button>
                 <Confirm 
                   open={this.state.saveOpen}
                   content={'Save changes made to ' + this.state.current_type + '?'}

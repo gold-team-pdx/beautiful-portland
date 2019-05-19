@@ -40,9 +40,9 @@ export default class Home extends Component {
           <div>
             <h2 className="MissionHeader"> Our Mission </h2>
             <RichTextEditor
-              className="MissionStatement"
+              editorClassName="MissionStatement"
               value={this.state.mission_stmt}
-              readOnly={true}
+              readOnly
             />
           </div>
         </div>
