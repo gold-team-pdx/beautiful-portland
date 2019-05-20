@@ -668,34 +668,40 @@ getStoryCount = async function(req, res) {
   })
 }
 
-editEventTemplate = function(req, res) {
-  let client = this.dbClient
-  collection = client.db('events-form').collection('events')
-  collection.findOneAndUpdate({ date : 'MASTER2' },
-    {$set: {
-      'location' : req.body.location,
-      'time' : req.body.time,
-      'max_servings' : req.body.max_servings,
-      'categories': [{
-        'name' : req.body.name,
-        'max_signups' : req.body.max_signups,
-        'min_servings' : req.body.min_servings,
-        'food' : req.body.food,
-        'min_vegan' : req.body.min_vegan
-      }]
-    }},{ upsert : true },
-    function(err,doc) {
-      if(err){
-        console.log(err, 'Error trying to find master template to edit')
-        res.send({
-          status: 'FAILURE'
-        })
-        return
-      }else{
-        console.log('SUCCESS! [' + req.body.name +'] has been updated')
-        res.end('Template Updated')
-      }}
-  )
+editEventTemplate = function (req, res) {
+	let client = this.dbClient
+	let categories = []
+	req.body.categories.forEach((category) => {
+		categories.push(
+			{
+				"name": category.name,
+				"max_signups": category.max_signups,
+				"min_servings": category.min_servings,
+				"food": category.food,
+				"min_vegan": category.min_vegan
+			}
+		)
+	})
+	collection = client.db("events-form").collection("events")
+	collection.findOneAndUpdate({ date: "MASTER2" },
+	{$set: {
+		"location" : req.body.location,
+		"time" : req.body.time,
+		"max_servings" : req.body.max_servings,
+		"categories": categories
+	}},{ upsert : true },
+	function(err,doc) {
+		if(err){
+			console.log(err, "Error trying to find master template to edit")
+			res.send({
+				status: 'FAILURE'
+			})
+			return
+		}else{
+			console.log("SUCCESS! [" + req.body.name +"] has been updated")
+			res.end("Template Updated")
+		}}
+	)
 }
 
 getEventTemplate = function(req, res) {
