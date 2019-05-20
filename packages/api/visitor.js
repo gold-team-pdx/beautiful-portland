@@ -282,6 +282,38 @@ getOneStory = function(req, res) {
   })
 }
 
+getCalendarFAQ = function(req, res) {
+  let client = this.dbClient
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+    if (err) {
+      console.log(err, 'Error trying to find Calendar FAQ')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if (docs[0] == null) {
+      console.log('Couldn\'t fulfill Calendar FAQ request')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    let response_data = []
+    docs.map((faq) => {
+      var faqObj = new Object()
+      faqObj._id = faq._id
+      faqObj.edited_timestamp = faq.question
+      faqObj.title = faq.answer
+      response_data.push(faq)
+    })
+    res.send({
+      status: 'SUCCESS',
+      faq_info: JSON.stringify(response_data)
+    })
+  })
+}
+
 module.exports.homeImages = homeImages
 module.exports.volunteerFormSubmit = volunteerFormSubmit
 module.exports.volunteerFormGetEventInfo = volunteerFormGetEventInfo
@@ -289,3 +321,4 @@ module.exports.eventCalendar = eventCalendar
 module.exports.getImageForStory = getImageForStory
 module.exports.displayStory = displayStory
 module.exports.getOneStory = getOneStory
+module.exports.getCalendarFAQ = getCalendarFAQ

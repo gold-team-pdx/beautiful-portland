@@ -669,39 +669,39 @@ getStoryCount = async function(req, res) {
 }
 
 editEventTemplate = function (req, res) {
-	let client = this.dbClient
-	let categories = []
-	req.body.categories.forEach((category) => {
-		categories.push(
-			{
-				"name": category.name,
-				"max_signups": category.max_signups,
-				"min_servings": category.min_servings,
-				"food": category.food,
-				"min_vegan": category.min_vegan
-			}
-		)
-	})
-	collection = client.db("events-form").collection("events")
-	collection.findOneAndUpdate({ date: "MASTER2" },
-	{$set: {
-		"location" : req.body.location,
-		"time" : req.body.time,
-		"max_servings" : req.body.max_servings,
-		"categories": categories
-	}},{ upsert : true },
-	function(err,doc) {
-		if(err){
-			console.log(err, "Error trying to find master template to edit")
-			res.send({
-				status: 'FAILURE'
-			})
-			return
-		}else{
-			console.log("SUCCESS! [" + req.body.name +"] has been updated")
-			res.end("Template Updated")
-		}}
-	)
+  let client = this.dbClient
+  let categories = []
+  req.body.categories.forEach((category) => {
+    categories.push(
+      {
+        'name': category.name,
+        'max_signups': category.max_signups,
+        'min_servings': category.min_servings,
+        'food': category.food,
+        'min_vegan': category.min_vegan
+      }
+    )
+  })
+  collection = client.db('events-form').collection('events')
+  collection.findOneAndUpdate({ date: 'MASTER2' },
+    {$set: {
+      'location' : req.body.location,
+      'time' : req.body.time,
+      'max_servings' : req.body.max_servings,
+      'categories': categories
+    }},{ upsert : true },
+    function(err,doc) {
+      if(err){
+        console.log(err, 'Error trying to find master template to edit')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      }else{
+        console.log('SUCCESS! [' + req.body.name +'] has been updated')
+        res.end('Template Updated')
+      }}
+  )
 }
 
 getEventTemplate = function(req, res) {
@@ -813,6 +813,75 @@ getVolunteerHistory = async function(req, res) {
   }
 }
 
+getCalendarFAQEdit = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID
+  let client = this.dbClient
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.find({ _id: ObjectId(req.body.id) }).sort({ 'question': -1 }).toArray((err, result) => {
+    if (err) {
+      throw err
+    } else {
+      res.send(result)
+    }
+  })
+}
+
+addCalendarFAQ = function(req, res) {
+  let client = this.dbClient
+  console.log(req.body)
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.updateOne(
+    { question: req.body.question },
+    {
+      $set: {
+        question: req.body.question,
+        answer: req.body.answer
+      }
+    },
+    { upsert: true },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Calendar FAQ Published')
+    }
+  )
+}
+
+editCalendarFAQ = function(req,res) {
+  var ObjectId = require('mongodb').ObjectID
+  let client = this.dbClient
+  console.log(req.body.publish_status)
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.updateOne(
+    {_id: ObjectId(req.body._id)},
+    {
+      $set: {
+        question: req.body.question,
+        answer: req.body.answer
+      }
+    },
+    { upsert: true },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Calendar FAQ has been edited')
+    }
+  )
+}
+
+deleteCalendarFAQ = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID
+  let client = this.dbClient
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.deleteOne(
+    {
+      _id: ObjectId(req.body.deleteId)
+    },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Calendar FAQ Deleted Successful')
+    }
+  )
+}
+
 module.exports.addPhotos = addPhotos
 module.exports.removePhotos = removePhotos
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
@@ -837,3 +906,7 @@ module.exports.deleteEventTemplate = deleteEventTemplate
 module.exports.editedStory = editedStory
 module.exports.getStoryCount = getStoryCount
 module.exports.getVolunteerHistory = getVolunteerHistory
+module.exports.getCalendarFAQEdit = getCalendarFAQEdit
+module.exports.addCalendarFAQ = addCalendarFAQ
+module.exports.editCalendarFAQ = editCalendarFAQ
+module.exports.deleteCalendarFAQ = deleteCalendarFAQ

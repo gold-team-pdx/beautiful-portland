@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { List } from 'semantic-ui-react'
-
+import { Accordion, Icon } from 'semantic-ui-react'
+import Axios from 'axios'
 
 // Sitewide Text Styles
 const paragraphStyles = {
@@ -17,42 +17,54 @@ const dropdownStyles = {
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 }
 
-export default class CalednarFAQ extends Component {
+export default class CalendarFAQ extends Component {
   constructor(){
     super()
-    this.state = {}
+    this.state = {
+      activeIndex: 0
+    }
+  }
+
+  componentDidMount = async () => {
+	  Axios.get('/api/getCalendarFAQ')
+	    .then(res => {
+	      let tempFAQs = JSON.parse(res.data.faq_info)
+	      console.log(tempFAQs)
+	      this.setState({
+	        faqs : tempFAQs
+        })
+	    })
+  }
+
+  handleClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
   }
 
   render() {
+    const { activeIndex } = this.state
+
     return (
       <div>
-        <List>
-          <List.Item>
-            <List.Content>
-              <List.Header style={paragraphStyles}>What if I can't make my scheduled volunteer shift</List.Header>
-              <List.Description style={dropdownStyles}>Text/call the volunteer coordinatoor for that event</List.Description>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header style={paragraphStyles}>Should I bring something other than my scheduled food item?</List.Header>
-              <List.Description style={dropdownStyles}>Please dress warm and bring anything you may need to serve your dish</List.Description>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header style={paragraphStyles}>What else can I do to support Beautiful Portland if I can't make a volunteer shift?</List.Header>
-              <List.Description style={dropdownStyles}>You can make a tax deductible donation from our homepage.</List.Description>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header style={paragraphStyles}>How or when can I make a non-food item donation?</List.Header>
-              <List.Description style={dropdownStyles}>You can select a Hot soup event that works for you and choose the type: Miscellaneous</List.Description>
-            </List.Content>
-          </List.Item>
-        </List>
-      </div>  
+        <Accordion fluid styled>
+          {this.state.faqs && this.state.faqs.map((faq, index) =>{
+            return(
+              <div key={index}>
+                <Accordion.Title active={activeIndex === index} index={index} onClick={this.handleClick} style={paragraphStyles}>
+                  <Icon name='dropdown' />
+                  {index+1}. {faq.question}
+                </Accordion.Title>
+                <Accordion.Content active={activeIndex === index} style={dropdownStyles}>
+                  {faq.answer}
+                </Accordion.Content>
+              </div>
+            )
+          })}
+        </Accordion>
+      </div>
     )
   }
 }
