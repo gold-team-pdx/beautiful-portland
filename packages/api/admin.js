@@ -813,6 +813,22 @@ getVolunteerHistory = async function(req, res) {
   }
 }
 
+editContent = function(req, res) {
+  client = this.dbClient
+  let collection = client.db('beautiful-portland').collection('site-content')
+  collection.findOneAndReplace({type: req.body.type}, req.body, (err, result) => {
+    if(err) {
+      console.log(err, 'Error trying to find ' + req.body.type + ' in db')
+    } else if(!result.ok) {
+      console.log('Something went wrong updating ' + req.body.type)
+    }
+
+    res.send({
+      status: 'SUCCESS'
+    })
+  })
+}
+
 getCalendarFAQEdit = function(req, res) {
   var ObjectId = require('mongodb').ObjectID
   let client = this.dbClient
@@ -906,7 +922,9 @@ module.exports.deleteEventTemplate = deleteEventTemplate
 module.exports.editedStory = editedStory
 module.exports.getStoryCount = getStoryCount
 module.exports.getVolunteerHistory = getVolunteerHistory
+module.exports.editContent = editContent
 module.exports.getCalendarFAQEdit = getCalendarFAQEdit
 module.exports.addCalendarFAQ = addCalendarFAQ
 module.exports.editCalendarFAQ = editCalendarFAQ
 module.exports.deleteCalendarFAQ = deleteCalendarFAQ
+

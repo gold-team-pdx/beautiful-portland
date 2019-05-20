@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Menu } from 'semantic-ui-react'
-import logo from '../../logoPhotos/bpdx_circlelogo_white.png'
+import { Menu, Image } from 'semantic-ui-react'
+import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 import 'semantic-ui-css/semantic.min.css'
 
+const buttonStyles = {
+  fontWeight: 1000, 
+  color: '#000b91', 
+  fontFamily: 'Varela Round',
+  textWrap: 'break-word',
+  fontSize: 'calc(18px + (24 - 18) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
+}
 export default class Header extends Component {
   state = {}
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
@@ -13,14 +21,14 @@ export default class Header extends Component {
 
     return (
       <Menu
-        inverted
-        color={'teal'}
+        secondary
         size="large"
         widths={5}
         style={{
           //flexShrink: 100000, //don't allow flexbox to shrink it
           borderRadius: 0, //clear semantic-ui style
-          margin: 0 //clear semantic-ui style
+          margin: 0, //clear semantic-ui style
+          backgroundColor: '#4cc7e1', //change to theme color
         }}
       >
         <Menu.Item
@@ -29,6 +37,7 @@ export default class Header extends Component {
           active={activeItem === 'About'}
           onClick={this.handleItemClick}
           to="/about"
+          style={buttonStyles}
         >
           About
         </Menu.Item>
@@ -38,17 +47,19 @@ export default class Header extends Component {
           active={activeItem === 'Volunteer Calendar'}
           onClick={this.handleItemClick}
           to="/volunteerCalendar"
+          style={buttonStyles}
         >
-          Volunteer Calendar
+          Volunteer
         </Menu.Item>
 
         <Menu.Item
           active={activeItem === 'Logo'}
           as={NavLink}
           onClick={this.handleItemClick}
-          to="/Home"
+          to='/'
+          exact path='/'
         >
-          <img src={logo} alt="logo" />
+          <Image src={logo} alt="logo"></Image>
         </Menu.Item>
 
         <Menu.Item
@@ -56,7 +67,8 @@ export default class Header extends Component {
           as={NavLink}
           active={activeItem === 'Stories'}
           onClick={this.handleItemClick}
-          to="/Stories"
+          to='/Stories'
+          style={buttonStyles}
         >
           Stories
         </Menu.Item>
@@ -66,6 +78,7 @@ export default class Header extends Component {
           active={activeItem === 'Contact Us'}
           onClick={this.handleItemClick}
           to="/ContactUs"
+          style={buttonStyles}
         >
           Contact Us
         </Menu.Item>

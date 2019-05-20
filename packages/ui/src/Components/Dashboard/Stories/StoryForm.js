@@ -1,7 +1,27 @@
 import React,{ Component } from 'react'
-import { Form, Segment, Button, TextArea, Confirm, Grid, Modal, Icon } from 'semantic-ui-react'
+import { Form, Segment, Button, Confirm, Grid, Modal, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
+import RichTextEditor from 'react-rte'
 import '../../Stylesheets/StoryForm.css'
+
+const toolbarConfig = {
+  display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'BLOCK_TYPE_DROPDOWN'],
+  INLINE_STYLE_BUTTONS: [
+    {label: 'Bold', style: 'BOLD', className: 'custom-css-class'},
+    {label: 'Italic', style: 'ITALIC'},
+    {label: 'Underline', style: 'UNDERLINE'}
+  ],
+  BLOCK_TYPE_DROPDOWN: [
+    {label: 'Normal', style: 'unstyled'},
+    {label: 'Heading Large', style: 'header-one'},
+    {label: 'Heading Medium', style: 'header-two'},
+    {label: 'Heading Small', style: 'header-three'}
+  ],
+  BLOCK_TYPE_BUTTONS: [
+    {label: 'UL', style: 'unordered-list-item'},
+    {label: 'OL', style: 'ordered-list-item'}
+  ]
+}
 
 export default class StoryForm extends Component {
   constructor(props){
@@ -10,7 +30,7 @@ export default class StoryForm extends Component {
       _id: '',
       title: '',
       hook: '',
-      content: '',
+      content: RichTextEditor.createEmptyValue(),
       publish_status: false,
       editedTimestamp: '',
       openSave: false,
@@ -42,7 +62,7 @@ export default class StoryForm extends Component {
             _id : response.data._id,
             title :response.data.title,
             hook :  response.data.hook,
-            content : response.data.content,
+            content : RichTextEditor.createValueFromString(response.data.content, 'html'),
             editedTimestamp : response.data.edited_timestamp,
             publish_status : response.data.publish_status,
             postPhotoName: response.data.postPhotoName
@@ -60,6 +80,7 @@ export default class StoryForm extends Component {
     let data = {
       ...this.state, publish_status: true
     }
+    data.content = data.content.toString('html')
     // Sets state for later
     this.setState({publish_status: true})
     if(this.state._id !== undefined && this.state._id !== '') {
@@ -89,7 +110,6 @@ export default class StoryForm extends Component {
       Axios.post('/api/addPublish', data)
         .then(response => {
           console.log(response, 'Story has been published')
-          this.handleDelete()
           if(this.state.oldPhotoName !== '') {
             this.removeFromS3Bucket()
           }
@@ -109,11 +129,13 @@ export default class StoryForm extends Component {
 
   /*Checks for publish_status if load through edit*/
   handleSave = () => {
+    let data = this.state
+    data.content = data.content.toString('html')
     if(this.state.publish_status) {
       this.handlePublish()
     } 
     else if(this.state._id !== undefined && this.state._id !== '') {
-      Axios.post('/api/editedStory', this.state)
+      Axios.post('/api/editedStory', data)
         .then(response => {
           console.log(response, 'Story has been edited and saved to drafts')
           if(this.state.oldPhotoName !== '') {
@@ -131,7 +153,7 @@ export default class StoryForm extends Component {
         })
     } 
     else {
-      Axios.post('/api/addDraft', this.state)
+      Axios.post('/api/addDraft', data)
         .then(response => {
           console.log(response, 'Story saved to drafts')
           if(this.state.oldPhotoName !== '') {
@@ -166,7 +188,7 @@ export default class StoryForm extends Component {
     this.setState({
       title: '',
       hook: '',
-      content: '',
+      content: RichTextEditor.createEmptyValue(),
       publish_status: false,
       open: false,
       postPhotoName: 'No Photo',
@@ -190,6 +212,12 @@ export default class StoryForm extends Component {
 
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value })
+  }
+
+  contentChange = (val) => {
+    this.setState({
+      content: val
+    })
   }
 
   // Image Modal Functions
@@ -378,11 +406,11 @@ export default class StoryForm extends Component {
           </Form.Field>
           <Form.Field>
             <label>Content</label>
-            <TextArea name="content"
-              placeholder='Your Story'
-              rows="15"
+            <RichTextEditor
+              placeholder="Your Story"
               value={this.state.content}
-              onChange={this.onChange}
+              onChange={this.contentChange}
+              toolbarConfig={toolbarConfig}
             />
           </Form.Field>
           <Grid stackable columns={3}>
