@@ -327,6 +327,7 @@ getContent= function(req, res) {
       })
     })
   }
+}
   
 getCalendarFAQ = function(req, res) {
   let client = this.dbClient
