@@ -6,7 +6,6 @@ import 'semantic-ui-css/semantic.min.css'
 
 const buttonStyles = {
   fontWeight: 1000, 
-  fontSize: '130%', 
   color: '#000b91', 
   fontFamily: 'Varela Round',
   textWrap: 'break-word',
@@ -50,7 +49,7 @@ export default class Header extends Component {
           to="/volunteerCalendar"
           style={buttonStyles}
         >
-          Volunteer Calendar
+          Volunteer
         </Menu.Item>
 
         <Menu.Item

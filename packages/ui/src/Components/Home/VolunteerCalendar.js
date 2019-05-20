@@ -7,8 +7,16 @@ import HomeLayout from '../Layouts/HomeLayout'
 import CalendarFAQ from '../Home/CalendarFAQ'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+
 moment.locale('en-GB')
 const localizer = BigCalendar.momentLocalizer(moment)
+// Sitewide Text Styles
+const headerStyles = {
+  fontFamily: 'Nunito',
+  color: '#000b91', 
+  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
+}
 
 export default class VolunteerCalendar extends Component {
   constructor() {
@@ -64,12 +72,12 @@ export default class VolunteerCalendar extends Component {
             <Grid.Row>
               <Modal
                 trigger={
-                  <Button color="teal">
+                  <Button style={{backgroundColor:'#a8efae'}} size='huge'>
                     Volunteering Frequently Asked Questions
                   </Button>
                 }
               >
-                <Modal.Header>Frequently Asked Questions</Modal.Header>
+                <Modal.Header style={headerStyles}>Frequently Asked Questions</Modal.Header>
                 <Modal.Content>
                   <CalendarFAQ />
                 </Modal.Content>
