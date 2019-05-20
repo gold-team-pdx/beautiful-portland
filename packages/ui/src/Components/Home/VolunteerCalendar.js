@@ -70,9 +70,7 @@ export default class VolunteerCalendar extends Component {
                 }
               >
                 <Modal.Header>Frequently Asked Questions</Modal.Header>
-                <Modal.Content>
-                  <CalendarFAQ />
-                </Modal.Content>
+                <CalendarFAQ />
               </Modal>
             </Grid.Row>
             <Grid.Row>

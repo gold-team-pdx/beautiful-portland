@@ -1,45 +1,55 @@
 import React, { Component } from 'react'
-import { List } from 'semantic-ui-react'
+import { Accordion, Icon } from 'semantic-ui-react'
+import Axios from 'axios'
 
-
-
-
-export default class CalednarFAQ extends Component {
+export default class CalendarFAQ extends Component {
   constructor(){
     super()
-    this.state = {}
+    this.state = {
+      activeIndex: 0
+    }
+  }
+
+  componentDidMount = async () => {
+	  Axios.get('/api/getCalendarFAQ')
+	    .then(res => {
+	      let tempFAQs = JSON.parse(res.data.faq_info)
+	      console.log(tempFAQs)
+	      this.setState({
+	        faqs : tempFAQs
+        })
+	    })
+  }
+
+  handleClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
   }
 
   render() {
+    const { activeIndex } = this.state
+
     return (
       <div>
-        <List>
-          <List.Item>
-            <List.Content>
-              <List.Header>What if I can't make my scheduled volunteer shift</List.Header>
-              <List.Description>Text/call the volunteer coordinatoor for that event</List.Description>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header>Should I bring something other than my scheduled food item?</List.Header>
-              <List.Description>Please dress warm and bring anything you may need to serve your dish</List.Description>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header>What else can I do to support Beautiful Portland if I can't make a volunteer shift?</List.Header>
-              <List.Description>You can make a tax deductible donation from our homepage.</List.Description>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content>
-              <List.Header>How or when can I make a non-food item donation?</List.Header>
-              <List.Description>You can select a Hot soup event that works for you and choose the type: Miscellaneous</List.Description>
-            </List.Content>
-          </List.Item>
-        </List>
-      </div>  
+        <Accordion fluid styled>
+          {this.state.faqs && this.state.faqs.map((faq, index) =>{
+            return(
+              <div key={index}>
+                <Accordion.Title active={activeIndex === index} index={index} onClick={this.handleClick}>
+                  <Icon name='dropdown' />
+                  {index+1}. {faq.question}
+                </Accordion.Title>
+                <Accordion.Content active={activeIndex === index}>
+                  {faq.answer}
+                </Accordion.Content>
+              </div>
+            )
+          })}
+        </Accordion>
+      </div>
     )
   }
 }

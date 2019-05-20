@@ -1,5 +1,3 @@
-const dbConfig = require('./config/db')
-var authConfig = require('./config/auth')
 const express = require('express')
 const AWS = require('aws-sdk')
 const MongoClient = require('mongodb').MongoClient
@@ -10,7 +8,6 @@ const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const app = express()
 const port = process.env.PORT || 5000
-const uri = dbConfig.mongodbURL
 const visitorHandlers = require('./visitor')
 const adminHandlers = require('./admin')
 
@@ -30,7 +27,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 //Connects to MongoDB
-const client = new MongoClient(uri, { useNewUrlParser: true })
+const client = new MongoClient(process.env.MONGODB_URL, { useNewUrlParser: true })
 client.connect((err) => {
   if (err) {
     console.log(err, 'Connection to db failed')
@@ -52,11 +49,14 @@ passport.deserializeUser(function(obj, done) {
 })
 
 // passport config
-passport.use(new GoogleStrategy(
-  authConfig.google,
-  function(accessToken, refreshToken, profile, done) {
-    return done(null, profile)
-  }
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret:process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL:process.env.GOOGLE_CALLBACK_URL
+},
+function(accessToken, refreshToken, profile, done) {
+  return done(null, profile)
+}
 ))
 
 // let google to authentication the admin
@@ -78,7 +78,7 @@ app.get('/auth/google/callback',
 
 //express middleware to check if admin is logged in.
 function ensureAuthenticated(req, res, next) {
-  let adminIsAuthenticated = req.isAuthenticated() && req.user.emails[0].value==authConfig.adminAccount
+  let adminIsAuthenticated = req.isAuthenticated() && req.user.emails[0].value==process.env.ADMIN_ACCOUNT
   if (adminIsAuthenticated){
     // console.log("Display name: "+ req.user.displayName)
     // console.log("Email: "+ req.user.emails[0].value)
@@ -112,6 +112,7 @@ app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: clie
 app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
 app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client}))
 app.get('/api/content', visitorHandlers.getContent.bind({dbClient: client}))
+app.get('/api/getCalendarFAQ', visitorHandlers.getCalendarFAQ.bind({dbClient: client}))
 
 // Admin request handlers
 app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
@@ -151,3 +152,7 @@ app.post('/api/editedStory', ensureAuthenticated, adminHandlers.editedStory.bind
 app.get('/api/storiesCount', adminHandlers.getStoryCount.bind({dbClient: client}))
 app.post('/api/volunteerHistory', ensureAuthenticated, adminHandlers.getVolunteerHistory.bind({dbClient: client}))
 app.post('/api/editContent', ensureAuthenticated, adminHandlers.editContent.bind({dbClient: client}))
+app.post('/api/getCalendarFAQEdit', ensureAuthenticated, adminHandlers.getCalendarFAQEdit.bind({dbClient: client}))
+app.post('/api/addCalendarFAQ', ensureAuthenticated, adminHandlers.addCalendarFAQ.bind({dbClient: client}))
+app.post('/api/editCalendarFAQ', ensureAuthenticated, adminHandlers.editCalendarFAQ.bind({dbClient: client}))
+app.post('/api/deleteCalendarFAQ', ensureAuthenticated, adminHandlers.deleteCalendarFAQ.bind({dbClient: client}))
