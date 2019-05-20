@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Card, Button } from 'semantic-ui-react'
+import { Card, Button, Pagination, Icon } from 'semantic-ui-react'
 import Header from '../Home/Header'
-import Pagination from './Pagination'
 import PublishStories from './PublishStories'
 import PublishStories2 from './PublishStories2'
 import PublishStories3 from './PublishStories3'
@@ -16,20 +15,59 @@ export default class Home extends Component {
 
     this.state = {
       publishStory: [],
-      version: '1'
+      version: '1',
+      page: 1,
+      pageCount: 1,
+      maxPage: 1,
+
+      activePage: 1,
+      boundaryRange: 1,
+      siblingRange: 1,
+      totalPages: 50,
     }
   }
 
+  // componentDidMount = async () => {
+  //   Axios.get('/api/displayStory')
+  //     .then(res => {
+  //       let tempPubStory = JSON.parse(res.data.published_info)
+  //       console.log(tempPubStory)
+  //       this.setState({
+  //         publishStory : tempPubStory
+  //       })
+  //     })
+  // }
+
+	handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
+
 	componentDidMount = async () => {
-	  Axios.get('/api/displayStory')
-	    .then(res => {
-	      let tempPubStory = JSON.parse(res.data.published_info)
-	      console.log(tempPubStory)
-	      this.setState({
-	        publishStory : tempPubStory
-	      })
+	  Axios.get('/api/StoriesCount')
+	    .then(async(res) => {
+	      let tempCount = JSON.parse(res.data.count_info)
+	      await this.setState({count: tempCount[0].publishCount})
+	      await this.setState({pageMax: Math.ceil(this.state.count/5)})
+	      console.log(res)
 	    })
+
+	  if(!(((this.state.publishCount) / this.state.publishPage * 5) < 1)) {
+	    this.getStory()
+	  }
 	}
+
+  getStory = () => {
+    Axios.get('/api/displayStory', {
+      params: { page: this.state.page }
+    })
+      .then(res => {
+        if(res.data.status !== 'FAILURE') {
+          let tempPubStory = JSON.parse(res.data.published_info)
+          console.log(tempPubStory)
+          this.setState({
+            publishStory : tempPubStory
+          })
+        }
+      })
+  }
 
 	handleVersion = () => {
 	  // const newVersion = this.state.version === false ? true : false
@@ -49,6 +87,13 @@ export default class Home extends Component {
 	}
 
 	render() {
+	  const {
+	    activePage,
+	    boundaryRange,
+	    siblingRange,
+	    totalPages,
+	  } = this.state
+
 	  if(this.state.version==='1'){
 	    return (
 	      <div className="Story">
@@ -73,8 +118,19 @@ export default class Home extends Component {
 	        </div>
 
 	        <br/>
-	        <div style={{margin: 'auto'}}>
-	          <Pagination/>
+	        <div>
+	          <Pagination
+	            activePage={activePage}
+	            ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+	            firstItem={{ content: <Icon name='angle double left' />, icon: true }}
+	            lastItem={{ content: <Icon name='angle double right' />, icon: true }}
+	            prevItem={{ content: <Icon name='angle left' />, icon: true }}
+	            nextItem={{ content: <Icon name='angle right' />, icon: true }}
+	            boundaryRange={boundaryRange}
+	            onPageChange={this.handlePaginationChange}
+	            siblingRange={siblingRange}
+	            totalPages={totalPages}
+	          />
 	        </div>
 	      </div>
 	    )
@@ -152,11 +208,7 @@ export default class Home extends Component {
 	            )
 	          })}
 	        </div>
-
 	        <br/>
-	        <div style={{margin: 'auto'}}>
-	          <Pagination/>
-	        </div>
 	      </div>
 	    )
 	  }

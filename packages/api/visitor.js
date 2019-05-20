@@ -213,9 +213,11 @@ eventCalendar = function(req, res) {
 }
 
 displayStory = function(req, res) {
+  console.log('publish page ' + req.query.page)
+  let skips = (req.query.page - 1) * 5
   let client = this.dbClient
   collection = client.db('stories_example1').collection('published')
-  collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+  collection.find().sort({ _id: -1 }).skip(skips).limit(6).toArray((err, docs) => {
     if (err) {
       console.log(err, 'Error trying to find published Stories')
       res.send({
@@ -238,6 +240,7 @@ displayStory = function(req, res) {
       publishObj.hook = pubStory.hook
       publishObj.content = pubStory.content
       publishObj.public_status = pubStory.public_status
+      publishObj.postPhotoName = pubStory.postPhotoName
       response_data.push(pubStory)
     })
     res.send({
