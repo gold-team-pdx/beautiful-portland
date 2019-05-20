@@ -671,13 +671,13 @@ getStoryCount = async function(req, res) {
 editEventTemplate = function (req, res) {
   let client = this.dbClient
   let categories = []
-  req.body.forEach((category) => {
+  req.body.data.forEach((category) => {
     categories.push(
       {
         'name': category.name,
         'max_signups': parseInt(category.max_signups,10),
         'min_servings': parseInt(category.min_servings,10),
-        'food': category.food.toLowerCase() == 'true' ? true : false,
+        'food': category.food == 'true' ? true : false,
         'min_vegan': parseInt(category.min_vegan,10)
       }
     )
@@ -686,9 +686,9 @@ editEventTemplate = function (req, res) {
   collection.replaceOne({ date: 'MASTER2' },
     {
       'date' : 'MASTER2',
-      'location' : 'Director Park',
+      'location' : req.body.location,
       'time' : '6:00 pm',
-      'max_servings' : 149,
+      'max_servings' : req.body.max_servings,
       'categories': categories
     },{ upsert : true },
     function(err,doc) {

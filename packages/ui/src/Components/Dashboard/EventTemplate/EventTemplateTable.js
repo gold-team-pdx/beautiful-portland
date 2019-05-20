@@ -17,7 +17,6 @@ export default class EventTemplateTable extends Component {
       min_vegan: 0,
       food: true,
       location: '',
-      time: '',
       max_servings: 0
     }
   }
@@ -34,7 +33,6 @@ export default class EventTemplateTable extends Component {
 	      this.setState({
 	        data: tempEvent_info,
 	        location: res.data.location,
-	        time: res.data.time,
 	        max_servings: res.data.max_servings
 	      })
 	    })
@@ -42,8 +40,6 @@ export default class EventTemplateTable extends Component {
 	      console.log(err, 'Error Retrieving Template Information')
 	    })
   }
-  
-  
 
   handleChange = event => {
     if (event.target.name === 'name') 
@@ -56,6 +52,10 @@ export default class EventTemplateTable extends Component {
       this.setState({min_vegan: event.target.value})
     if (event.target.name === 'food')
       this.setState({food: event.target.value})
+    if (event.target.name === 'location')
+      this.setState({location: event.target.value})
+    if (event.target.name === 'max_servings')
+      this.setState({max_servings: event.target.value})
   }
   
   handleSubmit = async (event) => {
@@ -66,7 +66,6 @@ export default class EventTemplateTable extends Component {
     
     /*await this.setState({ data: data })*/
     console.log(data)
-    
   }
 
   onSubmitTemplate = data => {
@@ -78,9 +77,19 @@ export default class EventTemplateTable extends Component {
 	    .catch(err => {
 	      console.log(err, 'Try again.')
 	    })
-	  
   }
 
+  deleteEvent = (event) => {
+    const deletedEventTemplate = {category: event}
+    console.log(deletedEventTemplate)
+    Axios.post('/api/deleteEventTemplate', deletedEventTemplate)
+      .then((response) => {
+        console.log(response, 'Deleted Event ' + event)
+      })
+      .catch((err) => {
+        console.log(err, 'Try again.')
+      })
+  }
   
 
   renderEditable = cellInfo => {
@@ -99,11 +108,9 @@ export default class EventTemplateTable extends Component {
           __html: sanitizer(this.state.data[cellInfo.index][cellInfo.column.id])
         }}
       />
-    )
-    
-  };
+    ) 
+  }
 
-  
   render() {
     const { data } = this.state
     var options = [
@@ -180,14 +187,42 @@ export default class EventTemplateTable extends Component {
               {
                 Header: 'Remove',
                 accessor: 'remove',
-                Cell: <Button color="red" size="tiny" icon="remove" />
+                Cell: (row)=> (
+                  <Button color="red" size="tiny" icon="remove" 
+                    onClick={() => {
+                      let data = this.state.data
+                      console.log(this.state.data[row.index].name)
+                      this.deleteEvent(this.state.data[row.index].name)
+                      data.splice(row.index, 1)
+                      this.setState({data})
+                    }}/>
+                ) 
               }
             ]}
             defaultPageSize={10}
-            className="-striped -highlight"
+            className="-highlight"
           />
         </div>
-        <Button color="teal" size="huge" style={{marginTop: '2%'}} onClick={() => {this.onSubmitTemplate(this.state.data)}}>SUBMIT</Button>
+        <Form style={{marginTop: '2%'}}>  
+          <Form.Group>
+            <Form.Input
+              type="text"
+              name="location"
+              placeholder="Event Location"
+              value={this.state.location}
+              onChange={this.handleChange}
+            />
+            <Form.Input
+              type="text"
+              name="max_servings"
+              placeholder="Max Servings"
+              value={this.state.max_servings}
+              onChange={this.handleChange}
+            />
+            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state)}}>SUBMIT</Button>
+          </Form.Group>
+        </Form>
+        
       </div>
     )
   }
