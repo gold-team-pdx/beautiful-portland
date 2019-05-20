@@ -813,6 +813,75 @@ getVolunteerHistory = async function(req, res) {
   }
 }
 
+getCalendarFAQEdit = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID
+  let client = this.dbClient
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.find({ _id: ObjectId(req.body.id) }).sort({ 'question': -1 }).toArray((err, result) => {
+    if (err) {
+      throw err
+    } else {
+      res.send(result)
+    }
+  })
+}
+
+addCalendarFAQ = function(req, res) {
+  let client = this.dbClient
+  console.log(req.body)
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.updateOne(
+    { question: req.body.question },
+    {
+      $set: {
+        question: req.body.question,
+        answer: req.body.answer
+      }
+    },
+    { upsert: true },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Calendar FAQ Published')
+    }
+  )
+}
+
+editCalendarFAQ = function(req,res) {
+  var ObjectId = require('mongodb').ObjectID
+  let client = this.dbClient
+  console.log(req.body.publish_status)
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.updateOne(
+    {_id: ObjectId(req.body._id)},
+    {
+      $set: {
+        question: req.body.question,
+        answer: req.body.answer
+      }
+    },
+    { upsert: true },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Calendar FAQ has been edited')
+    }
+  )
+}
+
+deleteCalendarFAQ = function(req, res) {
+  var ObjectId = require('mongodb').ObjectID
+  let client = this.dbClient
+  collection = client.db('events-form').collection('frequently-asked-questions')
+  collection.deleteOne(
+    {
+      _id: ObjectId(req.body.deleteId)
+    },
+    function(err, obj) {
+      if (err) throw err
+      else res.end('Calendar FAQ Deleted Successful')
+    }
+  )
+}
+
 module.exports.addPhotos = addPhotos
 module.exports.removePhotos = removePhotos
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
@@ -837,3 +906,7 @@ module.exports.deleteEventTemplate = deleteEventTemplate
 module.exports.editedStory = editedStory
 module.exports.getStoryCount = getStoryCount
 module.exports.getVolunteerHistory = getVolunteerHistory
+module.exports.getCalendarFAQEdit = getCalendarFAQEdit
+module.exports.addCalendarFAQ = addCalendarFAQ
+module.exports.editCalendarFAQ = editCalendarFAQ
+module.exports.deleteCalendarFAQ = deleteCalendarFAQ
