@@ -103,10 +103,10 @@ export default class EditCalendarFAQ extends Component {
         <Header as="h1">Edit Calendar FAQ</Header>
         <Segment>
           <Accordion>
-            <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+            <Accordion.Title active={activeIndex === 9999} index={9999} onClick={this.handleClick}>
               <Icon name='dropdown' /><b>Would you like to add a new FAQ?</b>
             </Accordion.Title>
-            <Accordion.Content active={activeIndex === 1}>
+            <Accordion.Content active={activeIndex === 9999}>
               <Form onSubmit={this.onSubmit}>
                 <Form.Group inline>
                   <Form.TextArea
@@ -146,16 +146,22 @@ export default class EditCalendarFAQ extends Component {
                     Question {index+1}: {faq.question}
                     </Card.Header>
                     <Card.Description>
-                      <p>Answer: {faq.answer}</p>
-                      <Button.Group>
-                        <Button color='blue' onClick={this.displayEditModal} id={faq._id} question={faq.question} answer={faq.answer}>
-                          Edit
-                        </Button>
-                        <Button.Or />
-                        <Button color='red' onClick={this.displayDeleteModal} id={faq._id} question={faq.question}>
-                          Delete
-                        </Button>
-                      </Button.Group>
+                      <p>Answer: {faq.answer}</p><Accordion>
+                        <Accordion.Title active={activeIndex === index+1} index={index+1} onClick={this.handleClick}>
+                          <Icon name='dropdown' /><b>Would you like to make change?</b>
+                        </Accordion.Title>
+                        <Accordion.Content active={activeIndex === index+1}>
+                          <Button.Group>
+                            <Button color='blue' onClick={this.displayEditModal} id={faq._id} question={faq.question} answer={faq.answer}>
+                              Edit
+                            </Button>
+                            <Button.Or />
+                            <Button color='red' onClick={this.displayDeleteModal} id={faq._id} question={faq.question}>
+                              Delete
+                            </Button>
+                          </Button.Group>
+                        </Accordion.Content>
+                      </Accordion>
                     </Card.Description>
                   </Card.Content>
                 </Card>
