@@ -18,6 +18,7 @@ import ViewStories from './Stories/ViewStories'
 import EditEvent from './EditEvent'
 import EditStory from './Stories/EditStory'
 import VolunteerSubmissions from './VolunteerSubmissions'
+import EditCalendarFAQ from './EditCalendarFAQ'
 
 export default class AdminDashboard extends Component {
   state = {
@@ -103,6 +104,10 @@ export default class AdminDashboard extends Component {
     )
   }
 
+  editCalendarFAQ = () => {
+    return <EditCalendarFAQ />
+  }
+
   volunteerList = () => {
     return <VolunteerList updateActiveEmail={this.updateActiveEmail} />
   }
@@ -181,6 +186,7 @@ export default class AdminDashboard extends Component {
               <Route path="/AddEvent" component={AddEvent} />
               <Route path="/ViewUpcomingEvents" component={this.viewEvents} />
               <Route path="/EditEvent" component={this.editEvent} />
+              <Route path="/EditCalendarFAQ" component={this.editCalendarFAQ} />
               <Route path="/VolunteerList" component={this.volunteerList} />
               <Route
                 path="/VolunteerSubmissions"

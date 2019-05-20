@@ -41,6 +41,15 @@ export default class DashMenu extends Component {
             >
               View Upcoming Events
             </Menu.Item>
+            <Menu.Item
+              name="editCalendarFAQ"
+              as={NavLink}
+              active={activeItem === 'editCalendarFAQ'}
+              onClick={this.handleItemClick}
+              to={'/EditCalendarFAQ'}
+            >
+              Edit Calendar FAQ
+            </Menu.Item>
           </Menu.Menu>
           <Menu.Item
             name="volunteerList"

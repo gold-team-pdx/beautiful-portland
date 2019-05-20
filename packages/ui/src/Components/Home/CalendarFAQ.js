@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Accordion, Icon } from 'semantic-ui-react'
+import { Accordion, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
 
 export default class CalendarFAQ extends Component {
