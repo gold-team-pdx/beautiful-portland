@@ -669,39 +669,39 @@ getStoryCount = async function(req, res) {
 }
 
 editEventTemplate = function (req, res) {
-	let client = this.dbClient
-	let categories = []
-	req.body.categories.forEach((category) => {
-		categories.push(
-			{
-				"name": category.name,
-				"max_signups": category.max_signups,
-				"min_servings": category.min_servings,
-				"food": category.food,
-				"min_vegan": category.min_vegan
-			}
-		)
-	})
-	collection = client.db("events-form").collection("events")
-	collection.findOneAndUpdate({ date: "MASTER2" },
-	{$set: {
-		"location" : req.body.location,
-		"time" : req.body.time,
-		"max_servings" : req.body.max_servings,
-		"categories": categories
-	}},{ upsert : true },
-	function(err,doc) {
-		if(err){
-			console.log(err, "Error trying to find master template to edit")
-			res.send({
-				status: 'FAILURE'
-			})
-			return
-		}else{
-			console.log("SUCCESS! [" + req.body.name +"] has been updated")
-			res.end("Template Updated")
-		}}
-	)
+  let client = this.dbClient
+  let categories = []
+  req.body.categories.forEach((category) => {
+    categories.push(
+      {
+        'name': category.name,
+        'max_signups': category.max_signups,
+        'min_servings': category.min_servings,
+        'food': category.food,
+        'min_vegan': category.min_vegan
+      }
+    )
+  })
+  collection = client.db('events-form').collection('events')
+  collection.findOneAndUpdate({ date: 'MASTER2' },
+    {$set: {
+      'location' : req.body.location,
+      'time' : req.body.time,
+      'max_servings' : req.body.max_servings,
+      'categories': categories
+    }},{ upsert : true },
+    function(err,doc) {
+      if(err){
+        console.log(err, 'Error trying to find master template to edit')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      }else{
+        console.log('SUCCESS! [' + req.body.name +'] has been updated')
+        res.end('Template Updated')
+      }}
+  )
 }
 
 getEventTemplate = function(req, res) {
@@ -813,6 +813,22 @@ getVolunteerHistory = async function(req, res) {
   }
 }
 
+editContent = function(req, res) {
+  client = this.dbClient
+  let collection = client.db('beautiful-portland').collection('site-content')
+  collection.findOneAndReplace({type: req.body.type}, req.body, (err, result) => {
+    if(err) {
+      console.log(err, 'Error trying to find ' + req.body.type + ' in db')
+    } else if(!result.ok) {
+      console.log('Something went wrong updating ' + req.body.type)
+    }
+
+    res.send({
+      status: 'SUCCESS'
+    })
+  })
+}
+
 getCalendarFAQEdit = function(req, res) {
   var ObjectId = require('mongodb').ObjectID
   let client = this.dbClient
@@ -906,7 +922,9 @@ module.exports.deleteEventTemplate = deleteEventTemplate
 module.exports.editedStory = editedStory
 module.exports.getStoryCount = getStoryCount
 module.exports.getVolunteerHistory = getVolunteerHistory
+module.exports.editContent = editContent
 module.exports.getCalendarFAQEdit = getCalendarFAQEdit
 module.exports.addCalendarFAQ = addCalendarFAQ
 module.exports.editCalendarFAQ = editCalendarFAQ
 module.exports.deleteCalendarFAQ = deleteCalendarFAQ
+

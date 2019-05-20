@@ -18,6 +18,7 @@ import ViewStories from './Stories/ViewStories'
 import EditEvent from './EditEvent'
 import EditStory from './Stories/EditStory'
 import VolunteerSubmissions from './VolunteerSubmissions'
+import EditContent from './EditContent'
 import EditCalendarFAQ from './EditCalendarFAQ'
 
 export default class AdminDashboard extends Component {
@@ -188,6 +189,7 @@ export default class AdminDashboard extends Component {
               <Route path="/EditEvent" component={this.editEvent} />
               <Route path="/EditCalendarFAQ" component={this.editCalendarFAQ} />
               <Route path="/VolunteerList" component={this.volunteerList} />
+              <Route path="/EditContent" component={EditContent} />
               <Route
                 path="/VolunteerSubmissions"
                 component={this.volunteerSubmissions}

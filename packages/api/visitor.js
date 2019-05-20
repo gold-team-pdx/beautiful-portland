@@ -282,6 +282,52 @@ getOneStory = function(req, res) {
   })
 }
 
+getContent= function(req, res) {
+  let client = this.dbClient
+  collection = client.db('beautiful-portland').collection('site-content')
+  if(req.query.type === 'all') {
+    collection.find({}, {projection: {_id: 0}}).toArray((err, docs) => {
+      if(err) {
+        console.log(err, 'Error looking for content')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      } else if(docs.length === 0) {
+        console.log('Content not found')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      }
+
+      res.send({
+        status: 'SUCCESS',
+        content: docs
+      })
+    })
+  } else {
+    collection.findOne({type: req.query.type}, (err, doc) => {
+      if(err) {
+        console.log(err, 'Error looking for content')
+        res.send({
+          status: 'FAILURE'
+        })
+        return
+      } else if(!doc) {
+        console.log(err, 'Content not found')
+        res.send({
+          status: 'FAILURE'
+        })
+      }
+
+      res.send({
+        status: 'SUCCESS',
+        content: doc.content
+      })
+    })
+  }
+  
 getCalendarFAQ = function(req, res) {
   let client = this.dbClient
   collection = client.db('events-form').collection('frequently-asked-questions')
@@ -321,4 +367,5 @@ module.exports.eventCalendar = eventCalendar
 module.exports.getImageForStory = getImageForStory
 module.exports.displayStory = displayStory
 module.exports.getOneStory = getOneStory
+module.exports.getContent = getContent
 module.exports.getCalendarFAQ = getCalendarFAQ

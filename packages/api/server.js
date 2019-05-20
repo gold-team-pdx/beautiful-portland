@@ -111,6 +111,7 @@ app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client
 app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: client}))
 app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
 app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client}))
+app.get('/api/content', visitorHandlers.getContent.bind({dbClient: client}))
 app.get('/api/getCalendarFAQ', visitorHandlers.getCalendarFAQ.bind({dbClient: client}))
 
 // Admin request handlers
@@ -150,6 +151,7 @@ app.post('/api/deleteEventTemplate', ensureAuthenticated, adminHandlers.deleteEv
 app.post('/api/editedStory', ensureAuthenticated, adminHandlers.editedStory.bind({dbClient: client}))
 app.get('/api/storiesCount', adminHandlers.getStoryCount.bind({dbClient: client}))
 app.post('/api/volunteerHistory', ensureAuthenticated, adminHandlers.getVolunteerHistory.bind({dbClient: client}))
+app.post('/api/editContent', ensureAuthenticated, adminHandlers.editContent.bind({dbClient: client}))
 app.post('/api/getCalendarFAQEdit', ensureAuthenticated, adminHandlers.getCalendarFAQEdit.bind({dbClient: client}))
 app.post('/api/addCalendarFAQ', ensureAuthenticated, adminHandlers.addCalendarFAQ.bind({dbClient: client}))
 app.post('/api/editCalendarFAQ', ensureAuthenticated, adminHandlers.editCalendarFAQ.bind({dbClient: client}))
