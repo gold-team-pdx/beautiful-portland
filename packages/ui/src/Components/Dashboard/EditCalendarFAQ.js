@@ -109,7 +109,7 @@ export default class EditCalendarFAQ extends Component {
             <Accordion.Content active={activeIndex === 1}>
               <Form onSubmit={this.onSubmit}>
                 <Form.Group inline>
-                  <Form.Input
+                  <Form.TextArea
                     name="newQuestion"
                     value={this.state.newQuestion}
                     onChange={this.onChange}
@@ -118,7 +118,7 @@ export default class EditCalendarFAQ extends Component {
                   />
                 </Form.Group>
                 <Form.Group inline>
-                  <Form.Input
+                  <Form.TextArea
                     name="newAnswer"
                     value={this.state.newAnswer}
                     onChange={this.onChange}
@@ -166,7 +166,7 @@ export default class EditCalendarFAQ extends Component {
             <Modal.Content>
               <h3>Edit: [{this.state.newQuestion}]</h3>
               <Form>
-                <Form.Input
+                <Form.TextArea
                   name="newQuestion"
                   value={this.state.newQuestion}
                   onChange={this.onChange}
@@ -174,7 +174,7 @@ export default class EditCalendarFAQ extends Component {
                   label="Question"
                 />
 
-                <Form.Input
+                <Form.TextArea
                   name="newAnswer"
                   value={this.state.newAnswer}
                   onChange={this.onChange}
