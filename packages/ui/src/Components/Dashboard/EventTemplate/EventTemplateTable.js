@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Button, Header } from 'semantic-ui-react'
+import { Form, Button, Header, Modal, Icon } from 'semantic-ui-react'
 import dompurify from 'dompurify'
 // Import React Table
 import ReactTable from 'react-table'
@@ -351,7 +351,16 @@ export default class EventTemplateTable extends Component {
             </div>
             
           </Form.Group>
-          <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state)}} disabled={!(this.state.location && this.state.max_servings)}>Update</Button>
+          <Modal trigger={
+            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state)}} disabled={!(this.state.location && this.state.max_servings)}>Update</Button> }>
+            <Modal.Header>Edit Master Event Template</Modal.Header>
+            <Modal.Content>
+                
+              <Modal.Description>
+                <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
+              </Modal.Description>
+            </Modal.Content>
+          </Modal>
         </Form>
         
       </div>
