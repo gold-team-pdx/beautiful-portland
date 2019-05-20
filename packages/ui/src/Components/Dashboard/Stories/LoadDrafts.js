@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Accordion, Icon, Button } from 'semantic-ui-react'
 import Axios from 'axios'
+import RichTextEditor from 'react-rte'
 import { Link } from 'react-router-dom'
 
 export default class LoadDrafts extends Component {
@@ -81,7 +82,10 @@ export default class LoadDrafts extends Component {
            							 <Icon name="dropdown" />
            						     </Accordion.Title>
                     <Accordion.Content active={activeIndex === 0 }>
-                      <p>{this.props.sDraft.content}</p>
+                      <RichTextEditor
+                        value={RichTextEditor.createValueFromString(this.props.sDraft.content, 'html')}
+                        readOnly
+                      />
                       <Button.Group widths={3}>
                         <Button color='blue'
                           name='editDraft'

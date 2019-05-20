@@ -19,7 +19,7 @@ export default class Home extends Component {
     Axios.get('/api/content', {params: {type: 'Mission Statement'}})
       .then(res => {
         if(res.data) {
-          this.setState({mission_stmt: RichTextEditor.createValueFromString(res.data.content, 'markdown')})
+          this.setState({mission_stmt: RichTextEditor.createValueFromString(res.data.content, 'html')})
         }
       }).catch(err => {
         console.log(err, 'Couldn\'t get data from server')

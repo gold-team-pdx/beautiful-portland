@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Card, Accordion, Icon, Button } from 'semantic-ui-react'
 import Axios from 'axios'
 import { Link } from 'react-router-dom'
+import RichTextEditor from 'react-rte'
 
 export default class LoadPublished extends Component {
   constructor(props){
@@ -56,7 +57,10 @@ export default class LoadPublished extends Component {
            							 <Icon name="dropdown" />
            						     </Accordion.Title>
                     <Accordion.Content active={activeIndex === 0}>
-                      <p>{this.props.sPublish.content}</p>
+                      <RichTextEditor
+                        value={RichTextEditor.createValueFromString(this.props.sPublish.content, 'html')}
+                        readOnly
+                      />
                       <Button.Group widths={2}>
                         <Button color='blue'
                           name='editDraft'

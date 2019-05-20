@@ -28,22 +28,22 @@ class About extends Component {
           let temp = res.data.content.find(e => {
             return e.type === 'About'
           })
-          let tempAbout = RichTextEditor.createValueFromString(temp.content, 'markdown')
+          let tempAbout = RichTextEditor.createValueFromString(temp.content, 'html')
 
           temp = res.data.content.find(e => {
             return e.type === 'Privacy Policy'
           })
-          let tempPrivPol = RichTextEditor.createValueFromString(temp.content, 'markdown')
+          let tempPrivPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
           temp = res.data.content.find(e => {
             return e.type === 'Donation Policy'
           })
-          let tempDonPol = RichTextEditor.createValueFromString(temp.content, 'markdown')
+          let tempDonPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
           temp = res.data.content.find(e => {
             return e.type === 'Terms and Conditions'
           })
-          let tempTaC = RichTextEditor.createValueFromString(temp.content, 'markdown')
+          let tempTaC = RichTextEditor.createValueFromString(temp.content, 'html')
 
           this.setState({
             about: tempAbout,

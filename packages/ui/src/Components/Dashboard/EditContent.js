@@ -4,6 +4,26 @@ import Axios from 'axios'
 import RichTextEditor from 'react-rte'
 import '../Stylesheets/EditContent.css'
 
+const toolbarConfig = {
+  // Optionally specify the groups to display (displayed in the order listed).
+  display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'BLOCK_TYPE_DROPDOWN'],
+  INLINE_STYLE_BUTTONS: [
+    {label: 'Bold', style: 'BOLD', className: 'custom-css-class'},
+    {label: 'Italic', style: 'ITALIC'},
+    {label: 'Underline', style: 'UNDERLINE'}
+  ],
+  BLOCK_TYPE_DROPDOWN: [
+    {label: 'Normal', style: 'unstyled'},
+    {label: 'Heading Large', style: 'header-one'},
+    {label: 'Heading Medium', style: 'header-two'},
+    {label: 'Heading Small', style: 'header-three'}
+  ],
+  BLOCK_TYPE_BUTTONS: [
+    {label: 'UL', style: 'unordered-list-item'},
+    {label: 'OL', style: 'ordered-list-item'}
+  ]
+}
+
 class EditContent extends Component {
   constructor(props) {
     super(props)
@@ -42,7 +62,7 @@ class EditContent extends Component {
       return name === e.type
     })
     this.setState({
-      value: RichTextEditor.createValueFromString(temp.content, 'markdown'),
+      value: RichTextEditor.createValueFromString(temp.content, 'html'),
       current_type: temp.type
     })
   }
@@ -54,7 +74,7 @@ class EditContent extends Component {
   onClearClose = () => { this.setState({clearOpen: false}) }
 
   handleSave = () => {
-    Axios.post('/api/editContent', { type: this.state.current_type, content: this.state.value.toString('markdown') }).then(res => {
+    Axios.post('/api/editContent', { type: this.state.current_type, content: this.state.value.toString('html') }).then(res => {
       window.location.reload()
     }).catch(err => {
 
@@ -88,6 +108,7 @@ class EditContent extends Component {
               <RichTextEditor
                 value={this.state.value}
                 onChange={this.onChange}
+                toolbarConfig={toolbarConfig}
               />
             </Form.Field>
             
