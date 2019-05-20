@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Button, Header } from 'semantic-ui-react'
+import dompurify from 'dompurify'
 // Import React Table
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
@@ -11,9 +12,9 @@ export default class EventTemplateTable extends Component {
     this.state = {
       data: [],
       name: '',
-      max_signups: '',
-      min_servings: '',
-      min_vegan: '',
+      max_signups: 0,
+      min_servings: 0,
+      min_vegan: 0,
       food: true,
       location: '',
       time: '',
@@ -59,7 +60,7 @@ export default class EventTemplateTable extends Component {
   
   handleSubmit = async (event) => {
     const { name, max_signups, min_servings, min_vegan, food, data} = this.state
-    var nameObj = {'name': name, 'max_signups': max_signups, 'min_servings' : min_servings, 'min_vegan': min_vegan, 'food': food}
+    var nameObj = {'name': name, 'max_signups': parseInt(max_signups,10), 'min_servings' : Number(min_servings), 'min_vegan': Number(min_vegan), 'food': food}
     data.push(nameObj)
     this.setState({ data })
     
@@ -83,6 +84,7 @@ export default class EventTemplateTable extends Component {
   
 
   renderEditable = cellInfo => {
+    let sanitizer = dompurify.sanitize
     return (
       <div
         style={{ backgroundColor: '#fafafa' }}
@@ -94,10 +96,11 @@ export default class EventTemplateTable extends Component {
           this.setState({ data })
         }}
         dangerouslySetInnerHTML={{
-          __html: this.state.data[cellInfo.index][cellInfo.column.id]
+          __html: sanitizer(this.state.data[cellInfo.index][cellInfo.column.id])
         }}
       />
     )
+    
   };
 
   
@@ -174,6 +177,11 @@ export default class EventTemplateTable extends Component {
                 accessor: 'food',
                 Cell: this.renderEditable
               },
+              {
+                Header: 'Remove',
+                accessor: 'remove',
+                Cell: <Button color="red" size="tiny" icon="remove" />
+              }
             ]}
             defaultPageSize={10}
             className="-striped -highlight"

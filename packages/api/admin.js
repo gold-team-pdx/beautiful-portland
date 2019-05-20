@@ -671,25 +671,26 @@ getStoryCount = async function(req, res) {
 editEventTemplate = function (req, res) {
   let client = this.dbClient
   let categories = []
-  req.body.categories.forEach((category) => {
+  req.body.forEach((category) => {
     categories.push(
       {
         'name': category.name,
-        'max_signups': category.max_signups,
-        'min_servings': category.min_servings,
-        'food': category.food,
-        'min_vegan': category.min_vegan
+        'max_signups': parseInt(category.max_signups,10),
+        'min_servings': parseInt(category.min_servings,10),
+        'food': category.food.toLowerCase() == 'true' ? true : false,
+        'min_vegan': parseInt(category.min_vegan,10)
       }
     )
   })
   collection = client.db('events-form').collection('events')
-  collection.findOneAndUpdate({ date: 'MASTER2' },
-    {$set: {
-      'location' : req.body.location,
-      'time' : req.body.time,
-      'max_servings' : req.body.max_servings,
+  collection.replaceOne({ date: 'MASTER2' },
+    {
+      'date' : 'MASTER2',
+      'location' : 'Director Park',
+      'time' : '6:00 pm',
+      'max_servings' : 149,
       'categories': categories
-    }},{ upsert : true },
+    },{ upsert : true },
     function(err,doc) {
       if(err){
         console.log(err, 'Error trying to find master template to edit')
@@ -707,7 +708,7 @@ editEventTemplate = function (req, res) {
 getEventTemplate = function(req, res) {
   let client = this.dbClient
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+  collection.find({date: 'MASTER2'}, {projection:{ _id: 0}}).toArray((err, docs) => {
     if(err) {
       console.log(err, 'Error trying to get info from master template')
       res.send({
