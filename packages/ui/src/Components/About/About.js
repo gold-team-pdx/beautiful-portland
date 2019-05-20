@@ -4,6 +4,29 @@ import HomeLayout from '../Layouts/HomeLayout'
 import Axios from 'axios'
 import RichTextEditor from 'react-rte'
 
+// Sitewide Text Styles
+const paragraphStyles = {
+  fontFamily: 'Nunito', 
+  color: '#000b91', 
+  fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+} 
+
+const headerStyles = {
+  fontFamily: 'Nunito',
+  color: '#000b91',  
+  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
+}
+
+const dropdownStyles = {
+  fontFamily: 'Nunito', 
+  color: '#000b91', 
+  fontSize: 'calc(12px + (20 - 12) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+}
+
+
 class About extends Component {
   state = {
     activeIndex: -1,
@@ -64,18 +87,22 @@ class About extends Component {
         <div className="About">
           <Container>
             <div style={{ marginTop: '20px' }}>
-              <Header as="h1">About Us</Header>
+              <Header as="h1" style={headerStyles}>
+                About Us
+              </Header>
             </div>
             <Divider />
             <RichTextEditor
               value={this.state.about}
               readOnly
+              style={paragraphStyles}
             />
             <Accordion>
               <Accordion.Title
                 active={activeIndex === 0}
                 index={0}
                 onClick={this.handleClick}
+                style={paragraphStyles}
               >
                 <Icon name="dropdown" />
                 Privacy Policy
@@ -84,6 +111,7 @@ class About extends Component {
                 <RichTextEditor
                   value={this.state.privacyPolicy}
                   readOnly
+                  style={dropdownStyles}
                 />
               </Accordion.Content>
 
@@ -91,6 +119,7 @@ class About extends Component {
                 active={activeIndex === 1}
                 index={1}
                 onClick={this.handleClick}
+                style={paragraphStyles}
               >
                 <Icon name="dropdown" />
                 Donation Policy
@@ -99,6 +128,7 @@ class About extends Component {
                 <RichTextEditor
                   value={this.state.donationPolicy}
                   readOnly
+                  style={dropdownStyles}
                 />
               </Accordion.Content>
 
@@ -106,6 +136,7 @@ class About extends Component {
                 active={activeIndex === 2}
                 index={2}
                 onClick={this.handleClick}
+                style={paragraphStyles}
               >
                 <Icon name="dropdown" />
                 Terms and Conditions
@@ -114,6 +145,7 @@ class About extends Component {
                 <RichTextEditor
                   value={this.state.termsAndConditions}
                   readOnly
+                  style={dropdownStyles}
                 />
               </Accordion.Content>
             </Accordion>

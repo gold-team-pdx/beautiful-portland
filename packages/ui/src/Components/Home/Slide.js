@@ -1,19 +1,24 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-const Slide = ({ image }) => {
-  const styles = {
-    backgroundImage: `url(${image})`,
-    backgroundPosition: 'center top',
-    backgroundSize: 'auto 100%',
-    objectFit: 'cover',
-    backgroundRepeat: 'no-repeat',
-    float: 'left',
+const Slide = ({ slideNum, image }) => {
+  const mainImageStyles = {
+    opacity: 1,
   }
-  return <div className="slide" style={styles}></div>
+  const otherImageStyles = {
+    opacity: .4,
+  }
+  return (
+    slideNum === 1 ? 
+      <img className="slide" 
+        src={image} 
+        alt='beautiful portland homepage' 
+        style={mainImageStyles}></img> : 
+      <img className='slide' 
+        src={image}
+        alt='beautiful portland homepage' 
+        style={otherImageStyles}></img>
+    
+  )
 }
 
-Slide.propTypes = {
-  image: PropTypes.string
-}
 export default Slide

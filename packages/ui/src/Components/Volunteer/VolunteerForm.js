@@ -1,9 +1,23 @@
 import React, { Component } from 'react'
 import Item from './Item'
 import { Header, Container } from 'semantic-ui-react'
-import { Redirect } from 'react-router-dom'
 import Axios from 'axios'
 import Moment from 'moment'
+
+// Sitewide Text Styles
+const paragraphStyles = {
+  fontFamily: 'Nunito',
+  color: '#000b91', 
+  fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+} 
+
+const headerStyles = {
+  fontFamily: 'Nunito',
+  color: '#000b91', 
+  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
+}
 
 export default class VolunteerForm extends Component {
   constructor(props) {
@@ -84,13 +98,13 @@ export default class VolunteerForm extends Component {
 	    <div>
 	      {this.state.validEvent ? (
 	        <Container>
-	          <Header as="h2" style={{ marginTop: '20px' }}>
+	          <Header as="h2" style={headerStyles}>
 							Dinner Sign-Up{' '}
 	          </Header>
-	          <Header as="h2">Volunteer Coordinator: {this.state.coordinator}</Header>
-	          <Header as="h2">Volunteer Coordinator Phone: {this.state.coordinator_phone}</Header>
-	          <Header as="h2">Location: {this.state.location}</Header>
-	          <Header as="h2">Date: {this.state.date} </Header>
+	          <Header as="h2" style={paragraphStyles}>Volunteer Coordinator: {this.state.coordinator}</Header>
+	          <Header as="h2" style={paragraphStyles}>Volunteer Coordinator Phone: {this.state.coordinator_phone}</Header>
+	          <Header as="h2" style={paragraphStyles}>Location: {this.state.location}</Header>
+	          <Header as="h2" style={paragraphStyles}>Date: {this.state.date} </Header>
 	          <Item
 	            onSubmit={this.onSubmit}
 	            event_info={this.state.event_info}
@@ -99,7 +113,7 @@ export default class VolunteerForm extends Component {
 	        </Container>
 	      ) : (
 	        <Container>
-	          <Header as="h2" style={{ marginTop: '20px' }}>
+	          <Header as="h2" style={{ marginTop: '20px', paragraphStyles }}>
 							There is no event scheduled for this date
 	          </Header>
 	        </Container>

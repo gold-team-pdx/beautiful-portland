@@ -2,6 +2,21 @@ import React, { Component } from 'react'
 import { Accordion, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
 
+// Sitewide Text Styles
+const paragraphStyles = {
+  fontFamily: 'Nunito',
+  color: '#000b91', 
+  fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+} 
+
+const dropdownStyles = {
+  fontFamily: 'Nunito', 
+  color: '#000b91', 
+  fontSize: 'calc(12px + (20 - 12) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+}
+
 export default class CalendarFAQ extends Component {
   constructor(){
     super()
@@ -38,11 +53,11 @@ export default class CalendarFAQ extends Component {
           {this.state.faqs && this.state.faqs.map((faq, index) =>{
             return(
               <div key={index}>
-                <Accordion.Title active={activeIndex === index} index={index} onClick={this.handleClick}>
+                <Accordion.Title active={activeIndex === index} index={index} onClick={this.handleClick} style={paragraphStyles}>
                   <Icon name='dropdown' />
                   {index+1}. {faq.question}
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === index}>
+                <Accordion.Content active={activeIndex === index} style={dropdownStyles}>
                   {faq.answer}
                 </Accordion.Content>
               </div>

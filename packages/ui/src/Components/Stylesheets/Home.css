@@ -1,58 +1,31 @@
 .Home {
-    /*
-    display: flex;
-    flex-direction: column;
-    max-height: 1000px;
-    width: 100vw;
-    */
-}
-
-.Logo {
-    /* This positioning needs to be changed for mobile. will do when we
-       have an actual logo */
-    position: relative;
-    transform: rotate(-10deg);
-    -webkit-transform: rotate(-10deg); 
-    -moz-transform: rotate(-10deg);
-    color: black;
     justify-content: center;
-    margin-left: 195px;
-    z-index: 1; 
-    font-size: 275%;
+    flex-direction: column;
 }
 
 .ImageCarousel {
-    justify-content: center;
-    height: 600px;
-    margin: 10px 10px 10px 10px;
+    height: 400px;
 }
 
 .MissionHeader {
-    justify-content: left;
-    padding-top: 100px; 
-    margin-top: 650px;
-    margin-left: 225px;
+    font-family: 'Varela Round';
+    margin: 40px 10px 10px 50px;
+    color: #000b91;
+    font-size: calc(16px + (32 - 16) * ((100vw - 300px) / (1300)));
+    line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)));
 }
 
 .MissionStatement {
-    position: relative;
-    display: inline-block;
-    justify-content: left;
-    text-align: left;
-    margin-top: 10px;
-    margin-left: 250px;
-    margin-right: 250px;
-    margin-bottom: 30px;
-    padding-bottom: 30px;
+    font-family: 'Nunito';
+    margin: 40px 20px 10px 50px;
+    word-wrap: break-word;
+    justify-content: center;
+    color: #000b91;
+    font-size: calc(14px + (28 - 14) * ((100vw - 300px) / (1300)));
+    line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)));
 }
 
 .DonateButton {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #a6fcd4;
-    margin-top: -200px;
-    margin-left: 20px;
-    margin-bottom: 50px;
+    background-color: '#a8efae';
+    margin: 10px 10px 20px 10px;
 }
