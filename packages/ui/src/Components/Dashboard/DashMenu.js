@@ -41,6 +41,15 @@ export default class DashMenu extends Component {
             >
               View Upcoming Events
             </Menu.Item>
+            <Menu.Item
+              name="editCalendarFAQ"
+              as={NavLink}
+              active={activeItem === 'editCalendarFAQ'}
+              onClick={this.handleItemClick}
+              to={'/EditCalendarFAQ'}
+            >
+              Edit Calendar FAQ
+            </Menu.Item>
           </Menu.Menu>
           <Menu.Item
             name="volunteerList"
@@ -50,6 +59,15 @@ export default class DashMenu extends Component {
             to={'/VolunteerList'}
           >
             Volunteer List
+          </Menu.Item>
+          <Menu.Item
+            name="editContent"
+            as={NavLink}
+            active={activeItem === 'editContent'}
+            onClick={this.handleItemClick}
+            to={'/EditContent'}
+          >
+            Edit Website Content
           </Menu.Item>
           <Menu.Item name="Images">Images</Menu.Item>
           <Menu.Menu>
