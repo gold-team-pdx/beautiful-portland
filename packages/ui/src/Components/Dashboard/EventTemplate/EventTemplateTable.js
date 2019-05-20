@@ -5,6 +5,7 @@ import dompurify from 'dompurify'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import Axios from 'axios'
+import '../../Stylesheets/EventTemplate.css'
 
 export default class EventTemplateTable extends Component {
   constructor() {
@@ -12,12 +13,29 @@ export default class EventTemplateTable extends Component {
     this.state = {
       data: [],
       name: '',
-      max_signups: 0,
-      min_servings: 0,
-      min_vegan: 0,
+      max_signups: '',
+      min_servings: '',
+      min_vegan: '',
       food: true,
       location: '',
-      max_servings: 0
+      max_servings: 0,
+      errors: {
+        location: '',
+        max_servings: '',
+        name: '',
+        max_signups : '',
+        min_servings : '',
+        min_vegan : ''
+      },
+      locationValid: false,
+      nameValid: false,
+      max_servingsValid: false,
+      max_signupsValid: false,
+      min_servingsValid: false,
+      min_veganValid: false,
+      formValid: false,
+      categoryToDelete:'',
+      open: false
     }
   }
 
@@ -39,6 +57,11 @@ export default class EventTemplateTable extends Component {
 	    .catch(err => {
 	      console.log(err, 'Error Retrieving Template Information')
 	    })
+  }
+  
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
+    this.validateField(e.target.name, e.target.value)
   }
 
   handleChange = event => {
@@ -96,7 +119,7 @@ export default class EventTemplateTable extends Component {
     let sanitizer = dompurify.sanitize
     return (
       <div
-        style={{ backgroundColor: '#fafafa' }}
+        style={{ backgroundColor: '#fafafa', textAlign: 'center'}}
         contentEditable
         suppressContentEditableWarning
         onBlur={e => {
@@ -105,11 +128,89 @@ export default class EventTemplateTable extends Component {
           this.setState({ data })
         }}
         dangerouslySetInnerHTML={{
-          __html: sanitizer(this.state.data[cellInfo.index][cellInfo.column.id])
+          __html: sanitizer(this.state.data[cellInfo.index][cellInfo.column.id].toString())
         }}
       />
     ) 
   }
+
+  validateField(fieldName, value) {
+    console.log(fieldName + ' ' + value)
+    let errors = this.state.errors
+    let locationValid = this.state.locationValid
+    let nameValid = this.state.nameValid
+    let timeValid = this.state.timeValid
+    let max_servingsValid = this.state.max_servingsValid
+    let max_signupsValid = this.state.max_signupsValid
+    let min_servingsValid = this.state.min_servingsValid
+    let min_veganValid = this.state.min_veganValid
+
+    switch (fieldName) {
+    case 'location':
+      locationValid = value.length > 5
+      errors.location = locationValid ? '' : ' ✗ Please enter a valid location'
+      break
+    case 'name':
+      nameValid = value.length > 2
+      errors.name = nameValid ? '' : ' ✗ Please enter a valid name.'
+      break
+    case 'time':
+      timeValid = value
+      errors.time = timeValid ? '' : ' ✗ Please enter a valid time (HH:MM AM or PM).'
+      break
+    case 'max_servings':
+      max_servingsValid = value > 0
+      errors.max_servings = max_servingsValid ? '' : ' ✗ Please enter a valid number for the max servings.'
+      break
+    case 'max_signups':
+      max_signupsValid = value > 0
+      errors.max_signups = max_signupsValid ? '' : ' ✗ Please enter max signups'
+      break
+    case 'min_servings':
+      min_servingsValid = value > 0 
+      errors.min_servings = min_servingsValid ? '' : ' ✗ Please enter a valid number between 0~' + this.props.max_servings + '.'
+      break
+    case 'min_vegan':
+      min_veganValid = value < this.state.max_servings/3
+      errors.min_vegan = min_veganValid ? '' : ' ✗ Please enter min vegan.'
+      break
+    default:
+      break
+    }
+
+    this.setState(
+      {
+        errors,
+        locationValid,
+        nameValid,
+        timeValid,
+        max_servingsValid,
+        max_signupsValid,
+        min_servingsValid,
+        min_veganValid,
+      },
+      this.validateForm
+    )
+  }
+
+  validateForm() {
+    this.setState({
+      formValid:
+      this.state.nameValid &&
+      this.state.max_signupsValid &&
+      this.state.min_servingsValid &&
+      this.state.min_veganValid
+    })
+  }
+
+  errorClass(error) {
+    return error.length === 0 ? '' : 'has-error'
+  }
+
+  show = () => this.setState({ open: true })
+  handleConfirm = () => this.setState({ open: false })
+  handleCancel = () => this.setState({ open: false })
+
 
   render() {
     const { data } = this.state
@@ -118,41 +219,60 @@ export default class EventTemplateTable extends Component {
       { key: 'f', text: 'FALSE', value: 'false' }
     ]
     return (
-      <div className="App">
+      <div>
         <Form onSubmit={() => this.handleSubmit()}>
-          <Header as="h2">Edit Event Template</Header>
+          <Header as="h2">Edit Master Event Template</Header>
           <Form.Group>
-            <Form.Input
-              type="text"
-              name="name"
-              placeholder="type"
-              value={this.state.name}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              type="text"
-              name="max_signups"
-              placeholder="Max Signups"
-              value={this.state.max_signups}
-              onChange={this.handleChange}
-            />
-            
-            <Form.Input
-              type="text"
-              name="min_servings"
-              placeholder="Minimum servings"
-              value={this.state.min_servings}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              type="text"
-              name="min_vegan"
-              placeholder="Minimum Vegan"
-              value={this.state.min_vegan}
-              onChange={this.handleChange}
-            />
+            <div className={`input-wrapper ${this.errorClass(this.state.errors.name)}`}>
+              <Form.Input
+                type="text"
+                name="name"
+                placeholder="type"
+                value={this.state.name}
+                onChange={this.onChange}
+              />
+              <div>
+                <span>{this.state.errors.name || ' ✓'}</span>
+              </div>
+            </div>
+            <div className={`input-wrapper ${this.errorClass(this.state.errors.max_signups)}`}>
+              <Form.Input
+                type="text"
+                name="max_signups"
+                placeholder="Max Signups"
+                value={this.state.max_signups}
+                onChange={this.onChange}
+              />
+              <div>
+                <span>{this.state.errors.max_signups || ' ✓'}</span>
+              </div>
+            </div>
+            <div className={`input-wrapper ${this.errorClass(this.state.errors.min_servings)}`}>
+              <Form.Input
+                type="text"
+                name="min_servings"
+                placeholder="Minimum servings"
+                value={this.state.min_servings}
+                onChange={this.onChange}
+              />
+              <div>
+                <span>{this.state.errors.min_servings || ' ✓'}</span>
+              </div>
+            </div>
+            <div className={`input-wrapper ${this.errorClass(this.state.errors.min_vegan)}`}>
+              <Form.Input
+                type="text"
+                name="min_vegan"
+                placeholder="Minimum Vegan"
+                value={this.state.min_vegan}
+                onChange={this.onChange}
+              />
+              <div>
+                <span>{this.state.errors.min_vegan || ' ✓'}</span>
+              </div>
+            </div>
             <Form.Select fluid options={options} placeholder='Food' />
-            <Form.Input type="submit" value="Add" />
+            <Form.Input type="submit" value="Add" disabled={!this.state.formValid}/>
           </Form.Group>
         </Form>
         <div>
@@ -194,7 +314,7 @@ export default class EventTemplateTable extends Component {
                       console.log(this.state.data[row.index].name)
                       this.deleteEvent(this.state.data[row.index].name)
                       data.splice(row.index, 1)
-                      this.setState({data})
+                      this.setState({data})  
                     }}/>
                 ) 
               }
@@ -205,22 +325,33 @@ export default class EventTemplateTable extends Component {
         </div>
         <Form style={{marginTop: '2%'}}>  
           <Form.Group>
-            <Form.Input
-              type="text"
-              name="location"
-              placeholder="Event Location"
-              value={this.state.location}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              type="text"
-              name="max_servings"
-              placeholder="Max Servings"
-              value={this.state.max_servings}
-              onChange={this.handleChange}
-            />
-            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state)}}>SUBMIT</Button>
+            <div className={`input-wrapper ${this.errorClass(this.state.errors.location)}`}>
+              <Form.Input
+                type="text"
+                name="location"
+                placeholder="Event Location"
+                value={this.state.location}
+                onChange={this.onChange}
+              />
+              <div>
+                <span>{this.state.errors.location || ' ✓'}</span>
+              </div>
+            </div>
+            <div className={`input-wrapper ${this.errorClass(this.state.errors.max_servings)}`}>
+              <Form.Input
+                type="text"
+                name="max_servings"
+                placeholder="Max Servings"
+                value={this.state.max_servings}
+                onChange={this.onChange}
+              />
+              <div>
+                <span>{this.state.errors.max_servings || ' ✓'}</span>
+              </div>
+            </div>
+            
           </Form.Group>
+          <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state)}}>Update</Button>
         </Form>
         
       </div>

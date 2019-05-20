@@ -672,12 +672,13 @@ editEventTemplate = function (req, res) {
   let client = this.dbClient
   let categories = []
   req.body.data.forEach((category) => {
+    var isFood = category.food === 'true' ? true : false
     categories.push(
       {
         'name': category.name,
         'max_signups': parseInt(category.max_signups,10),
         'min_servings': parseInt(category.min_servings,10),
-        'food': category.food == 'true' ? true : false,
+        'food': isFood,
         'min_vegan': parseInt(category.min_vegan,10)
       }
     )
