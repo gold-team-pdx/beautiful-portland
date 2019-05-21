@@ -213,11 +213,11 @@ eventCalendar = function(req, res) {
 }
 
 displayStory = function(req, res) {
-  console.log('publish page ' + req.query.page)
-  let skips = (req.query.page - 1) * 5
+  let skips = (req.query.page - 1) * 12
   let client = this.dbClient
   collection = client.db('stories_example1').collection('published')
-  collection.find().sort({ _id: -1 }).skip(skips).limit(6).toArray((err, docs) => {
+  console.log('publish page ' + req.query.page)
+  collection.find().sort({ _id: -1 }).skip(skips).limit(12).toArray((err, docs) => {
     if (err) {
       console.log(err, 'Error trying to find published Stories')
       res.send({
@@ -247,6 +247,20 @@ displayStory = function(req, res) {
       status: 'SUCCESS',
       published_info: JSON.stringify(response_data)
     })
+  })
+}
+
+countStory = async function(req, res) {
+  let client = this.dbClient
+  collection = client.db('stories_example1').collection('published')
+  var countObj = new Object()
+  countObj.publishCount = await collection.countDocuments({})
+  let response_data = []
+  response_data.push(countObj)
+  console.log(response_data)
+  res.send({
+    status: 'SUCESS',
+    count_info: JSON.stringify(response_data)
   })
 }
 
@@ -370,6 +384,7 @@ module.exports.volunteerFormGetEventInfo = volunteerFormGetEventInfo
 module.exports.eventCalendar = eventCalendar
 module.exports.getImageForStory = getImageForStory
 module.exports.displayStory = displayStory
+module.exports.countStory = countStory
 module.exports.getOneStory = getOneStory
 module.exports.getContent = getContent
 module.exports.getCalendarFAQ = getCalendarFAQ

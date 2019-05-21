@@ -8,6 +8,7 @@ import PublishStories4 from './PublishStories4'
 import Axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
+import { Grid } from 'semantic-ui-react'
 
 export default class Home extends Component {
   constructor(props) {
@@ -16,47 +17,37 @@ export default class Home extends Component {
     this.state = {
       publishStory: [],
       version: '1',
-      page: 1,
-      pageCount: 1,
-      maxPage: 1,
-
       activePage: 1,
+      pageCount: 1,
+      totalPages: 1,
       boundaryRange: 1,
       siblingRange: 1,
-      totalPages: 50,
     }
   }
 
-  // componentDidMount = async () => {
-  //   Axios.get('/api/displayStory')
-  //     .then(res => {
-  //       let tempPubStory = JSON.parse(res.data.published_info)
-  //       console.log(tempPubStory)
-  //       this.setState({
-  //         publishStory : tempPubStory
-  //       })
-  //     })
-  // }
-
-	handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
+	handlePaginationChange = async (e, { activePage }) => {
+	  await this.setState({ activePage })
+	  this.componentDidMount()
+	}
 
 	componentDidMount = async () => {
-	  Axios.get('/api/StoriesCount')
+	  Axios.get('/api/countStory')
 	    .then(async(res) => {
 	      let tempCount = JSON.parse(res.data.count_info)
-	      await this.setState({count: tempCount[0].publishCount})
-	      await this.setState({pageMax: Math.ceil(this.state.count/5)})
+	      await this.setState({pageCount: tempCount[0].publishCount})
+	      await this.setState({totalPages: Math.ceil(this.state.pageCount/12)})
 	      console.log(res)
+	      console.log(this.state)
 	    })
 
-	  if(!(((this.state.publishCount) / this.state.publishPage * 5) < 1)) {
+	  if(!(((this.state.publishCount) / this.state.publishPage * 12) < 1)) {
 	    this.getStory()
 	  }
 	}
 
   getStory = () => {
     Axios.get('/api/displayStory', {
-      params: { page: this.state.page }
+      params: { page: this.state.activePage }
     })
       .then(res => {
         if(res.data.status !== 'FAILURE') {
@@ -119,18 +110,21 @@ export default class Home extends Component {
 
 	        <br/>
 	        <div>
-	          <Pagination
-	            activePage={activePage}
-	            ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-	            firstItem={{ content: <Icon name='angle double left' />, icon: true }}
-	            lastItem={{ content: <Icon name='angle double right' />, icon: true }}
-	            prevItem={{ content: <Icon name='angle left' />, icon: true }}
-	            nextItem={{ content: <Icon name='angle right' />, icon: true }}
-	            boundaryRange={boundaryRange}
-	            onPageChange={this.handlePaginationChange}
-	            siblingRange={siblingRange}
-	            totalPages={totalPages}
-	          />
+	          <p style={{color:'white'}}>totalPages: {totalPages}, activePage: {activePage}</p>
+	          <Grid centered>
+	            <Pagination
+	              activePage={activePage}
+	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
+	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
+	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
+	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
+	              boundaryRange={boundaryRange}
+	              onPageChange={this.handlePaginationChange}
+	              siblingRange={siblingRange}
+	              totalPages={totalPages}
+	            />
+	          </Grid>
 	        </div>
 	      </div>
 	    )
@@ -156,8 +150,21 @@ export default class Home extends Component {
 	        </div>
 
 	        <br/>
-	        <div style={{margin: 'auto'}}>
-	          <Pagination/>
+	        <div>
+	          <Grid centered>
+	            <Pagination
+	              activePage={activePage}
+	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
+	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
+	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
+	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
+	              boundaryRange={boundaryRange}
+	              onPageChange={this.handlePaginationChange}
+	              siblingRange={siblingRange}
+	              totalPages={totalPages}
+	            />
+	          </Grid>
 	        </div>
 	      </div>
 	    )
@@ -183,8 +190,21 @@ export default class Home extends Component {
 	        </div>
 
 	        <br/>
-	        <div style={{margin: 'auto'}}>
-	          <Pagination/>
+	        <div>
+	          <Grid centered>
+	            <Pagination
+	              activePage={activePage}
+	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
+	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
+	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
+	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
+	              boundaryRange={boundaryRange}
+	              onPageChange={this.handlePaginationChange}
+	              siblingRange={siblingRange}
+	              totalPages={totalPages}
+	            />
+	          </Grid>
 	        </div>
 	      </div>
 	    )
@@ -209,6 +229,22 @@ export default class Home extends Component {
 	          })}
 	        </div>
 	        <br/>
+	        <div>
+	          <Grid centered>
+	            <Pagination
+	              activePage={activePage}
+	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
+	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
+	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
+	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
+	              boundaryRange={boundaryRange}
+	              onPageChange={this.handlePaginationChange}
+	              siblingRange={siblingRange}
+	              totalPages={totalPages}
+	            />
+	          </Grid>
+	        </div>
 	      </div>
 	    )
 	  }
