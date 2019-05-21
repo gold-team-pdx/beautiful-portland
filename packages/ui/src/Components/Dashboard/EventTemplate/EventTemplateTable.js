@@ -64,23 +64,6 @@ export default class EventTemplateTable extends Component {
     this.validateField(e.target.name, e.target.value)
   }
 
-  handleChange = event => {
-    if (event.target.name === 'name') 
-      this.setState({name: event.target.value})  
-    if (event.target.name === 'max_signups')
-      this.setState({max_signups: event.target.value})
-    if (event.target.name === 'min_servings')
-      this.setState({min_servings: event.target.value})
-    if (event.target.name === 'min_vegan')
-      this.setState({min_vegan: event.target.value})
-    if (event.target.name === 'food')
-      this.setState({food: event.target.value})
-    if (event.target.name === 'location')
-      this.setState({location: event.target.value})
-    if (event.target.name === 'max_servings')
-      this.setState({max_servings: event.target.value})
-  }
-  
   handleSubmit = async (event) => {
     const { name, max_signups, min_servings, min_vegan, food, data} = this.state
     var nameObj = {'name': name, 'max_signups': parseInt(max_signups,10), 'min_servings' : Number(min_servings), 'min_vegan': Number(min_vegan), 'food': food}
@@ -135,7 +118,6 @@ export default class EventTemplateTable extends Component {
   }
 
   validateField(fieldName, value) {
-    console.log(fieldName + ' ' + value)
     let errors = this.state.errors
     let locationValid = this.state.locationValid
     let nameValid = this.state.nameValid
@@ -206,11 +188,6 @@ export default class EventTemplateTable extends Component {
   errorClass(error) {
     return error.length === 0 ? '' : 'has-error'
   }
-
-  show = () => this.setState({ open: true })
-  handleConfirm = () => this.setState({ open: false })
-  handleCancel = () => this.setState({ open: false })
-
 
   render() {
     const { data } = this.state
