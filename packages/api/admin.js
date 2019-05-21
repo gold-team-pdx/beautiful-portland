@@ -672,7 +672,8 @@ editEventTemplate = function (req, res) {
   let client = this.dbClient
   let categories = []
   req.body.data.forEach((category) => {
-    var isFood = category.food === 'true' ? true : false
+    console.log(category.food)
+    var isFood = category.food.toString() === 'true' ? true : false
     categories.push(
       {
         'name': category.name,

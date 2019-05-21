@@ -354,8 +354,7 @@ export default class EventTemplateTable extends Component {
           <Modal trigger={
             <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state)}} disabled={!(this.state.location && this.state.max_servings)}>Update</Button> }>
             <Modal.Header>Edit Master Event Template</Modal.Header>
-            <Modal.Content>
-                
+            <Modal.Content>  
               <Modal.Description>
                 <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
               </Modal.Description>
