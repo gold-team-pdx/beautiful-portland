@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Button, Header, Modal, Icon } from 'semantic-ui-react'
+import { Form, Button, Header, Modal } from 'semantic-ui-react'
 import dompurify from 'dompurify'
 // Import React Table
 import ReactTable from 'react-table'
@@ -16,7 +16,7 @@ export default class EventTemplateTable extends Component {
       max_signups: '',
       min_servings: '',
       min_vegan: '',
-      food: true,
+      food: '',
       location: '',
       max_servings: 0,
       errors: {
@@ -34,6 +34,8 @@ export default class EventTemplateTable extends Component {
       min_servingsValid: false,
       min_veganValid: false,
       formValid: false,
+      submitValid: true,
+      blockSubmission: false,
       categoryToDelete:'',
       open: false
     }
@@ -42,12 +44,7 @@ export default class EventTemplateTable extends Component {
   async componentDidMount() {
 	  Axios.get('/api/getEventTemplate')
 	    .then(res => {
-	      // console.log(res.data)
-	      // console.log(res.data.event_info)
-	      // console.log(res.data.location)
-	      // console.log(res.data.time)
 	      let tempEvent_info = JSON.parse(res.data.event_info)
-	      console.log(tempEvent_info)
 	      this.setState({
 	        data: tempEvent_info,
 	        location: res.data.location,
@@ -69,20 +66,21 @@ export default class EventTemplateTable extends Component {
     var nameObj = {'name': name, 'max_signups': parseInt(max_signups,10), 'min_servings' : Number(min_servings), 'min_vegan': Number(min_vegan), 'food': food}
     data.push(nameObj)
     this.setState({ data })
-    
-    /*await this.setState({ data: data })*/
-    console.log(data)
   }
 
-  onSubmitTemplate = data => {
-	  console.log(data)
+  onSubmitTemplate = (data, submitValid) => {
+    if(!submitValid){
+      this.setState({blockSubmission: true})
+    } else {
+      this.setState({blockSubmission: false})
 	  Axios.post('/api/editEventTemplate', data)
 	    .then(response => {
-	      console.log(response, 'Template Submitted')
+	      console.log('Template Submitted')
 	    })
 	    .catch(err => {
 	      console.log(err, 'Try again.')
-	    })
+        })
+    }
   }
 
   deleteEvent = (event) => {
@@ -90,7 +88,7 @@ export default class EventTemplateTable extends Component {
     console.log(deletedEventTemplate)
     Axios.post('/api/deleteEventTemplate', deletedEventTemplate)
       .then((response) => {
-        console.log(response, 'Deleted Event ' + event)
+        console.log('Deleted Event ')
       })
       .catch((err) => {
         console.log(err, 'Try again.')
@@ -189,12 +187,18 @@ export default class EventTemplateTable extends Component {
     return error.length === 0 ? '' : 'has-error'
   }
 
+  onDropdownChange = (e, data) => {
+    const {name, value} = data
+    this.setState({ [name]: value })
+  }
+
   render() {
     const { data } = this.state
     var options = [
-      { key: 't', text: 'TRUE', value: 'true' },
-      { key: 'f', text: 'FALSE', value: 'false' }
+      { key: 't', text: 'true', value: 'true' },
+      { key: 'f', text: 'false', value: 'false' }
     ]
+    let submitValid = this.state.submitValid
     return (
       <div>
         <Form onSubmit={() => this.handleSubmit()}>
@@ -248,7 +252,12 @@ export default class EventTemplateTable extends Component {
                 <span>{this.state.errors.min_vegan || ' ✓'}</span>
               </div>
             </div>
-            <Form.Select fluid options={options} placeholder='Food' />
+            
+            <Form.Select  
+              name="food"
+              placeholder="Food"
+              onChange={this.onDropdownChange} 
+              options={options}/>
             <Form.Input type="submit" value="Add" disabled={!this.state.formValid}/>
           </Form.Group>
         </Form>
@@ -259,27 +268,98 @@ export default class EventTemplateTable extends Component {
               {
                 Header: 'Name',
                 accessor: 'name',
-                Cell: this.renderEditable
+                Cell: this.renderEditable,
+                getProps: (state, rowInfo, column) => {
+                  if(!rowInfo){
+                    return {} 
+                  } else {
+                    let nameError = rowInfo.row.name.length < 2
+                    if(nameError) 
+                      submitValid = false
+                    return {
+                      style: {
+                        color: nameError ? 'red' : null,
+                      }
+                    }
+                  }
+                }
               },
               {
                 Header: 'Maximum # Signups',
                 accessor: 'max_signups',
-                Cell: this.renderEditable
+                Cell: this.renderEditable,
+                getProps: (state, rowInfo, column) => {
+                  if(!rowInfo){
+                    return {} 
+                  } else {
+                    let signupError = rowInfo.row.max_signups < 1 || isNaN(rowInfo.row.max_signups)
+                    if(signupError) 
+                      submitValid = false
+                    return {
+                      style: {
+                        color: signupError ? 'red' : null,
+                      }
+                    }
+                  }
+                }
               },
               {
                 Header: 'Minimum # Servings',
                 accessor: 'min_servings',
-                Cell: this.renderEditable
+                Cell: this.renderEditable,
+                getProps: (state, rowInfo, column) => {
+                  if(!rowInfo){
+                    return {} 
+                  } else {
+                    let servingsError = rowInfo.row.min_servings < 1 || isNaN(rowInfo.row.min_servings)
+                    if(servingsError) 
+                      submitValid = false
+                    return {
+                      style: {
+                        color: servingsError ? 'red' : null,
+                      }
+                    }
+                  }
+                }
               },
               {
                 Header: 'Minimum # Vegan',
                 accessor: 'min_vegan',
-                Cell: this.renderEditable
+                Cell: this.renderEditable,
+                getProps: (state, rowInfo, column) => {
+                  if(!rowInfo){
+                    return {} 
+                  } else {
+                    let veganError = rowInfo.row.min_vegan < 0 || isNaN(rowInfo.row.min_vegan)
+                    if(veganError) 
+                      submitValid = false
+                    return {
+                      style: {
+                        color: veganError ? 'red' : null,
+                      }
+                    }
+                  }
+                }
               },
               {
                 Header: 'Food',
                 accessor: 'food',
-                Cell: this.renderEditable
+                Cell: this.renderEditable,
+                getProps: (state, rowInfo, column) => {
+                  if(!rowInfo){
+                    return {} 
+                  } else {
+                    let checkFood = rowInfo.row.food === 'true' ? true : false
+                    let foodError = checkFood !== true && checkFood !== false
+                    if(foodError) 
+                      submitValid = false
+                    return {
+                      style: {
+                        color: foodError ? 'red' : null,
+                      }
+                    }
+                  }
+                }
               },
               {
                 Header: 'Remove',
@@ -288,7 +368,6 @@ export default class EventTemplateTable extends Component {
                   <Button color="red" size="tiny" icon="remove" 
                     onClick={() => {
                       let data = this.state.data
-                      console.log(this.state.data[row.index].name)
                       this.deleteEvent(this.state.data[row.index].name)
                       data.splice(row.index, 1)
                       this.setState({data})  
@@ -329,11 +408,15 @@ export default class EventTemplateTable extends Component {
             
           </Form.Group>
           <Modal trigger={
-            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state)}} disabled={!(this.state.location && this.state.max_servings)}>Update</Button> }>
+            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state,submitValid)}} disabled={(!(this.state.location && this.state.max_servings)) || !submitValid}>Update</Button> }>
             <Modal.Header>Edit Master Event Template</Modal.Header>
             <Modal.Content>  
               <Modal.Description>
-                <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
+                {
+                  this.state.blockSubmission ?
+                    <Header color="red" as="h1">There are errors in your event template. Your template was not submitted</Header>
+                    : <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
+                }
               </Modal.Description>
             </Modal.Content>
           </Modal>
