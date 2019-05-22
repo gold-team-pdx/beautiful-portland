@@ -44,7 +44,8 @@ export default class ViewAllImages extends Component {
           urls = res.data
           let imagesToDisplay = []
           urls.forEach(url => {
-            let fileName = url.split('/').pop().split('?')[0].toString().split('%2').join('')
+            let fileName = url.split('/').pop().split('?')[0].toString()
+            fileName = decodeURI(fileName)
             let location = 'All Photos'
             if(url.indexOf('/frontPage') !== -1){
               location = 'Front Page Photos'

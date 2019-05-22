@@ -41,7 +41,6 @@ export default class EditCarouselImages extends Component {
 
     // Initialize images to display
     initializeImages = () => {
-      console.log('initializeImages')
       let urls = []
       Axios.get('/api/getImages/', {
         params: {
@@ -51,7 +50,6 @@ export default class EditCarouselImages extends Component {
       })
         .then((res) => {
           urls = res.data
-          console.log(urls)
           let imagesToDisplay = []
           urls.forEach(url => {
             let newImage = {
@@ -72,7 +70,6 @@ export default class EditCarouselImages extends Component {
 
     // Initialize images not on front page
     initializeNotFrontImages = () => {
-      console.log('initializeNotImages')
       Axios.get('/api/getImages/', {
         params: {
           isFrontPage: true,

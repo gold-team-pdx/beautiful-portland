@@ -251,7 +251,7 @@ addPhotos = function(req, res) {
 
 // Removes multiple photos from s3 bucket using filesnames from urls.
 // Does not return anything, but console.logs success/failure
-removePhotos = function(req, res) {
+removeImageFromBucket = function(req, res) {
   let AWS = this.amazon
   const s3 = new AWS.S3({
     endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
@@ -265,13 +265,14 @@ removePhotos = function(req, res) {
   let files = []
   urls.forEach((url) => {
     let file = url.split('/').pop().split('?').splice(0, 1).toString()
-    if ( url.indexOf('/frontPage') !== -1) {
-      files.push({ Key: '/frontPage/' + file })
+    file = decodeURI(file)
+    if ( url.indexOf('frontPage/') !== -1) {
+      files.push({ Key: 'frontPage/' + file })
     } else {
       files.push({ Key: file })
     }
-    console.log(key)
   })
+  console.log(files)
   //const url = req.body.urlToRemove
   const params = {
     Bucket: bucket,
@@ -313,7 +314,7 @@ removeImagesFromFrontPage = function(req, res) {
   const urls = req.body.urlsToRemove
   urls.forEach((url) => {
     let newFile = url.split('/').pop().split('?').splice(0, 1).toString()
-    // push old file to array to remove later
+    newFile = decodeURI(newFile)
     let file = 'frontPage/' + newFile
     const params = {
       Bucket: bucket,
@@ -912,7 +913,7 @@ deleteCalendarFAQ = function(req, res) {
 }
 
 module.exports.addPhotos = addPhotos
-module.exports.removePhotos = removePhotos
+module.exports.removeImageFromBucket = removeImageFromBucket
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
 module.exports.addFromUploaded = addFromUploaded
 module.exports.addImageIntoStories = addImageIntoStories

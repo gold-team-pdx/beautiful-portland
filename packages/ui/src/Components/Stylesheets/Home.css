@@ -5,6 +5,7 @@
 
 .ImageCarousel {
     height: 400px;
+    margin-top: -15px;
 }
 
 .MissionHeader {
@@ -25,5 +26,6 @@
 
 .DonateButton {
     background-color: '#a8efae';
-    margin: 10px 10px 20px 10px;
+    margin: 0px 0px 20px 0px;
+    width: 100%
 }
