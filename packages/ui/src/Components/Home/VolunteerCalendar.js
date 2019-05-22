@@ -12,8 +12,7 @@ moment.locale('en-GB')
 const localizer = BigCalendar.momentLocalizer(moment)
 // Sitewide Text Styles
 const headerStyles = {
-  fontFamily: 'Nunito',
-  color: '#000b91', 
+  fontFamily: 'Quicksand',
   fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
 }
@@ -73,7 +72,7 @@ export default class VolunteerCalendar extends Component {
               <Modal
                 trigger={
                   <Button style={{backgroundColor:'#a8efae'}} size='huge'>
-                    Volunteering Frequently Asked Questions
+                    <p style={{color: '#FFF'}}>Volunteering Frequently Asked Questions</p>
                   </Button>
                 }
               >

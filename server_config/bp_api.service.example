@@ -1,0 +1,26 @@
+// example of what your systemd .service file should look like for running the api
+// replace environment variables with real values
+
+[Unit]
+Description=Beautiful Portland API - api for the Beautiful Portland website
+Documentation=https://github.com/gold-team-pdx/beautiful-portland
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+Environment=UI_SERVER=webserver.hostname
+Environment=S3_BUCKET=s3.bucketname
+Environment=S3_ACCESS_KEY=f@k3k3y
+Environment=S3_SECRET_ACCESS_KEY=f@k3s3cr3t
+Environment=MONGODB_URL=mongodb.hostname
+Environment=GOOGLE_CLIENT_ID=google_id
+Environment=GOOGLE_CLIENT_SECRET=google_secret
+Environment=GOOGLE_CALLBACK_URL=/auth/google/callback
+Environment=ADMIN_ACCOUNT=youradminaccount@gmail.com
+Type=simple
+User=ubuntu
+ExecStart=/usr/bin/node /home/ubuntu/www/bp/api/server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

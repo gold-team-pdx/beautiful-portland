@@ -6,8 +6,8 @@ import 'semantic-ui-css/semantic.min.css'
 
 const buttonStyles = {
   fontWeight: 1000, 
-  color: '#000b91', 
-  fontFamily: 'Varela Round',
+  color: '#FFFFFF', 
+  fontFamily: 'Quicksand',
   textWrap: 'break-word',
   fontSize: 'calc(18px + (24 - 18) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
@@ -22,7 +22,7 @@ export default class Header extends Component {
 
     return (
       <Menu
-        borderless='true'
+        borderless="true"
         size="large"
         widths={5}
         style={{
