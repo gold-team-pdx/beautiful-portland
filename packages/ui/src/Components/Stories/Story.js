@@ -3,7 +3,6 @@ import { Header, Modal, Image, Container, Icon } from 'semantic-ui-react'
 import Moment from 'moment'
 import Axios from 'axios'
 import '../Stylesheets/PublishStories.css'
-import { Dropdown } from 'semantic-ui-react'
 
 // Sitewide Text Styles
 const paragraphStyles = {
@@ -12,13 +11,6 @@ const paragraphStyles = {
   fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 } 
-
-const headerStyles = {
-  fontFamily: 'Nunito',
-  color: '#000b91', 
-  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
-  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
-}
 
 const dropdownStyles = {
   fontFamily: 'Nunito', 

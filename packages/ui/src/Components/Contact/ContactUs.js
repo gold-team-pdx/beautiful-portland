@@ -6,7 +6,7 @@ import HomeLayout from '../Layouts/HomeLayout'
 // Sitewide Text Styles
 const paragraphStyles = {
   fontFamily: 'Nunito',
-  color: '#000b91', 
+  color: 'black', 
   fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 } 

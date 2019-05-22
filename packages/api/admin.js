@@ -245,7 +245,7 @@ addPhotos = function(req, res) {
   s3.upload(params, function(s3Err, data) {
     if (s3Err) throw s3Err
     console.log('File uploaded successfully')
-    res.send('upload successful')
+    res.end('upload successful')
   })
 }
 
@@ -265,11 +265,12 @@ removePhotos = function(req, res) {
   let files = []
   urls.forEach((url) => {
     let file = url.split('/').pop().split('?').splice(0, 1).toString()
-    if (req.body.isFrontPage === true) {
+    if ( url.indexOf('/frontPage') !== -1) {
       files.push({ Key: '/frontPage/' + file })
     } else {
       files.push({ Key: file })
     }
+    console.log(key)
   })
   //const url = req.body.urlToRemove
   const params = {
@@ -283,12 +284,15 @@ removePhotos = function(req, res) {
     console.log('File Found in S3')
     try {
       s3.deleteObjects(params).promise()
-      console.log('file deleted Successfully')
+      console.log('file deleted successfully')
+      res.end('File deleted successfully')
     } catch (err) {
       console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+      res.end('Error in deleting')
     }
   } catch (err) {
     console.log('File not Found ERROR : ' + err.code)
+    res.end('File not found')
   }
 }
 
@@ -330,11 +334,14 @@ removeImagesFromFrontPage = function(req, res) {
         try {
           s3.deleteObject(params2).promise()
           console.log('file deleted Successfully')
+          res.end('File Deleted Successfully')
         } catch (err) {
           console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+          res.end('Error in deleting file')
         }
       } catch (err) {
         console.log('File not Found ERROR : ' + err.code)
+        res.end('File not found')
       }
     })
   })
@@ -362,7 +369,7 @@ addImageIntoStories = function(req, res) {
   s3.upload(params, function(s3Err, data) {
     if (s3Err) throw s3Err
     console.log('File uploaded successfully')
-    res.send('upload successful')
+    res.end('upload successful')
   })
 }
 
@@ -387,11 +394,14 @@ removeImageFromStories = function(req, res) {
     try {
       s3.deleteObject(params).promise()
       console.log('file deleted Successfully')
+      res.end('File deleted successfully!')
     } catch (err) {
       console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+      res.end('Error when deleting file')
     }
   } catch (err) {
     console.log('File not Found ERROR : ' + err.code)
+    res.end('File not found')
   }
 }
 
@@ -434,12 +444,15 @@ addFromUploaded = function(req, res) {
         console.log('File Found in S3')
         try {
           s3.deleteObject(params2).promise()
-          console.log('file deleted Successfully')
+          console.log('File deleted successfully')
+          res.end('File deleted successfully')
         } catch (err) {
           console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+          res.end('Error deleting file')
         }
       } catch (err) {
         console.log('File not Found ERROR : ' + err.code)
+        res.end('File not found')
       }
     })
   })

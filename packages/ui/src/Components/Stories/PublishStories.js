@@ -13,13 +13,6 @@ const paragraphStyles = {
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 } 
 
-const headerStyles = {
-  fontFamily: 'Nunito',
-  color: '#000b91', 
-  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
-  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
-}
-
 const dropdownStyles = {
   fontFamily: 'Nunito', 
   color: '#000b91', 

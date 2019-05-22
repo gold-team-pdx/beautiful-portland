@@ -88,7 +88,6 @@ export default class EditCarouselImages extends Component {
             })
           }
           else {
-            console.log(urls)
             urls.forEach(url => {
               let newImage = {
                 imageUrl: url,
@@ -125,7 +124,7 @@ export default class EditCarouselImages extends Component {
       let tempImages = [...this.state.imagesNotOnFrontPage]
       let index = tempImages.indexOf(item)
       let isClicked = tempImages[index].checked 
-      isClicked = isClicked ? false : true
+      isClicked = isClicked === true ? false : true
       tempImages[index].checked = isClicked
       this.setState({
         imagesNotOnFrontPage: tempImages
