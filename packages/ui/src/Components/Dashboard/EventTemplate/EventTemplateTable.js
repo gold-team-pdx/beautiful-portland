@@ -349,8 +349,8 @@ export default class EventTemplateTable extends Component {
                   if(!rowInfo){
                     return {} 
                   } else {
-                    let checkFood = rowInfo.row.food === 'true' ? true : false
-                    let foodError = checkFood !== true && checkFood !== false
+                    let checkFood = rowInfo.row.food.toString()
+                    let foodError = checkFood !== 'true' && checkFood !== 'false'
                     if(foodError) 
                       submitValid = false
                     return {
@@ -408,7 +408,7 @@ export default class EventTemplateTable extends Component {
             
           </Form.Group>
           <Modal trigger={
-            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state,submitValid)}} disabled={(!(this.state.location && this.state.max_servings)) || !submitValid}>Update</Button> }>
+            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state,submitValid)}} disabled={(!(this.state.location && this.state.max_servings))}>Update</Button> }>
             <Modal.Header>Edit Master Event Template</Modal.Header>
             <Modal.Content>  
               <Modal.Description>
