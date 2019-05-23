@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Button, Header, Modal, Segment } from 'semantic-ui-react'
+import { Form, Button, Header, Modal } from 'semantic-ui-react'
 import dompurify from 'dompurify'
 // Import React Table
 import ReactTable from 'react-table'
