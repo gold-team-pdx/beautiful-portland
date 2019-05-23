@@ -17,7 +17,6 @@ const Slide = ({ slideNum, image }) => {
         src={image}
         alt='beautiful portland homepage' 
         style={otherImageStyles}></img>
-    
   )
 }
 
