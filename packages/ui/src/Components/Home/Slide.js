@@ -5,7 +5,7 @@ const Slide = ({ slideNum, image }) => {
     opacity: 1,
   }
   const otherImageStyles = {
-    opacity: .0,
+    opacity: .5,
   }
   return (
     slideNum === 1 ? 
