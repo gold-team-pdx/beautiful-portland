@@ -4,15 +4,13 @@ import Axios from 'axios'
 
 // Sitewide Text Styles
 const paragraphStyles = {
-  fontFamily: 'Nunito',
-  color: '#000b91', 
+  fontFamily: 'Quicksand',
   fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 } 
 
 const dropdownStyles = {
-  fontFamily: 'Nunito', 
-  color: '#000b91', 
+  fontFamily: 'Quicksand', 
   fontSize: 'calc(12px + (20 - 12) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 }
