@@ -240,6 +240,8 @@ export default class EventTemplateTable extends Component {
                 <span>{this.state.errors.min_servings || ' ✓'}</span>
               </div>
             </div>
+          </Form.Group>
+          <Form.Group>
             <div className={`input-wrapper ${this.errorClass(this.state.errors.min_vegan)}`}>
               <Form.Input
                 type="text"
@@ -421,7 +423,6 @@ export default class EventTemplateTable extends Component {
             </Modal.Content>
           </Modal>
         </Form>
-        
       </div>
     )
   }
