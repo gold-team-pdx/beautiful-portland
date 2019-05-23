@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Button, Header, Modal } from 'semantic-ui-react'
+import { Form, Button, Header, Modal, Segment } from 'semantic-ui-react'
 import dompurify from 'dompurify'
 // Import React Table
 import ReactTable from 'react-table'
@@ -240,6 +240,8 @@ export default class EventTemplateTable extends Component {
                 <span>{this.state.errors.min_servings || ' ✓'}</span>
               </div>
             </div>
+          </Form.Group>
+          <Form.Group>
             <div className={`input-wrapper ${this.errorClass(this.state.errors.min_vegan)}`}>
               <Form.Input
                 type="text"
@@ -421,7 +423,6 @@ export default class EventTemplateTable extends Component {
             </Modal.Content>
           </Modal>
         </Form>
-        
       </div>
     )
   }
