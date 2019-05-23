@@ -1,2 +1,5 @@
-.About {
+.dropDownContent {
+    font-family: 'Quicksand';
+    font-size: calc(12px + (20 - 12) * ((100vw - 300px) / (1300)));
+    line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)));
 }
