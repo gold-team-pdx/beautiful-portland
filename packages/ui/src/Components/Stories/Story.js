@@ -65,7 +65,7 @@ export default class PublishStories extends Component {
                   <Header.Subheader style={dropdownStyles}><Icon name='calendar'/>Last Edited: {this.state.date}</Header.Subheader>
                 </Header>
                 <Header as='h3' style={paragraphStyles}><i>{this.state.publishStory.hook}</i></Header>
-                <RichTextEditor readOnly style={paragraphStyles} value={RichTextEditor.createValueFromString(this.state.publishStory.content, 'html')} />
+                <RichTextEditor readOnly editorClassName='storyText' value={RichTextEditor.createValueFromString(this.state.publishStory.content, 'html')} />
                 <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
                 <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
                 <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
