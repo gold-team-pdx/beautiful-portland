@@ -21,7 +21,7 @@ export default class Header extends Component {
 
     return (
       <Menu
-        borderless="true"
+        borderless={true}
         size="large"
         widths={5}
         style={{
