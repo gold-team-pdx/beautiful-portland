@@ -124,7 +124,7 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 })
 
 // Image admin functions
-app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.removePhotos.bind({amazon: AWS}))
+app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.removeImageFromBucket.bind({amazon: AWS}))
 app.post('/api/addImagesToBucket', ensureAuthenticated, adminHandlers.addPhotos.bind({amazon: AWS}))
 app.post('/api/removeImagesFromFrontPage', ensureAuthenticated, adminHandlers.removeImagesFromFrontPage.bind({amazon: AWS}))
 app.post('/api/addImageFromUploaded', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))

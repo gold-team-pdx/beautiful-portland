@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button, List, Segment } from 'semantic-ui-react'
+
 class Footer extends Component {
   render() {
     return (

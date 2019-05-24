@@ -21,6 +21,7 @@ getImageForStory = function(req, res) {
     }
   } catch (err) {
     console.log('ERROR could not locate file : ' + JSON.stringify(err))
+    res.end('File not found')
   }
 }
 
