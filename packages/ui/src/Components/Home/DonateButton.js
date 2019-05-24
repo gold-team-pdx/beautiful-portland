@@ -12,7 +12,7 @@ const buttonStyles={
 const DonateButton = () => {
   return (
     <div className='donateButton'>
-      <Button size='massive' fluid style={buttonStyles}>
+      <Button  raised size='massive' fluid style={buttonStyles}>
                 DONATE NOW
       </Button>
     </div>
