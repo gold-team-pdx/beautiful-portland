@@ -6,6 +6,7 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import Axios from 'axios'
 import '../../Stylesheets/EventTemplate.css'
+import { Segment } from 'semantic-ui-react'
 
 export default class EventTemplateTable extends Component {
   constructor() {
@@ -192,6 +193,8 @@ export default class EventTemplateTable extends Component {
     this.setState({ [name]: value })
   }
 
+  handleClose = () => this.setState({ open: false })
+
   render() {
     const { data } = this.state
     var options = [
@@ -201,228 +204,245 @@ export default class EventTemplateTable extends Component {
     let submitValid = this.state.submitValid
     return (
       <div>
-        <Form onSubmit={() => this.handleSubmit()}>
-          <Header as="h2">Edit Master Event Template</Header>
-          <Form.Group>
-            <div className={`input-wrapper ${this.errorClass(this.state.errors.name)}`}>
-              <Form.Input
-                type="text"
-                name="name"
-                placeholder="type"
-                value={this.state.name}
-                onChange={this.onChange}
-              />
-              <div>
-                <span>{this.state.errors.name || ' ✓'}</span>
+        <Header as="h2">Edit Master Event Template</Header>
+        <Segment>
+          <Form onSubmit={() => this.handleSubmit()}>
+            <Form.Group>
+              <div className={`input-wrapper ${this.errorClass(this.state.errors.name)}`}>
+                <Form.Input
+                  type="text"
+                  name="name"
+                  placeholder="type"
+                  value={this.state.name}
+                  onChange={this.onChange}
+                />
+                <div>
+                  <span>{this.state.errors.name || ' ✓'}</span>
+                </div>
               </div>
-            </div>
-            <div className={`input-wrapper ${this.errorClass(this.state.errors.max_signups)}`}>
-              <Form.Input
-                type="text"
-                name="max_signups"
-                placeholder="Max Signups"
-                value={this.state.max_signups}
-                onChange={this.onChange}
-              />
-              <div>
-                <span>{this.state.errors.max_signups || ' ✓'}</span>
+              <div className={`input-wrapper ${this.errorClass(this.state.errors.max_signups)}`}>
+                <Form.Input
+                  type="text"
+                  name="max_signups"
+                  placeholder="Max Signups"
+                  value={this.state.max_signups}
+                  onChange={this.onChange}
+                />
+                <div>
+                  <span>{this.state.errors.max_signups || ' ✓'}</span>
+                </div>
               </div>
-            </div>
-            <div className={`input-wrapper ${this.errorClass(this.state.errors.min_servings)}`}>
-              <Form.Input
-                type="text"
-                name="min_servings"
-                placeholder="Minimum servings"
-                value={this.state.min_servings}
-                onChange={this.onChange}
-              />
-              <div>
-                <span>{this.state.errors.min_servings || ' ✓'}</span>
+              <div className={`input-wrapper ${this.errorClass(this.state.errors.min_servings)}`}>
+                <Form.Input
+                  type="text"
+                  name="min_servings"
+                  placeholder="Minimum servings"
+                  value={this.state.min_servings}
+                  onChange={this.onChange}
+                />
+                <div>
+                  <span>{this.state.errors.min_servings || ' ✓'}</span>
+                </div>
               </div>
-            </div>
-          </Form.Group>
-          <Form.Group>
-            <div className={`input-wrapper ${this.errorClass(this.state.errors.min_vegan)}`}>
-              <Form.Input
-                type="text"
-                name="min_vegan"
-                placeholder="Minimum Vegan"
-                value={this.state.min_vegan}
-                onChange={this.onChange}
-              />
-              <div>
-                <span>{this.state.errors.min_vegan || ' ✓'}</span>
+            </Form.Group>
+            <Form.Group>
+              <div className={`input-wrapper ${this.errorClass(this.state.errors.min_vegan)}`}>
+                <Form.Input
+                  type="text"
+                  name="min_vegan"
+                  placeholder="Minimum Vegan"
+                  value={this.state.min_vegan}
+                  onChange={this.onChange}
+                />
+                <div>
+                  <span>{this.state.errors.min_vegan || ' ✓'}</span>
+                </div>
               </div>
-            </div>
             
-            <Form.Select  
-              name="food"
-              placeholder="Food"
-              onChange={this.onDropdownChange} 
-              options={options}/>
-            <Form.Input type="submit" value="Add" disabled={!this.state.formValid}/>
-          </Form.Group>
-        </Form>
-        <div>
-          <ReactTable
-            data={data}
-            columns={[
-              {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: this.renderEditable,
-                getProps: (state, rowInfo, column) => {
-                  if(!rowInfo){
-                    return {} 
-                  } else {
-                    let nameError = rowInfo.row.name.length < 2
-                    if(nameError) 
-                      submitValid = false
-                    return {
-                      style: {
-                        color: nameError ? 'red' : null,
-                      }
-                    }
-                  }
-                }
-              },
-              {
-                Header: 'Maximum # Signups',
-                accessor: 'max_signups',
-                Cell: this.renderEditable,
-                getProps: (state, rowInfo, column) => {
-                  if(!rowInfo){
-                    return {} 
-                  } else {
-                    let signupError = rowInfo.row.max_signups < 1 || isNaN(rowInfo.row.max_signups)
-                    if(signupError) 
-                      submitValid = false
-                    return {
-                      style: {
-                        color: signupError ? 'red' : null,
-                      }
-                    }
-                  }
-                }
-              },
-              {
-                Header: 'Minimum # Servings',
-                accessor: 'min_servings',
-                Cell: this.renderEditable,
-                getProps: (state, rowInfo, column) => {
-                  if(!rowInfo){
-                    return {} 
-                  } else {
-                    let servingsError = rowInfo.row.min_servings < 1 || isNaN(rowInfo.row.min_servings)
-                    if(servingsError) 
-                      submitValid = false
-                    return {
-                      style: {
-                        color: servingsError ? 'red' : null,
-                      }
-                    }
-                  }
-                }
-              },
-              {
-                Header: 'Minimum # Vegan',
-                accessor: 'min_vegan',
-                Cell: this.renderEditable,
-                getProps: (state, rowInfo, column) => {
-                  if(!rowInfo){
-                    return {} 
-                  } else {
-                    let veganError = rowInfo.row.min_vegan < 0 || isNaN(rowInfo.row.min_vegan)
-                    if(veganError) 
-                      submitValid = false
-                    return {
-                      style: {
-                        color: veganError ? 'red' : null,
-                      }
-                    }
-                  }
-                }
-              },
-              {
-                Header: 'Food',
-                accessor: 'food',
-                Cell: this.renderEditable,
-                getProps: (state, rowInfo, column) => {
-                  if(!rowInfo){
-                    return {} 
-                  } else {
-                    let checkFood = rowInfo.row.food.toString()
-                    let foodError = checkFood !== 'true' && checkFood !== 'false'
-                    if(foodError) 
-                      submitValid = false
-                    return {
-                      style: {
-                        color: foodError ? 'red' : null,
-                      }
-                    }
-                  }
-                }
-              },
-              {
-                Header: 'Remove',
-                accessor: 'remove',
-                Cell: (row)=> (
-                  <Button color="red" size="tiny" icon="remove" 
-                    onClick={() => {
-                      let data = this.state.data
-                      this.deleteEvent(this.state.data[row.index].name)
-                      data.splice(row.index, 1)
-                      this.setState({data})  
-                    }}/>
-                ) 
-              }
-            ]}
-            defaultPageSize={10}
-            className="-highlight"
-          />
-        </div>
-        <Form style={{marginTop: '2%'}}>  
-          <Form.Group>
-            <div className={`input-wrapper ${this.errorClass(this.state.errors.location)}`}>
-              <Form.Input
-                type="text"
-                name="location"
-                placeholder="Event Location"
-                value={this.state.location}
-                onChange={this.onChange}
-              />
-              <div>
-                <span>{this.state.errors.location || ' ✓'}</span>
-              </div>
-            </div>
-            <div className={`input-wrapper ${this.errorClass(this.state.errors.max_servings)}`}>
-              <Form.Input
-                type="text"
-                name="max_servings"
-                placeholder="Max Servings"
-                value={this.state.max_servings}
-                onChange={this.onChange}
-              />
-              <div>
-                <span>{this.state.errors.max_servings || ' ✓'}</span>
-              </div>
-            </div>
-            
-          </Form.Group>
-          <Modal trigger={
-            <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state,submitValid)}} disabled={(!(this.state.location && this.state.max_servings))}>Update</Button> }>
-            <Modal.Header>Edit Master Event Template</Modal.Header>
-            <Modal.Content>  
-              <Modal.Description>
+              <Form.Select  
+                name="food"
+                placeholder="Food"
+                onChange={this.onDropdownChange} 
+                options={options}/>
+              <Form.Input type="submit" value="Add" disabled={!this.state.formValid}/>
+            </Form.Group>
+          </Form>
+          <div>
+            <ReactTable
+              data={data}
+              columns={[
                 {
-                  this.state.blockSubmission ?
-                    <Header color="red" as="h1">There are errors in your event template. Your template was not submitted</Header>
-                    : <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
+                  Header: 'Name',
+                  accessor: 'name',
+                  Cell: this.renderEditable,
+                  getProps: (state, rowInfo, column) => {
+                    if(!rowInfo){
+                      return {} 
+                    } else {
+                      let nameError = rowInfo.row.name.length < 2
+                      if(nameError) 
+                        submitValid = false
+                      return {
+                        style: {
+                          color: nameError ? 'red' : null,
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  Header: 'Maximum # Signups',
+                  accessor: 'max_signups',
+                  Cell: this.renderEditable,
+                  getProps: (state, rowInfo, column) => {
+                    if(!rowInfo){
+                      return {} 
+                    } else {
+                      let signupError = rowInfo.row.max_signups < 1 || isNaN(rowInfo.row.max_signups)
+                      if(signupError) 
+                        submitValid = false
+                      return {
+                        style: {
+                          color: signupError ? 'red' : null,
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  Header: 'Minimum # Servings',
+                  accessor: 'min_servings',
+                  Cell: this.renderEditable,
+                  getProps: (state, rowInfo, column) => {
+                    if(!rowInfo){
+                      return {} 
+                    } else {
+                      let servingsError = rowInfo.row.min_servings < 1 || isNaN(rowInfo.row.min_servings)
+                      if(servingsError) 
+                        submitValid = false
+                      return {
+                        style: {
+                          color: servingsError ? 'red' : null,
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  Header: 'Minimum # Vegan',
+                  accessor: 'min_vegan',
+                  Cell: this.renderEditable,
+                  getProps: (state, rowInfo, column) => {
+                    if(!rowInfo){
+                      return {} 
+                    } else {
+                      let veganError = rowInfo.row.min_vegan < 0 || isNaN(rowInfo.row.min_vegan)
+                      if(veganError) 
+                        submitValid = false
+                      return {
+                        style: {
+                          color: veganError ? 'red' : null,
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  Header: 'Food',
+                  accessor: 'food',
+                  Cell: this.renderEditable,
+                  getProps: (state, rowInfo, column) => {
+                    if(!rowInfo){
+                      return {} 
+                    } else {
+                      let checkFood = rowInfo.row.food.toString()
+                      let foodError = checkFood !== 'true' && checkFood !== 'false'
+                      if(foodError) 
+                        submitValid = false
+                      return {
+                        style: {
+                          color: foodError ? 'red' : null,
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  Header: 'Remove',
+                  accessor: 'remove',
+                  Cell: (row)=> (
+                    <Modal 
+                      trigger={
+                        <Button color="red" size="tiny" icon="remove" onClick={() => this.setState({open: true})}/> } 
+                      open={this.state.open}
+                      onClose={this.handleClose}> 
+                      <Modal.Header>Warning! This Action is Permenant</Modal.Header>
+                      <Modal.Content>
+                        <Modal.Description>
+                          <Header as="h2">Are you sure you want to delete this category?</Header>
+                          <Button 
+                            onClick={() => {
+                              let data = this.state.data
+                              this.deleteEvent(this.state.data[row.index].name)
+                              data.splice(row.index, 1)
+                              this.setState({data})  
+                              this.setState({open: false})
+                            }}
+                          >OK</Button>
+                          <Button onClick={this.handleClose}>Cancel</Button>
+                        </Modal.Description>
+                      </Modal.Content>
+                    </Modal>
+                  ) 
                 }
-              </Modal.Description>
-            </Modal.Content>
-          </Modal>
-        </Form>
+              ]}
+              defaultPageSize={10}
+              className="-highlight"
+            />
+          </div>
+          <Form style={{marginTop: '2%'}}>  
+            <Form.Group>
+              <div className={`input-wrapper ${this.errorClass(this.state.errors.location)}`}>
+                <Form.Input
+                  type="text"
+                  name="location"
+                  placeholder="Event Location"
+                  value={this.state.location}
+                  onChange={this.onChange}
+                />
+                <div>
+                  <span>{this.state.errors.location || ' ✓'}</span>
+                </div>
+              </div>
+              <div className={`input-wrapper ${this.errorClass(this.state.errors.max_servings)}`}>
+                <Form.Input
+                  type="text"
+                  name="max_servings"
+                  placeholder="Max Servings"
+                  value={this.state.max_servings}
+                  onChange={this.onChange}
+                />
+                <div>
+                  <span>{this.state.errors.max_servings || ' ✓'}</span>
+                </div>
+              </div>
+            
+            </Form.Group>
+            <Modal trigger={
+              <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state,submitValid)}} disabled={(!(this.state.location && this.state.max_servings))}>Update</Button> }>
+              <Modal.Header>Edit Master Event Template</Modal.Header>
+              <Modal.Content>  
+                <Modal.Description>
+                  {
+                    this.state.blockSubmission ?
+                      <Header color="red" as="h1">There are errors in your event template. Your template was not submitted</Header>
+                      : <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
+                  }
+                </Modal.Description>
+              </Modal.Content>
+            </Modal>
+          </Form>
+        </Segment>
       </div>
     )
   }
