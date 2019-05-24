@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { Form, Button, Header, Modal } from 'semantic-ui-react'
+import { Form, Button, Header, Modal, Segment, Input, Icon } from 'semantic-ui-react'
 import dompurify from 'dompurify'
 // Import React Table
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import Axios from 'axios'
 import '../../Stylesheets/EventTemplate.css'
-import { Segment } from 'semantic-ui-react'
 
 export default class EventTemplateTable extends Component {
   constructor() {
@@ -38,7 +37,8 @@ export default class EventTemplateTable extends Component {
       submitValid: true,
       blockSubmission: false,
       categoryToDelete:'',
-      open: false
+      open: false,
+      pin: 2019
     }
   }
 
@@ -89,10 +89,20 @@ export default class EventTemplateTable extends Component {
     console.log(deletedEventTemplate)
     Axios.post('/api/deleteEventTemplate', deletedEventTemplate)
       .then((response) => {
-        console.log('Deleted Event ')
+        console.log('Deleted Event')
       })
       .catch((err) => {
         console.log(err, 'Try again.')
+      })
+  }
+
+  emergencyRefresh = () => {
+    Axios.post('/api/emergencyRefresh')
+      .then((response) => {
+        console.log('Template set to original state')
+      })
+      .catch((err) => {
+        console.log(err, 'Could not reset template')
       })
   }
   
@@ -373,14 +383,14 @@ export default class EventTemplateTable extends Component {
                   Cell: (row)=> (
                     <Modal 
                       trigger={
-                        <Button color="red" size="tiny" icon="remove" onClick={() => this.setState({open: true})}/> } 
+                        <Button color="red" onClick={() => this.setState({open: true})}>Remove</Button>} 
                       open={this.state.open}
                       onClose={this.handleClose}> 
-                      <Modal.Header>Warning! This Action is Permenant</Modal.Header>
+                      <Modal.Header>Refresh Event Template</Modal.Header>
                       <Modal.Content>
                         <Modal.Description>
                           <Header as="h2">Are you sure you want to delete this category?</Header>
-                          <Button 
+                          <Button color="green"
                             onClick={() => {
                               let data = this.state.data
                               this.deleteEvent(this.state.data[row.index].name)
@@ -388,8 +398,9 @@ export default class EventTemplateTable extends Component {
                               this.setState({data})  
                               this.setState({open: false})
                             }}
-                          >OK</Button>
-                          <Button onClick={this.handleClose}>Cancel</Button>
+                          ><Icon name="checkmark" />Yes</Button>
+                          <Button color="red" onClick={this.handleClose}>
+                            <Icon name="remove" />No</Button>
                         </Modal.Description>
                       </Modal.Content>
                     </Modal>
@@ -442,6 +453,26 @@ export default class EventTemplateTable extends Component {
               </Modal.Content>
             </Modal>
           </Form>
+          <Modal trigger={
+            <Button color="red">Template Refresh</Button> }>
+            <Modal.Header>Emergency Template Refresh</Modal.Header>
+            <Modal.Content>  
+              <Modal.Description>
+                <Header as="h2">This action cannot be undone. Enter PIN to continue:</Header>
+                <Input type="text" placeholder="pin"/>
+                <Button.Group>
+                  <Button>Cancel</Button>
+                  <Button.Or />
+                  <Button positive>Save</Button>
+                </Button.Group>
+                {
+                  this.state.blockSubmission ?
+                    <Header color="red" as="h1">There are errors in your event template. Your template was not submitted</Header>
+                    : <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
+                }
+              </Modal.Description>
+            </Modal.Content>
+          </Modal>
         </Segment>
       </div>
     )
