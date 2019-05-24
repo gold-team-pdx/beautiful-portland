@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Item from './Item'
-import { Header, Container } from 'semantic-ui-react'
+import { Header, Message, Container, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
 import Moment from 'moment'
 
@@ -39,7 +39,8 @@ export default class VolunteerForm extends Component {
       coordinator_phone: '',
       location: '',
       event_info: [ { type: 'n/a', servings: 0 } ],
-      max_servings: 0
+      max_servings: 0,
+      newDate: Moment(dateToUse).format('MMMM Do, YYYY')
     }
   }
 
@@ -96,13 +97,11 @@ export default class VolunteerForm extends Component {
 	    <div>
 	      {this.state.validEvent ? (
 	        <Container>
-	          <Header as="h2" style={headerStyles}>
-							Dinner Sign-Up{' '}
-	          </Header>
-	          <Header as="h2" style={paragraphStyles}>Volunteer Coordinator: {this.state.coordinator}</Header>
-	          <Header as="h2" style={paragraphStyles}>Volunteer Coordinator Phone: {this.state.coordinator_phone}</Header>
-	          <Header as="h2" style={paragraphStyles}>Location: {this.state.location}</Header>
-	          <Header as="h2" style={paragraphStyles}>Date: {this.state.date} </Header>
+	          <Header as="h1" ><Icon name='calendar alternate'/>{this.state.newDate} Dinner at {' '} {this.state.location} {' '} Sign-Up</Header>
+	          <Message warning>
+	            <Header as="h4">If you have question, please contact the Volunteer Coordinator<Icon name='question circle outline'/></Header>
+	            <p><Icon name='user'/>{this.state.coordinator} {' '} {this.state.coordinator_phone}</p>
+	          </Message>
 	          <Item
 	            onSubmit={this.onSubmit}
 	            event_info={this.state.event_info}
