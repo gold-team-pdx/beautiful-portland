@@ -38,7 +38,8 @@ export default class EventTemplateTable extends Component {
       blockSubmission: false,
       categoryToDelete:'',
       open: false,
-      pin: 2019
+      pin: 2019,
+      pin_match: false
     }
   }
 
@@ -386,23 +387,23 @@ export default class EventTemplateTable extends Component {
                         <Button color="red" onClick={() => this.setState({open: true})}>Remove</Button>} 
                       open={this.state.open}
                       onClose={this.handleClose}> 
-                      <Modal.Header>Refresh Event Template</Modal.Header>
+                      <Header icon="calendar alternate outline" content="Remove event category"/>
                       <Modal.Content>
-                        <Modal.Description>
-                          <Header as="h2">Are you sure you want to delete this category?</Header>
-                          <Button color="green"
-                            onClick={() => {
-                              let data = this.state.data
-                              this.deleteEvent(this.state.data[row.index].name)
-                              data.splice(row.index, 1)
-                              this.setState({data})  
-                              this.setState({open: false})
-                            }}
-                          ><Icon name="checkmark" />Yes</Button>
-                          <Button color="red" onClick={this.handleClose}>
-                            <Icon name="remove" />No</Button>
-                        </Modal.Description>
+                        <Header as="h2">Are you sure you want to delete this category?</Header>
                       </Modal.Content>
+                      <Modal.Actions> 
+                        <Button color="green"
+                          onClick={() => {
+                            let data = this.state.data
+                            this.deleteEvent(this.state.data[row.index].name)
+                            data.splice(row.index, 1)
+                            this.setState({data})  
+                            this.setState({open: false})
+                          }}
+                        ><Icon name="checkmark" />Yes</Button>
+                        <Button color="red" onClick={this.handleClose}>
+                          <Icon name="remove" />No</Button>
+                      </Modal.Actions>
                     </Modal>
                   ) 
                 }
@@ -441,13 +442,13 @@ export default class EventTemplateTable extends Component {
             </Form.Group>
             <Modal trigger={
               <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state,submitValid)}} disabled={(!(this.state.location && this.state.max_servings))}>Update</Button> }>
-              <Modal.Header>Edit Master Event Template</Modal.Header>
+              <Header icon="calendar alternate outline" content="Submit Template"/>
               <Modal.Content>  
                 <Modal.Description>
                   {
                     this.state.blockSubmission ?
-                      <Header color="red" as="h1">There are errors in your event template. Your template was not submitted</Header>
-                      : <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
+                      <Header color="red" as="h2">There are errors in your event template. Your template was not submitted</Header>
+                      : <Header color="green" as="h2">Your changes to the Master Event Template have been submitted</Header>
                   }
                 </Modal.Description>
               </Modal.Content>
@@ -457,21 +458,18 @@ export default class EventTemplateTable extends Component {
             <Button color="red">Template Refresh</Button> }>
             <Modal.Header>Emergency Template Refresh</Modal.Header>
             <Modal.Content>  
-              <Modal.Description>
-                <Header as="h2">This action cannot be undone. Enter PIN to continue:</Header>
-                <Input type="text" placeholder="pin"/>
-                <Button.Group>
-                  <Button>Cancel</Button>
-                  <Button.Or />
-                  <Button positive>Save</Button>
-                </Button.Group>
-                {
-                  this.state.blockSubmission ?
-                    <Header color="red" as="h1">There are errors in your event template. Your template was not submitted</Header>
-                    : <Header color="green" as="h1">Your changes to the Master Event Template have been submitted</Header>
-                }
-              </Modal.Description>
+              <Header as="h2">This action cannot be undone. Enter PIN to continue:</Header>
+              <Input type="text" placeholder="pin"/>
+              {
+                this.state.pin_match ?
+                  <Header color="red" as="h1"></Header>
+                  : <Header color="red" as="h1">PIN does not match. Try Again.</Header>
+              }
             </Modal.Content>
+            <Modal.Actions>
+              <Button color="green"><Icon name="checkmark" />Yes</Button>
+              <Button color="red" onClick={this.handleClose}><Icon name="remove" />No</Button>
+            </Modal.Actions> 
           </Modal>
         </Segment>
       </div>
