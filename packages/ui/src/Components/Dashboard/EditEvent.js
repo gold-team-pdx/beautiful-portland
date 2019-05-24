@@ -206,46 +206,70 @@ class EditEvent extends Component {
     this.setState({ open: false })
   }
 
-  render() {
-    return (
-      <div>
-        <Header as="h3">{this.props.date}</Header>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={2}>
-              <h4>Time:{this.state.time && this.state.time}</h4>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <h4>Location: {this.state.location && this.state.location}</h4>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <h4>
+  // SUUUUUPER hacky way to copy text
+  copyStringToClipboard = (str) => {
+    var el = document.createElement('textarea')
+    el.value = str
+    el.setAttribute('readonly', '')
+    el.style = {position: 'absolute', left: '-9999px'}
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+  }
+
+ copyEmails= () => {
+   let emails = ''
+   this.state.submissions.forEach((signup, i, arr) => {
+     if(i === arr.length-1) {
+       emails = emails.concat(signup.email)
+     } else {
+       emails = emails.concat(signup.email + ', ')
+     }
+   })
+   this.copyStringToClipboard(emails)
+ }
+
+ render() {
+   return (
+     <div>
+       <Header as="h3">{this.props.date}</Header>
+       <Grid>
+         <Grid.Row>
+           <Grid.Column width={2}>
+             <h4>Time:{this.state.time && this.state.time}</h4>
+           </Grid.Column>
+           <Grid.Column width={4}>
+             <h4>Location: {this.state.location && this.state.location}</h4>
+           </Grid.Column>
+           <Grid.Column width={4}>
+             <h4>
                 Coordinator: {this.state.coordinator && this.state.coordinator}
-              </h4>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <h4>
+             </h4>
+           </Grid.Column>
+           <Grid.Column width={4}>
+             <h4>
                 Phone:{' '}
-                {this.state.coordinator_phone && this.state.coordinator_phone}
-              </h4>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <Table celled textAlign={'center'} selectable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Volunteer</Table.HeaderCell>
-              <Table.HeaderCell>Desc</Table.HeaderCell>
-              <Table.HeaderCell>Type</Table.HeaderCell>
-              <Table.HeaderCell>Servings</Table.HeaderCell>
-              <Table.HeaderCell>Vegan</Table.HeaderCell>
-              <Table.HeaderCell>Vegetarian</Table.HeaderCell>
-              <Table.HeaderCell>Gluten-Free</Table.HeaderCell>
-              <Table.HeaderCell>Delete</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.state.submissions &&
+               {this.state.coordinator_phone && this.state.coordinator_phone}
+             </h4>
+           </Grid.Column>
+         </Grid.Row>
+       </Grid>
+       <Table celled textAlign={'center'} selectable>
+         <Table.Header>
+           <Table.Row>
+             <Table.HeaderCell>Volunteer</Table.HeaderCell>
+             <Table.HeaderCell>Desc</Table.HeaderCell>
+             <Table.HeaderCell>Type</Table.HeaderCell>
+             <Table.HeaderCell>Servings</Table.HeaderCell>
+             <Table.HeaderCell>Vegan</Table.HeaderCell>
+             <Table.HeaderCell>Vegetarian</Table.HeaderCell>
+             <Table.HeaderCell>Gluten-Free</Table.HeaderCell>
+             <Table.HeaderCell>Delete</Table.HeaderCell>
+           </Table.Row>
+         </Table.Header>
+         <Table.Body>
+           {this.state.submissions &&
               this.state.submissions.map(volunteer => (
                 <Table.Row key={volunteer.email + volunteer.desc}>
                   <Table.Cell>
@@ -277,99 +301,100 @@ class EditEvent extends Component {
                   </Table.Cell>
                 </Table.Row>
               ))}
-          </Table.Body>
-        </Table>
-        <Form>
-          <br />
-          <Form.Group>
-            <div
-              className={`input-wrapper ${this.errorClass(
-                this.state.errors.location
-              )}`}
-            >
-              <Form.Input
-                name="location"
-                onChange={this.onChange}
-                value={this.state.location}
-                label="Location"
-                placeholder="Park Blocs"
-              />
-              <span>{this.state.errors.location || ' ✓'}</span>
-            </div>
-            <div
-              className={`input-wrapper ${this.errorClass(
-                this.state.errors.coordinator
-              )}`}
-            >
-              <Form.Input
-                name="coordinator"
-                value={this.state.coordinator}
-                onChange={this.onChange}
-                label="Coordinator"
-                placeholder="Julie"
-              />
-              <span>{this.state.errors.coordinator || ' ✓'}</span>
-            </div>
-            <div
-              className={`input-wrapper ${this.errorClass(
-                this.state.errors.coordinator_phone
-              )}`}
-            >
-              <Form.Input
-                name="coordinator_phone"
-                value={this.state.coordinator_phone}
-                onChange={this.onChange}
-                label="Phone"
-                placeholder="xxx-xxx-xxx"
-              />
-              <span>{this.state.errors.coordinator_phone || ' ✓'}</span>
-            </div>
-            <Form.Field>
-              <label>Event Time</label>
-              <DatePicker
-                selected={this.state.newTime}
-                onChange={this.timeChanged}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={30}
-                dateFormat="h:mm aa"
-                timeCaption="Time"
-              />
-            </Form.Field>
-          </Form.Group>
-          <br />
-          <Form.Group inline>
-            <Modal
-              open={this.state.open}
-              trigger={
-                <Button color="teal" onClick={this.openModal}>
+         </Table.Body>
+       </Table>
+       <Form>
+         <br />
+         <Form.Group>
+           <div
+             className={`input-wrapper ${this.errorClass(
+               this.state.errors.location
+             )}`}
+           >
+             <Form.Input
+               name="location"
+               onChange={this.onChange}
+               value={this.state.location}
+               label="Location"
+               placeholder="Park Blocs"
+             />
+             <span>{this.state.errors.location || ' ✓'}</span>
+           </div>
+           <div
+             className={`input-wrapper ${this.errorClass(
+               this.state.errors.coordinator
+             )}`}
+           >
+             <Form.Input
+               name="coordinator"
+               value={this.state.coordinator}
+               onChange={this.onChange}
+               label="Coordinator"
+               placeholder="Julie"
+             />
+             <span>{this.state.errors.coordinator || ' ✓'}</span>
+           </div>
+           <div
+             className={`input-wrapper ${this.errorClass(
+               this.state.errors.coordinator_phone
+             )}`}
+           >
+             <Form.Input
+               name="coordinator_phone"
+               value={this.state.coordinator_phone}
+               onChange={this.onChange}
+               label="Phone"
+               placeholder="xxx-xxx-xxx"
+             />
+             <span>{this.state.errors.coordinator_phone || ' ✓'}</span>
+           </div>
+           <Form.Field>
+             <label>Event Time</label>
+             <DatePicker
+               selected={this.state.newTime}
+               onChange={this.timeChanged}
+               showTimeSelect
+               showTimeSelectOnly
+               timeIntervals={30}
+               dateFormat="h:mm aa"
+               timeCaption="Time"
+             />
+           </Form.Field>
+           <Button onClick={this.copyEmails}>Copy Emails</Button>
+         </Form.Group>
+         <br />
+         <Form.Group inline>
+           <Modal
+             open={this.state.open}
+             trigger={
+               <Button color="teal" onClick={this.openModal}>
                   Update
-                </Button>
-              }
-              onClose={this.closeModal}
-              closeIcon
-            >
-              <Header
-                icon="calendar alternate outline"
-                content="Update Event"
-              />
-              <Modal.Content>
-                <h3>Are you sure you want to update the event ?</h3>
-              </Modal.Content>
-              <Modal.Actions>
-                <Button color="red" onClick={this.closeModal}>
-                  <Icon name="remove" /> No
-                </Button>
-                <Button color="green" onClick={this.onSubmit}>
-                  <Icon name="checkmark" /> Yes
-                </Button>
-              </Modal.Actions>
-            </Modal>
-          </Form.Group>
-        </Form>
-      </div>
-    )
-  }
+               </Button>
+             }
+             onClose={this.closeModal}
+             closeIcon
+           >
+             <Header
+               icon="calendar alternate outline"
+               content="Update Event"
+             />
+             <Modal.Content>
+               <h3>Are you sure you want to update the event ?</h3>
+             </Modal.Content>
+             <Modal.Actions>
+               <Button color="red" onClick={this.closeModal}>
+                 <Icon name="remove" /> No
+               </Button>
+               <Button color="green" onClick={this.onSubmit}>
+                 <Icon name="checkmark" /> Yes
+               </Button>
+             </Modal.Actions>
+           </Modal>
+         </Form.Group>
+       </Form>
+     </div>
+   )
+ }
 }
 
 export default EditEvent
