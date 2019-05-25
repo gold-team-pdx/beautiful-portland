@@ -25,6 +25,10 @@ app.use(session({
 app.use(cookieParser())
 app.use(passport.initialize())
 app.use(passport.session())
+app.use((req, res, next) => {
+  res.set('Content-Type', 'text/plain')
+  next()
+})
 
 //Connects to MongoDB
 const client = new MongoClient(process.env.MONGODB_URL, { useNewUrlParser: true })
