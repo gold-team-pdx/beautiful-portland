@@ -156,3 +156,4 @@ app.post('/api/getCalendarFAQEdit', ensureAuthenticated, adminHandlers.getCalend
 app.post('/api/addCalendarFAQ', ensureAuthenticated, adminHandlers.addCalendarFAQ.bind({dbClient: client}))
 app.post('/api/editCalendarFAQ', ensureAuthenticated, adminHandlers.editCalendarFAQ.bind({dbClient: client}))
 app.post('/api/deleteCalendarFAQ', ensureAuthenticated, adminHandlers.deleteCalendarFAQ.bind({dbClient: client}))
+app.post('/api/emergencyRefresh', ensureAuthenticated, adminHandlers.emergencyRefresh.bind({dbClient: client}))

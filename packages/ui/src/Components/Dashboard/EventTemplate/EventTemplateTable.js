@@ -38,8 +38,10 @@ export default class EventTemplateTable extends Component {
       blockSubmission: false,
       categoryToDelete:'',
       open: false,
-      pin: 2019,
-      pin_match: false
+      openRefresh: false,
+      pin: 'soup',
+      pin_input: '',
+      pin_match: true
     }
   }
 
@@ -96,17 +98,6 @@ export default class EventTemplateTable extends Component {
         console.log(err, 'Try again.')
       })
   }
-
-  emergencyRefresh = () => {
-    Axios.post('/api/emergencyRefresh')
-      .then((response) => {
-        console.log('Template set to original state')
-      })
-      .catch((err) => {
-        console.log(err, 'Could not reset template')
-      })
-  }
-  
 
   renderEditable = cellInfo => {
     let sanitizer = dompurify.sanitize
@@ -205,6 +196,24 @@ export default class EventTemplateTable extends Component {
   }
 
   handleClose = () => this.setState({ open: false })
+
+  handleRefresh = () => {
+    const { pin, pin_input} = this.state
+    
+    if(pin === pin_input){
+      this.setState({pin_match: true})
+      Axios.post('/api/emergencyRefresh')
+        .then((response) => {
+          console.log('Template set to original state')
+        })
+        .catch((err) => {
+          console.log(err, 'Could not reset template')
+        })
+      this.setState({openRefresh: false})
+    } else {
+      this.setState({pin_match: false})
+    }
+  }
 
   render() {
     const { data } = this.state
@@ -455,11 +464,20 @@ export default class EventTemplateTable extends Component {
             </Modal>
           </Form>
           <Modal trigger={
-            <Button color="red">Template Refresh</Button> }>
-            <Modal.Header>Emergency Template Refresh</Modal.Header>
+            <Button color="red" style={{marginTop:'2%'}} onClick={() => {
+              this.setState({openRefresh: true})
+              this.setState({pin_input: ''})}}>Template Refresh
+            </Button> }
+          open={this.state.openRefresh}
+          onClose={() => this.setState({openRefresh: false})}>
+            <Header icon="calendar alternate outline" content="Emergency Template Refresh"/>
             <Modal.Content>  
-              <Header as="h2">This action cannot be undone. Enter PIN to continue:</Header>
-              <Input type="text" placeholder="pin"/>
+              <Header as="h3">This action cannot be undone, enter PIN to continue:</Header>
+              <Input type="text" 
+                name="pin_input"
+                placeholder="PIN" 
+                value={this.state.pin_input}
+                onChange={this.onChange}/>
               {
                 this.state.pin_match ?
                   <Header color="red" as="h1"></Header>
@@ -467,8 +485,8 @@ export default class EventTemplateTable extends Component {
               }
             </Modal.Content>
             <Modal.Actions>
-              <Button color="green"><Icon name="checkmark" />Yes</Button>
-              <Button color="red" onClick={this.handleClose}><Icon name="remove" />No</Button>
+              <Button color="green" onClick={this.handleRefresh}><Icon name="checkmark" />Refresh</Button>
+              <Button color="red" onClick={() => this.setState({openRefresh: false})}><Icon name="remove" />Cancel</Button>
             </Modal.Actions> 
           </Modal>
         </Segment>
