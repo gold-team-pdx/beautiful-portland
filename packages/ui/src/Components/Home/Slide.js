@@ -4,15 +4,15 @@ const Slide = ({ slideNum, image, isLessthan3 }) => {
   const mainImageStyles = {
     opacity: 1
   }
-  const otherImageStyles = {}
-  if(!isLessthan3) {
+  let otherImageStyles = {}
+  if(isLessthan3 === false) {
     otherImageStyles = {
       opacity: .4
     }
   }
   else {
     otherImageStyles = {
-      opacity: 0
+      opacity: .0
     }
   }
 

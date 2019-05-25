@@ -46,6 +46,9 @@ export default class Slider extends Component {
           }
           if(urls.length < 3) {
             isLessThan3 = true
+            if(urls[1] === undefined) {
+              urls[1] = urls[0]
+            }
           }
           this.setState({
             images: urls,
