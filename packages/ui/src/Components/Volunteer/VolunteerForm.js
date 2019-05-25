@@ -11,12 +11,6 @@ const paragraphStyles = {
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 } 
 
-const headerStyles = {
-  fontFamily: 'Quicksand',
-  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
-  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
-}
-
 export default class VolunteerForm extends Component {
   constructor(props) {
     super(props)
