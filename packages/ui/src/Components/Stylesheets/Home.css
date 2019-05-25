@@ -5,27 +5,27 @@
 
 .ImageCarousel {
     height: 400px;
+    margin-top: -15px;
 }
 
 .MissionHeader {
     font-family: 'Varela Round';
     margin: 40px 10px 10px 50px;
-    color: #000b91;
     font-size: calc(16px + (32 - 16) * ((100vw - 300px) / (1300)));
     line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)));
 }
 
 .MissionStatement {
-    font-family: 'Nunito';
+    font-family: 'Quicksand';
     margin: 40px 20px 10px 50px;
     word-wrap: break-word;
     justify-content: center;
-    color: #000b91;
     font-size: calc(14px + (28 - 14) * ((100vw - 300px) / (1300)));
     line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)));
 }
 
 .DonateButton {
     background-color: '#a8efae';
-    margin: 10px 10px 20px 10px;
+    margin: 0px 0px 20px 0px;
+    width: 100%
 }

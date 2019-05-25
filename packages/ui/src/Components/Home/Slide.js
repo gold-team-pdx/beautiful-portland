@@ -26,7 +26,6 @@ const Slide = ({ slideNum, image, isLessthan3 }) => {
         src={image}
         alt='beautiful portland homepage' 
         style={otherImageStyles}></img>
-    
   )
 }
 

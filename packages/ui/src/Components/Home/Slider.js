@@ -73,6 +73,10 @@ export default class Slider extends Component {
       if(this.state.counter % 5 === 0) {
         this.nextSlide()
       }
+      // If images are ready to expire, 15 minutes is the default, reload them.
+      if(this.state.counter === (60*15)) {
+        window.location.reload()
+      }
     }
 
     nextSlide = () => {

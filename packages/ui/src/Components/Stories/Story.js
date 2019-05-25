@@ -3,26 +3,17 @@ import { Header, Modal, Image, Container, Icon } from 'semantic-ui-react'
 import Moment from 'moment'
 import Axios from 'axios'
 import '../Stylesheets/PublishStories.css'
-import { Dropdown } from 'semantic-ui-react'
+import RichTextEditor from 'react-rte'
 
 // Sitewide Text Styles
 const paragraphStyles = {
-  fontFamily: 'Nunito',
-  color: '#000b91', 
+  fontFamily: 'Quicksand',
   fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 } 
 
-const headerStyles = {
-  fontFamily: 'Nunito',
-  color: '#000b91', 
-  fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
-  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
-}
-
 const dropdownStyles = {
-  fontFamily: 'Nunito', 
-  color: '#000b91', 
+  fontFamily: 'Quicksand', 
   fontSize: 'calc(12px + (20 - 12) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 }
@@ -68,7 +59,7 @@ export default class PublishStories extends Component {
                   <Header.Subheader style={dropdownStyles}><Icon name='calendar'/>Last Edited: {this.state.date}</Header.Subheader>
                 </Header>
                 <Header as='h3' style={paragraphStyles}><i>{this.state.publishStory.hook}</i></Header>
-                <p style={paragraphStyles}>{this.state.publishStory.content}</p>
+                <RichTextEditor readOnly editorClassName='storyText' value={RichTextEditor.createValueFromString(this.state.publishStory.content, 'html')} />
                 <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
                 <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
                 <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>

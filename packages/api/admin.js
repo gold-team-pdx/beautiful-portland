@@ -245,13 +245,13 @@ addPhotos = function(req, res) {
   s3.upload(params, function(s3Err, data) {
     if (s3Err) throw s3Err
     console.log('File uploaded successfully')
-    res.send('upload successful')
+    res.end('upload successful')
   })
 }
 
 // Removes multiple photos from s3 bucket using filesnames from urls.
 // Does not return anything, but console.logs success/failure
-removePhotos = function(req, res) {
+removeImageFromBucket = function(req, res) {
   let AWS = this.amazon
   const s3 = new AWS.S3({
     endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
@@ -265,12 +265,14 @@ removePhotos = function(req, res) {
   let files = []
   urls.forEach((url) => {
     let file = url.split('/').pop().split('?').splice(0, 1).toString()
-    if (req.body.isFrontPage === true) {
-      files.push({ Key: '/frontPage/' + file })
+    file = decodeURI(file)
+    if ( url.indexOf('frontPage/') !== -1) {
+      files.push({ Key: 'frontPage/' + file })
     } else {
       files.push({ Key: file })
     }
   })
+  console.log(files)
   //const url = req.body.urlToRemove
   const params = {
     Bucket: bucket,
@@ -283,12 +285,15 @@ removePhotos = function(req, res) {
     console.log('File Found in S3')
     try {
       s3.deleteObjects(params).promise()
-      console.log('file deleted Successfully')
+      console.log('file deleted successfully')
+      res.end('File deleted successfully')
     } catch (err) {
       console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+      res.end('Error in deleting')
     }
   } catch (err) {
     console.log('File not Found ERROR : ' + err.code)
+    res.end('File not found')
   }
 }
 
@@ -309,7 +314,7 @@ removeImagesFromFrontPage = function(req, res) {
   const urls = req.body.urlsToRemove
   urls.forEach((url) => {
     let newFile = url.split('/').pop().split('?').splice(0, 1).toString()
-    // push old file to array to remove later
+    newFile = decodeURI(newFile)
     let file = 'frontPage/' + newFile
     const params = {
       Bucket: bucket,
@@ -330,11 +335,14 @@ removeImagesFromFrontPage = function(req, res) {
         try {
           s3.deleteObject(params2).promise()
           console.log('file deleted Successfully')
+          res.end('File Deleted Successfully')
         } catch (err) {
           console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+          res.end('Error in deleting file')
         }
       } catch (err) {
         console.log('File not Found ERROR : ' + err.code)
+        res.end('File not found')
       }
     })
   })
@@ -362,7 +370,7 @@ addImageIntoStories = function(req, res) {
   s3.upload(params, function(s3Err, data) {
     if (s3Err) throw s3Err
     console.log('File uploaded successfully')
-    res.send('upload successful')
+    res.end('upload successful')
   })
 }
 
@@ -387,11 +395,14 @@ removeImageFromStories = function(req, res) {
     try {
       s3.deleteObject(params).promise()
       console.log('file deleted Successfully')
+      res.end('File deleted successfully!')
     } catch (err) {
       console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+      res.end('Error when deleting file')
     }
   } catch (err) {
     console.log('File not Found ERROR : ' + err.code)
+    res.end('File not found')
   }
 }
 
@@ -434,12 +445,15 @@ addFromUploaded = function(req, res) {
         console.log('File Found in S3')
         try {
           s3.deleteObject(params2).promise()
-          console.log('file deleted Successfully')
+          console.log('File deleted successfully')
+          res.end('File deleted successfully')
         } catch (err) {
           console.log('ERROR in file Deleting : ' + JSON.stringify(err))
+          res.end('Error deleting file')
         }
       } catch (err) {
         console.log('File not Found ERROR : ' + err.code)
+        res.end('File not found')
       }
     })
   })
@@ -671,25 +685,28 @@ getStoryCount = async function(req, res) {
 editEventTemplate = function (req, res) {
   let client = this.dbClient
   let categories = []
-  req.body.categories.forEach((category) => {
+  req.body.data.forEach((category) => {
+    console.log(category.food)
+    var isFood = category.food.toString() === 'true' ? true : false
     categories.push(
       {
         'name': category.name,
-        'max_signups': category.max_signups,
-        'min_servings': category.min_servings,
-        'food': category.food,
-        'min_vegan': category.min_vegan
+        'max_signups': parseInt(category.max_signups,10),
+        'min_servings': parseInt(category.min_servings,10),
+        'food': isFood,
+        'min_vegan': parseInt(category.min_vegan,10)
       }
     )
   })
   collection = client.db('events-form').collection('events')
-  collection.findOneAndUpdate({ date: 'MASTER2' },
-    {$set: {
+  collection.replaceOne({ date: 'MASTER2' },
+    {
+      'date' : 'MASTER2',
       'location' : req.body.location,
-      'time' : req.body.time,
+      'time' : '6:00 pm',
       'max_servings' : req.body.max_servings,
       'categories': categories
-    }},{ upsert : true },
+    },{ upsert : true },
     function(err,doc) {
       if(err){
         console.log(err, 'Error trying to find master template to edit')
@@ -707,7 +724,7 @@ editEventTemplate = function (req, res) {
 getEventTemplate = function(req, res) {
   let client = this.dbClient
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+  collection.find({date: 'MASTER2'}, {projection:{ _id: 0}}).toArray((err, docs) => {
     if(err) {
       console.log(err, 'Error trying to get info from master template')
       res.send({
@@ -899,7 +916,7 @@ deleteCalendarFAQ = function(req, res) {
 }
 
 module.exports.addPhotos = addPhotos
-module.exports.removePhotos = removePhotos
+module.exports.removeImageFromBucket = removeImageFromBucket
 module.exports.removeImagesFromFrontPage = removeImagesFromFrontPage
 module.exports.addFromUploaded = addFromUploaded
 module.exports.addImageIntoStories = addImageIntoStories
