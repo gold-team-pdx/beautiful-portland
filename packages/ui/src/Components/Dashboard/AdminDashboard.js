@@ -67,7 +67,6 @@ export default class AdminDashboard extends Component {
 
   updateGrandparentID = async value => {
     await this.setState({ editId: value })
-    await console.log(this.state.editId)
   }
 
   loginPrompt = () => {

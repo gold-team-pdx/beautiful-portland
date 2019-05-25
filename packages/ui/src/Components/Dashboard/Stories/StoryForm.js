@@ -86,7 +86,6 @@ export default class StoryForm extends Component {
     if(this.state._id !== undefined && this.state._id !== '') {
       Axios.post('/api/editedStory', data)
         .then(response => {
-          console.log(response, 'Story has been edited and saved to published')
           this.handleDelete()
           // Handles removing uneeded photos from s3 bucket
           if(this.state.oldPhotoName !== '') {
@@ -109,7 +108,6 @@ export default class StoryForm extends Component {
     else {
       Axios.post('/api/addPublish', data)
         .then(response => {
-          console.log(response, 'Story has been published')
           if(this.state.oldPhotoName !== '') {
             this.removeFromS3Bucket()
           }
@@ -129,15 +127,14 @@ export default class StoryForm extends Component {
 
   /*Checks for publish_status if load through edit*/
   handleSave = () => {
-    let data = this.state
-    data.content = data.content.toString('html')
     if(this.state.publish_status) {
       this.handlePublish()
-    } 
+    }
     else if(this.state._id !== undefined && this.state._id !== '') {
+      let data = {...this.state}
+      data.content = data.content.toString('html')
       Axios.post('/api/editedStory', data)
         .then(response => {
-          console.log(response, 'Story has been edited and saved to drafts')
           if(this.state.oldPhotoName !== '') {
             this.removeFromS3Bucket()
           }
@@ -153,9 +150,10 @@ export default class StoryForm extends Component {
         })
     } 
     else {
+      let data = {...this.state}
+      data.content = data.content.toString('html') 
       Axios.post('/api/addDraft', data)
         .then(response => {
-          console.log(response, 'Story saved to drafts')
           if(this.state.oldPhotoName !== '') {
             this.removeFromS3Bucket()
           }
@@ -174,10 +172,8 @@ export default class StoryForm extends Component {
   }
 
   handleDelete = () => {
-    console.log('Deleting draft with id: ' + this.state._id)
     Axios.post('/api/deleteDraft', {deleteId: this.state._id})
       .then(res => {
-        console.log(res.data)
       })
       .catch((err) => {
         console.log(err)
@@ -236,10 +232,9 @@ export default class StoryForm extends Component {
     // If the keys are different, push new file.
     if(fileName !== this.state.postPhotoName) {
       Axios.post('/api/addImageIntoStories', {
-        fileToAdd: this.state.postPhoto
+        filesToAdd: this.state.postPhoto
       })
         .then(res => {
-          console.log('Photo saved in s3')
           this.clearForm()
         })
         .catch(err => {
@@ -425,17 +420,19 @@ export default class StoryForm extends Component {
                 onConfirm={this.handleSave}
               />
             </Grid.Column>
-            <Grid.Column >
-              <Button color="green"
-                fluid
-                disabled={!this.state.title || !this.state.hook || !this.state.content}
-                onClick={this.handleOpenPublish}>Publish</Button>
-              <Confirm open={this.state.openPublish}
-                content='Your Story will be published'
-                onCancel={this.handleClosePublish}
-                onConfirm={this.handlePublish}
-              />
-            </Grid.Column>
+            {!this.state.publish_status && (
+              <Grid.Column >
+                <Button color="green"
+                  fluid
+                  disabled={!this.state.title || !this.state.hook || !this.state.content}
+                  onClick={this.handleOpenPublish}>Publish</Button>
+                <Confirm open={this.state.openPublish}
+                  content='Your Story will be published'
+                  onCancel={this.handleClosePublish}
+                  onConfirm={this.handlePublish}
+                />
+              </Grid.Column>
+            )}
             <Grid.Column>
               <Button color="red" fluid onClick={this.handleOpenClear}>Clear Form</Button>
               <Confirm open={this.state.openClear} onCancel={this.handleCloseClear} onConfirm={this.clearForm} />
