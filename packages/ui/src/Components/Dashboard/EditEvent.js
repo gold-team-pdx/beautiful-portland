@@ -40,18 +40,47 @@ class EditEvent extends Component {
     this.loadVolunteers()
   }
 
+  setHours = time => {
+    let tempTime = time.split(' ')
+    let period = tempTime[1]
+    let hours = tempTime[0].split(':')
+    let hour = parseInt(hours[0])
+    let min = parseInt(hours[1])
+
+    if (period.toLowerCase() === 'am') {
+      if (hour === 12) {
+        this.state.newTime.setHours(hour - 12)
+        this.state.newTime.setMinutes(min)
+      } else {
+        this.state.newTime.setHours(hour)
+        this.state.newTime.setMinutes(min)
+      }
+    } else {
+      if (hour === 12) {
+        this.state.newTime.setHours(hour)
+        this.state.newTime.setMinutes(min)
+      } else {
+        this.state.newTime.setHours(hour + 12)
+        this.state.newTime.setMinutes(min)
+      }
+    }
+  }
+
   loadVolunteers = () => {
     let path = '/api/fullEvent?date=' + this.props.date
     Axios.get(path)
       .then(res => {
         if (res.data['event_info']) {
-          this.setState({
-            coordinator: res.data.coordinator,
-            coordinator_phone: res.data.coordinator_phone,
-            location: res.data.location,
-            time: res.data.time,
-            submissions: JSON.parse(res.data['event_info'])
-          })
+          this.setState(
+            {
+              coordinator: res.data.coordinator,
+              coordinator_phone: res.data.coordinator_phone,
+              location: res.data.location,
+              time: res.data.time,
+              submissions: JSON.parse(res.data['event_info'])
+            },
+            this.setHours(res.data.time)
+          )
         }
       })
       .catch(err => {
@@ -206,6 +235,30 @@ class EditEvent extends Component {
     this.setState({ open: false })
   }
 
+  // SUUUUUPER hacky way to copy text
+  copyStringToClipboard = str => {
+    var el = document.createElement('textarea')
+    el.value = str
+    el.setAttribute('readonly', '')
+    el.style = { position: 'absolute', left: '-9999px' }
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+  }
+
+  copyEmails = () => {
+    let emails = ''
+    this.state.submissions.forEach((signup, i, arr) => {
+      if (i === arr.length - 1) {
+        emails = emails.concat(signup.email)
+      } else {
+        emails = emails.concat(signup.email + ', ')
+      }
+    })
+    this.copyStringToClipboard(emails)
+  }
+
   render() {
     return (
       <div>
@@ -336,6 +389,7 @@ class EditEvent extends Component {
                 timeCaption="Time"
               />
             </Form.Field>
+            <Button onClick={this.copyEmails}>Copy Emails</Button>
           </Form.Group>
           <br />
           <Form.Group inline>

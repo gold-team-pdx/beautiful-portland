@@ -20,6 +20,8 @@ export default class Slider extends Component {
     this.state = {
       images: [],
       currentImageIndex: 0,
+      // If less than 3 images on the front page, this is false (changes the way images display on page)
+      lessThan3: false,
       // Timer for transitions
       timer: null,
       counter: 0,
@@ -37,12 +39,20 @@ export default class Slider extends Component {
       })
         .then((res) => {
           urls = res.data
+          let isLessThan3 = false
           // Else, set the urls to the default image urls given (TESTING ONLY)
           if(urls.length === 0) {
             urls = defaultImages
           }
+          if(urls.length < 3) {
+            isLessThan3 = true
+            if(urls[1] === undefined) {
+              urls[1] = urls[0]
+            }
+          }
           this.setState({
             images: urls,
+            lessThan3: isLessThan3,
             timer: timer
           })
         })
@@ -65,6 +75,10 @@ export default class Slider extends Component {
       }))
       if(this.state.counter % 5 === 0) {
         this.nextSlide()
+      }
+      // If images are ready to expire, 15 minutes is the default, reload them.
+      if(this.state.counter === (60*15)) {
+        window.location.reload()
       }
     }
 
@@ -89,6 +103,7 @@ export default class Slider extends Component {
                 <Slide
                   slideNum={i}
                   image={image}
+                  isLessThan3={this.state.lessThan3}
                 />
               ))
             }

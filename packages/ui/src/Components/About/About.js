@@ -3,6 +3,7 @@ import { Accordion, Container, Header, Icon, Divider } from 'semantic-ui-react'
 import HomeLayout from '../Layouts/HomeLayout'
 import Axios from 'axios'
 import RichTextEditor from 'react-rte'
+import '../Stylesheets/About.css'
 
 // Sitewide Text Styles
 const paragraphStyles = {
@@ -14,12 +15,6 @@ const paragraphStyles = {
 const headerStyles = {
   fontFamily: 'Quicksand',
   fontSize: 'calc(20px + (42 - 20) * ((100vw - 300px) / (1300)))',
-  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
-}
-
-const dropdownStyles = {
-  fontFamily: 'Quicksand', 
-  fontSize: 'calc(12px + (20 - 12) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 }
 
@@ -92,7 +87,7 @@ class About extends Component {
             <RichTextEditor
               value={this.state.about}
               readOnly
-              style={paragraphStyles}
+              editorClassName='dropDownContent'
             />
             <Accordion>
               <Accordion.Title
@@ -108,7 +103,7 @@ class About extends Component {
                 <RichTextEditor
                   value={this.state.privacyPolicy}
                   readOnly
-                  style={dropdownStyles}
+                  editorClassName='dropDownContent'
                 />
               </Accordion.Content>
 
@@ -125,7 +120,7 @@ class About extends Component {
                 <RichTextEditor
                   value={this.state.donationPolicy}
                   readOnly
-                  style={dropdownStyles}
+                  editorClassName='dropDownContent'
                 />
               </Accordion.Content>
 
@@ -142,7 +137,23 @@ class About extends Component {
                 <RichTextEditor
                   value={this.state.termsAndConditions}
                   readOnly
-                  style={dropdownStyles}
+                  editorClassName='dropDownContent'
+                />
+              </Accordion.Content>
+              <Accordion.Title
+                active={activeIndex === 3}
+                index={3}
+                onClick={this.handleClick}
+                style={paragraphStyles}
+              >
+                <Icon name="dropdown" />
+                Financials
+              </Accordion.Title>
+              <Accordion.Content active={activeIndex === 3}>
+                <RichTextEditor
+                  value={RichTextEditor.createValueFromString('<p>Beautiful Portland\'s tax documents can be found <a href=\'https://www.dropbox.com/sh/4v1zrrwu3bnlzmx/AAD-x1bog72OGLef7ID28eAMa?dl=0\'> here</a></p>', 'html')}
+                  readOnly
+                  editorClassName='dropDownContent'
                 />
               </Accordion.Content>
             </Accordion>

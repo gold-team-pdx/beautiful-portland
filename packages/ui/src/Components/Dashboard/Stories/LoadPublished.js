@@ -21,10 +21,8 @@ export default class LoadPublished extends Component {
  	}
 
   handleDelete = () => {
-    console.log('Deleting published Story with id: ' + this.props.sPublish._id)
     Axios.post('/api/deletePublish', {deleteId: this.props.sPublish._id})
       .then(res => {
-        console.log(res.data)
       })
       .catch((err) => {
         console.log(err)

@@ -31,7 +31,6 @@ export default class ViewStories extends Component {
         await this.setState({publishCount: tempCount[0].publishCount})
         await this.setState({maxPublish: Math.ceil(this.state.publishCount/5)})
         await this.setState({maxDraft: Math.ceil(this.state.draftCount/5)})
-        console.log(res)
       })
      
     if(!(((this.state.draftCount) / this.state.draftPage * 5) < 1)) {
@@ -80,7 +79,6 @@ export default class ViewStories extends Component {
 
   updateParentID = (value) => {
     this.props.updateGrandparentID(value)
-    console.log(value)
   }
 
    handleMoreStories = async () => {

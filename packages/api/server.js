@@ -25,6 +25,10 @@ app.use(session({
 app.use(cookieParser())
 app.use(passport.initialize())
 app.use(passport.session())
+app.use((req, res, next) => {
+  res.set('Content-Type', 'text/plain')
+  next()
+})
 
 //Connects to MongoDB
 const client = new MongoClient(process.env.MONGODB_URL, { useNewUrlParser: true })
@@ -124,7 +128,7 @@ app.get('/api/admin-dashboard', ensureAuthenticated, function(req, res) {
 })
 
 // Image admin functions
-app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.removePhotos.bind({amazon: AWS}))
+app.post('/api/removeImageFromBucket', ensureAuthenticated, adminHandlers.removeImageFromBucket.bind({amazon: AWS}))
 app.post('/api/addImagesToBucket', ensureAuthenticated, adminHandlers.addPhotos.bind({amazon: AWS}))
 app.post('/api/removeImagesFromFrontPage', ensureAuthenticated, adminHandlers.removeImagesFromFrontPage.bind({amazon: AWS}))
 app.post('/api/addImageFromUploaded', ensureAuthenticated, adminHandlers.addFromUploaded.bind({amazon: AWS}))
@@ -156,3 +160,4 @@ app.post('/api/getCalendarFAQEdit', ensureAuthenticated, adminHandlers.getCalend
 app.post('/api/addCalendarFAQ', ensureAuthenticated, adminHandlers.addCalendarFAQ.bind({dbClient: client}))
 app.post('/api/editCalendarFAQ', ensureAuthenticated, adminHandlers.editCalendarFAQ.bind({dbClient: client}))
 app.post('/api/deleteCalendarFAQ', ensureAuthenticated, adminHandlers.deleteCalendarFAQ.bind({dbClient: client}))
+app.post('/api/emergencyRefresh', ensureAuthenticated, adminHandlers.emergencyRefresh.bind({dbClient: client}))

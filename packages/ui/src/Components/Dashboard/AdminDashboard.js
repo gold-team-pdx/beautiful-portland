@@ -7,7 +7,6 @@ import Moment from 'moment'
 import '../Stylesheets/AdminDashboard.css'
 import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 import DashMenu from './DashMenu'
-import EditEventTemplate from './EventTemplate/EditEventTemplate'
 import AddEvent from './AddEvent'
 import UpcomingEvents from './UpcomingEvents'
 import VolunteerList from './VolunteerList'
@@ -68,7 +67,6 @@ export default class AdminDashboard extends Component {
 
   updateGrandparentID = async value => {
     await this.setState({ editId: value })
-    await console.log(this.state.editId)
   }
 
   loginPrompt = () => {

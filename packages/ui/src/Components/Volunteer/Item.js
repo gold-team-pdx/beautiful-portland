@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Form, Button, Dropdown, Segment } from 'semantic-ui-react'
+import { Form, Button, Dropdown, Message, Grid, Progress, Container} from 'semantic-ui-react'
 import '../Stylesheets/Item.css'
 
 export default class Item extends Component {
@@ -39,7 +39,9 @@ export default class Item extends Component {
       volunteer_nameValid: false,
       volunteer_phoneValid: false,
       volunteer_emailValid: false,
-      formValid: false
+      formValid: false,
+      btnLabel: 'Click to View Needed Items',
+      visible: false
     }
   }
 
@@ -71,7 +73,9 @@ export default class Item extends Component {
 	    volunteer_nameValid: false,
 	    volunteer_phoneValid: false,
 	    volunteer_emailValid: false,
-	    formValid: false
+	    formValid: false,
+	    btnLabel: 'Click to View Needed Items',
+	    visible:false
 	  })
 	}
 
@@ -198,6 +202,15 @@ export default class Item extends Component {
 	  return error.length === 0 ? '' : 'has-error'
 	}
 
+	showProgressBars = () => {
+	  if(!this.state.visible) {
+	    this.setState({visible: true, btnLabel: 'Click to Hide'})
+	  }
+	  else{
+	    this.setState({visible: false, btnLabel: 'Click to View Needed Items'})
+	  }
+	}
+
 	render() {
 	  let options = this.props.event_info.map((category) => {
 	    return {
@@ -212,11 +225,52 @@ export default class Item extends Component {
 
 	  return (
 	    <div>
-	      {this.state.messageNeeded && <Header as="h3">{this.state.message}</Header>}
-	      <Segment>
+	      <Button primary onClick={this.showProgressBars}>{this.state.btnLabel}</Button>
+	      <br />
+	    <div>
+	      {
+	        this.state.visible && (
+	          <React.Fragment>
+	              <br/>
+	            <Grid columns={2}>
+	              {
+	                this.props.event_info && this.props.event_info.map(category => (
+	                  <Grid.Row key={category.type}>
+	                    <Grid.Column>
+	                      <Progress
+	                        key={category.type}
+	                        size="medium"
+	                        value={category.real_signups}
+	                        total={category.max_signups}
+	                        progress="percent"
+	                        precision={0}
+	                        active
+	                        autoSuccess
+	                      />
+	                    </Grid.Column>
+	                    <Grid.Column>
+	                      <h4>
+	                          {category.type}
+	                        </h4>
+	                    </Grid.Column>
+	                  </Grid.Row>
+	                ))
+	              }
+	            </Grid>
+	          </React.Fragment>
+	          )}
+	        <br/>
+	      {this.state.messageNeeded && (
+	        <Message
+	          negative
+	          size="large"
+	          header="Alert"
+	          content={this.state.message}
+	        />
+	      )}
+	      <Container>
 	        <Form onSubmit={this.onSubmit}>
 	          <br />
-
 	          <div className={`input-wrapper ${this.errorClass(this.state.errors.type)}`}>
 	            <b>Please select a type:</b>
 	            <Form.Group inline>
@@ -349,7 +403,8 @@ export default class Item extends Component {
 							Submit
 	          </Button>
 	        </Form>
-	      </Segment>
+	      </Container>
+	    </div>
 	    </div>
 	  )
 	}

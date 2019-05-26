@@ -12,6 +12,7 @@ const buttonStyles = {
   fontSize: 'calc(18px + (24 - 18) * ((100vw - 300px) / (1300)))',
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
 }
+
 export default class Header extends Component {
   state = {}
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
@@ -21,7 +22,7 @@ export default class Header extends Component {
 
     return (
       <Menu
-        borderless="true"
+        borderless={true}
         size="large"
         widths={5}
         style={{
