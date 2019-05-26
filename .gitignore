@@ -4,3 +4,8 @@ lerna-debug.log
 npm-debug.log
 packages/ui/build/
 packages/api/.env
+server_config/bp_api.service
+*.tfstate
+*.tfstate.backup
+.terraform/
+configure_webserver.sh

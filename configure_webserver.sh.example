@@ -1,0 +1,53 @@
+#! /bin/bash
+sudo apt update
+sudo apt install -y nginx
+sudo cat >> /etc/nginx/sites-available/beautiful-portland <<EOL
+server {
+  listen 80;
+  server_name beautiful-portland;
+
+  root /www/beautiful-portland;
+
+  proxy_set_header  X-Real-IP  $remote_addr;
+  proxy_set_header  Host       $http_host;
+
+  location /api {
+    proxy_pass        http://127.0.0.1:5000;
+  }
+  location /auth {
+    proxy_pass        http://127.0.0.1:5000;
+  }
+  location / {
+    root /home/ubuntu/www/bp/build;
+    error_page 404 =200 /index.html;
+  }
+}
+EOL
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/beautiful-portland /etc/nginx/sites-enabled/
+sudo cat >> /lib/systemd/system/bp_api.service <<EOL
+[Unit]
+Description=Beautiful Portland API - api for the Beautiful Portland website
+Documentation=https://github.com/gold-team-pdx/beautiful-portland
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+Environment=UI_SERVER=webserver.hostname
+Environment=S3_BUCKET=http://s3.amazonaws.com
+Environment=S3_ACCESS_KEY=<your_access_key>
+Environment=S3_SECRET_ACCESS_KEY=<your_secret_key>
+Environment=MONGODB_URL=<your_atlas_url>
+Environment=GOOGLE_CLIENT_ID=<your_google_id>
+Environment=GOOGLE_CLIENT_SECRET=<your_google_secret>
+Environment=GOOGLE_CALLBACK_URL=/auth/google/callback
+Environment=ADMIN_ACCOUNT=<youradminaccount>
+Type=simple
+User=ubuntu
+ExecStart=/usr/bin/node /home/ubuntu/www/bp/api/server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOL
+sudo service start nginx
