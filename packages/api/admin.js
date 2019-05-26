@@ -670,7 +670,7 @@ getStoryCount = async function(req, res) {
   let pubResult = await collection.countDocuments({})
 		
   collection = client.db('stories_example1').collection('drafts')
-	    draftResult = await collection.countDocuments({})
+  let draftResult = await collection.countDocuments({})
   var countObj = new Object()
   countObj.draftCount = draftResult
   countObj.publishCount = pubResult
@@ -686,7 +686,6 @@ editEventTemplate = function (req, res) {
   let client = this.dbClient
   let categories = []
   req.body.data.forEach((category) => {
-    console.log(category.food)
     var isFood = category.food.toString() === 'true' ? true : false
     categories.push(
       {
@@ -788,6 +787,59 @@ deleteEventTemplate = function(req, res) {
         return
       }
     })
+}
+
+emergencyRefresh = function(req, res) {
+  let client = this.dbClient
+  let response_data = []
+  collection = client.db('events-form').collection('events')
+  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+    if(err) {
+      console.log(err, 'Error trying to get info from master template')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs[0] == null) {
+      console.log('Couldn\'t fulfill master template request')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+
+    // console.log(docs[0])
+    docs[0].categories.forEach(category => {
+      var masterObj = new Object()
+      masterObj.name = category.name
+      masterObj.food = category.food
+      masterObj.max_signups = category.max_signups
+      masterObj.min_servings = category.min_servings
+      masterObj.min_vegan = category.min_vegan
+      response_data.push(masterObj)
+    })
+    
+    collection.replaceOne({ date: 'MASTER2' },
+      {
+        'date' : 'MASTER2',
+        'location' : docs[0].location,
+        'time' : docs[0].time,
+        'max_servings' : docs[0].max_servings,
+        'categories': response_data
+      },{ upsert : true },
+      function(err,doc) {
+        if(err){
+          console.log(err, 'Error trying to find master template to refresh')
+          res.send({
+            status: 'FAILURE'
+          })
+          return
+        }else{
+          console.log('SUCCESS! has been updated')
+          res.end('Template Updated')
+        }}
+    )
+  })
 }
 
 getVolunteerHistory = async function(req, res) {
@@ -944,4 +996,5 @@ module.exports.getCalendarFAQEdit = getCalendarFAQEdit
 module.exports.addCalendarFAQ = addCalendarFAQ
 module.exports.editCalendarFAQ = editCalendarFAQ
 module.exports.deleteCalendarFAQ = deleteCalendarFAQ
+module.exports.emergencyRefresh = emergencyRefresh
 
