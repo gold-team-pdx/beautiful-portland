@@ -18,12 +18,6 @@ const headerStyles = {
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
 }
 
-const dropdownStyles = {
-  fontFamily: 'Quicksand', 
-  fontSize: 'calc(12px + (20 - 12) * ((100vw - 300px) / (1300)))',
-  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
-}
-
 
 class About extends Component {
   state = {

@@ -23,10 +23,8 @@ export default class LoadDrafts extends Component {
   }
 
   handleDelete = () => {
-    console.log('Deleting draft with id: ' + this.props.sDraft._id)
     Axios.post('/api/deleteDraft', {deleteId: this.props.sDraft._id})
       .then(res => {
-        console.log(res.data)
       })
       .catch((err) => {
         console.log(err)
@@ -45,7 +43,6 @@ export default class LoadDrafts extends Component {
     }
     Axios.post('/api/addPublish', data)
       .then(response => {
-        console.log(response, 'Story has been published')
       })
       .catch(err => {
         console.log(err, 'Try again.')
@@ -54,7 +51,6 @@ export default class LoadDrafts extends Component {
   }
 
   handlePublish = () => {
-    console.log('Publishing draft with id: ' + this.props.sDraft._id)
     Axios.all([this.moveToPublish(), this.handleDelete()])
   }
 

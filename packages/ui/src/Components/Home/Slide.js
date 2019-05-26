@@ -1,12 +1,21 @@
 import React from 'react'
 
-const Slide = ({ slideNum, image }) => {
+const Slide = ({ slideNum, image, isLessthan3 }) => {
   const mainImageStyles = {
-    opacity: 1,
+    opacity: 1
   }
-  const otherImageStyles = {
-    opacity: .5,
+  let otherImageStyles = {}
+  if(isLessthan3 === false) {
+    otherImageStyles = {
+      opacity: .4
+    }
   }
+  else {
+    otherImageStyles = {
+      opacity: .0
+    }
+  }
+
   return (
     slideNum === 1 ? 
       <img className="slide" 

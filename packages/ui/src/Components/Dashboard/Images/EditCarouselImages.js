@@ -179,26 +179,21 @@ export default class EditCarouselImages extends Component {
           return true
         }
       })
-      if(tempImages.length > 2) {
-        this.setState({
-          images: tempImages,
-          removeModalOpen: false
+      this.setState({
+        images: tempImages,
+        removeModalOpen: false
+      })
+      if(imagesToDelete.length > 0) {
+        Axios.post('/api/removeImagesFromFrontPage', {
+          urlsToRemove: imagesToDelete,
         })
-        if(imagesToDelete.length > 0) {
-          Axios.post('/api/removeImagesFromFrontPage', {
-            urlsToRemove: imagesToDelete,
+          .then(res => {
+            console.log(res)
           })
-            .then(res => {
-              console.log(res)
-            })
-            .catch(err => {
-              console.log(err)
-            })
-          this.initializeNotFrontImages()
-        }
-      }
-      else {
-        alert('You must have more than 2 images for the front page! Please add more images before deleting.')
+          .catch(err => {
+            console.log(err)
+          })
+        this.initializeNotFrontImages()
       }
     }
 
