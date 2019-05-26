@@ -694,7 +694,7 @@ editEventTemplate = function (req, res) {
         'min_servings': parseInt(category.min_servings,10),
         'food': isFood,
         'min_vegan': parseInt(category.min_vegan,10),
-        'submissions': ''
+        'submissions': req.body.submissions
       }
     )
   })
