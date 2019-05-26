@@ -212,6 +212,7 @@ export default class EventTemplateTable extends Component {
           console.log(err, 'Could not reset template')
         })
       this.setState({openRefresh: false})
+      window.location.reload()
     } else {
       this.setState({pin_match: false})
     }
