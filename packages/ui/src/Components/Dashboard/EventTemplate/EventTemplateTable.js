@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Form, Button, Header, Modal, Segment, Input, Icon } from 'semantic-ui-react'
+import React, { Component, Fragment } from 'react'
+import { Form, Button, Header, Modal, Segment, Input, Icon, Confirm} from 'semantic-ui-react'
 import dompurify from 'dompurify'
 // Import React Table
 import ReactTable from 'react-table'
@@ -41,7 +41,9 @@ export default class EventTemplateTable extends Component {
       openRefresh: false,
       pin: 'soup',
       pin_input: '',
-      pin_match: true
+      pin_match: true,
+      removeName: '',
+      index: ''
     }
   }
 
@@ -356,7 +358,7 @@ export default class EventTemplateTable extends Component {
                     if(!rowInfo){
                       return {} 
                     } else {
-                      let veganError = rowInfo.row.min_vegan < 0 || isNaN(rowInfo.row.min_vegan)
+                      let veganError = rowInfo.row.min_vegan < 0 || isNaN(rowInfo.row.min_vegan) || rowInfo.row.min_vegan === ''
                       if(veganError) 
                         submitValid = false
                       return {
@@ -391,29 +393,24 @@ export default class EventTemplateTable extends Component {
                   Header: 'Remove',
                   accessor: 'remove',
                   Cell: (row)=> (
-                    <Modal 
-                      trigger={
-                        <Button color="red" onClick={() => this.setState({open: true})}>Remove</Button>} 
-                      open={this.state.open}
-                      onClose={this.handleClose}> 
-                      <Header icon="calendar alternate outline" content="Remove event category"/>
-                      <Modal.Content>
-                        <Header as="h2">Are you sure you want to delete this category?</Header>
-                      </Modal.Content>
-                      <Modal.Actions> 
-                        <Button color="green"
-                          onClick={() => {
-                            let data = this.state.data
-                            this.deleteEvent(this.state.data[row.index].name)
-                            data.splice(row.index, 1)
-                            this.setState({data})  
-                            this.setState({open: false})
-                          }}
-                        ><Icon name="checkmark" />Yes</Button>
-                        <Button color="red" onClick={this.handleClose}>
-                          <Icon name="remove" />No</Button>
-                      </Modal.Actions>
-                    </Modal>
+                    <React.Fragment>
+                      <Button color="red" onClick={() => {
+                        this.setState({index: row.index})
+                        this.setState({removeName: this.state.data[row.index]})
+                        this.setState({open: true}) 
+                      }}>Remove</Button>
+                      <Confirm open={this.state.open}
+                        onCancel={this.handleClose} 
+                        confirmButton="Remove"
+                        content="Are you sure you want to remove this category?"
+                        onConfirm={() => {
+                          let data = this.state.data
+                          this.deleteEvent(this.state.removeName)
+                          data.splice(this.state.index, 1)
+                          this.setState({data})  
+                          this.handleClose()
+                        }}/>
+                    </React.Fragment> 
                   ) 
                 }
               ]}
