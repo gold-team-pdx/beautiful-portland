@@ -20,28 +20,28 @@ class Footer extends Component {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button circular color="facebook" icon="facebook" />
+              <Button circular color="facebook" icon="facebook" aria-label="Facebook"/>
             </a>
             <a
               href="https://google.com"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button circular color="instagram" icon="instagram" />
+              <Button circular color="instagram" icon="instagram" aria-label="Instagram"/>
             </a>
             <a
               href="https://google.com"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button circular color="twitter" icon="twitter" />
+              <Button circular color="twitter" icon="twitter" aria-label="Twitter"/>
             </a>
             <a
               href="https://google.com"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button circular color="google plus" icon="google plus" />
+              <Button circular color="google plus" icon="google plus" aria-label="Google+"/>
             </a>
           </Segment.Group>
           <Segment.Group>

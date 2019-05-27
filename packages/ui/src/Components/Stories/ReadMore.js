@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Header, Modal, Image, Container, Icon } from 'semantic-ui-react'
 import Moment from 'moment'
 import Axios from 'axios'
+import RichTextEditor from 'react-rte'
 import LogoPlaceHolder from './../../logoPhotos/bpdx_story_place_holder.png'
 import '../Stylesheets/PublishStories.css'
 
@@ -41,6 +42,7 @@ export default class PublishStories extends Component {
       .catch((err) => {
         console.log(err, 'Try again.')
       })
+    document.querySelector('div.public-DraftEditor-content').removeAttribute('aria-describedby')
   }
 
   close = () => this.setState({ open: false })
@@ -52,20 +54,20 @@ export default class PublishStories extends Component {
         <Modal.Content>
           <Modal.Description>
             {imageUrl==='notFound' ? (
-              <Image fluid size='massive' src={LogoPlaceHolder} />
+              <Image fluid size='massive' src={LogoPlaceHolder} alt="Beautiful Portland Logo"/>
             ):(
-              <Image fluid size='massive' src={this.state.publishStory.imageUrl} />
+              <Image fluid size='massive' src={this.state.publishStory.imageUrl} alt={'Photo for story: ' + this.state.title} />
             )}<br/>
-            <Container text>
+            <Container text style={{paddingBottom: '10px'}}>
               <Header as='h1' style= {paragraphStyles}><div className='capitalize'>{this.state.title}</div>
                 <Header.Subheader style={dropdownStyles}><Icon name='calendar'/>Last Edited: {this.state.date}</Header.Subheader>
               </Header>
               <Header as='h3' style={paragraphStyles}><i>{this.state.publishStory.hook}</i></Header>
-              <p style={paragraphStyles}>{this.state.publishStory.content}</p>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /><br/>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+              <RichTextEditor
+                value={RichTextEditor.createValueFromString(this.state.publishStory.content, 'html')}
+                editorClassName="story-content"
+                readOnly
+              />
             </Container>
           </Modal.Description>
         </Modal.Content>

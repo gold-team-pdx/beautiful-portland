@@ -47,9 +47,9 @@ export default class Story extends Component {
     return (
       <Card raised>
         <div className='outer-div'>{imageUrl==='notFound' ? (
-          <Image className='card-image' fluid src={LogoPlaceHolder} />
+          <Image className='card-image' fluid src={LogoPlaceHolder} alt="Beautiful Portland Logo"/>
         ):(
-          <Image className='card-image' fluid src={this.props.publish.imageUrl} />
+          <Image className='card-image' fluid src={this.props.publish.imageUrl} alt={'Photo for story: ' + this.props.publish.title} />
         )}</div>
         <Card.Content>
           <Card.Header to='/as' style={paragraphStyles}>
