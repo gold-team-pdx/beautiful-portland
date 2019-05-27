@@ -41,7 +41,6 @@ export default class EditCarouselImages extends Component {
 
     // Initialize images to display
     initializeImages = () => {
-      console.log('initializeImages')
       let urls = []
       Axios.get('/api/getImages/', {
         params: {
@@ -51,7 +50,6 @@ export default class EditCarouselImages extends Component {
       })
         .then((res) => {
           urls = res.data
-          console.log(urls)
           let imagesToDisplay = []
           urls.forEach(url => {
             let newImage = {
@@ -72,7 +70,6 @@ export default class EditCarouselImages extends Component {
 
     // Initialize images not on front page
     initializeNotFrontImages = () => {
-      console.log('initializeNotImages')
       Axios.get('/api/getImages/', {
         params: {
           isFrontPage: true,
@@ -88,7 +85,6 @@ export default class EditCarouselImages extends Component {
             })
           }
           else {
-            console.log(urls)
             urls.forEach(url => {
               let newImage = {
                 imageUrl: url,
@@ -125,7 +121,7 @@ export default class EditCarouselImages extends Component {
       let tempImages = [...this.state.imagesNotOnFrontPage]
       let index = tempImages.indexOf(item)
       let isClicked = tempImages[index].checked 
-      isClicked = isClicked ? false : true
+      isClicked = isClicked === true ? false : true
       tempImages[index].checked = isClicked
       this.setState({
         imagesNotOnFrontPage: tempImages
@@ -183,21 +179,26 @@ export default class EditCarouselImages extends Component {
           return true
         }
       })
-      this.setState({
-        images: tempImages,
-        removeModalOpen: false
-      })
-      if(imagesToDelete.length > 0) {
-        Axios.post('/api/removeImagesFromFrontPage', {
-          urlsToRemove: imagesToDelete,
+      if(tempImages.length > 2) {
+        this.setState({
+          images: tempImages,
+          removeModalOpen: false
         })
-          .then(res => {
-            console.log(res)
+        if(imagesToDelete.length > 0) {
+          Axios.post('/api/removeImagesFromFrontPage', {
+            urlsToRemove: imagesToDelete,
           })
-          .catch(err => {
-            console.log(err)
-          })
-        this.initializeNotFrontImages()
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+          this.initializeNotFrontImages()
+        }
+      }
+      else {
+        alert('You must have more than 2 images for the front page! Please add more images before deleting.')
       }
     }
 

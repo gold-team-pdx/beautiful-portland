@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Button, Icon, Modal, Header, Form } from 'semantic-ui-react'
+import { Card, Button, Icon, Modal, Header, Form, Image } from 'semantic-ui-react'
 import Axios from 'axios'
 import '../../Stylesheets/ViewAllImages.css'
 
@@ -44,8 +44,19 @@ export default class ViewAllImages extends Component {
           urls = res.data
           let imagesToDisplay = []
           urls.forEach(url => {
+            let fileName = url.split('/').pop().split('?')[0].toString()
+            fileName = decodeURI(fileName)
+            let location = 'All Photos'
+            if(url.indexOf('/frontPage') !== -1){
+              location = 'Front Page Photos'
+            }
+            else if(url.indexOf('/storyPhotos') !== -1) {
+              location = 'Story Photos'
+            }
             let newImage = {
               imageUrl: url,
+              imageName: fileName, 
+              imageLocation: location,
               checked: false
             }
             imagesToDisplay.push(newImage)
@@ -130,7 +141,6 @@ export default class ViewAllImages extends Component {
       if(imagesToDelete.length > 0) {
         Axios.post('/api/removeImageFromBucket', {
           urlsToRemove: imagesToDelete,
-          isFrontPage: false
         })
           .then(res => {
             console.log(res)
@@ -196,15 +206,23 @@ export default class ViewAllImages extends Component {
               </Button>
             </Modal.Actions>
           </Modal>
-          <Card.Group className="cardGroup" itemsPerRow = {5}>
+          <Card.Group className="cardGroup" itemsPerRow = {4}>
             {
-              this.state.images.length > 0 && this.state.images.map(item => (
-                <Card 
-                  image={item.imageUrl} 
-                  onClick={e => {this.handlePhotoClick(item)}}
-                  className={item.checked ? 'clicked' : 'notClicked'} 
-                />
-              ))
+              this.state.images.length > 0 && this.state.images.map(item => {
+                return (
+                  <Card
+                    onClick={e => {this.handlePhotoClick(item)}}
+                    className={item.checked ? 'clicked' : 'notClicked'} 
+                  > 
+                    <Image src={item.imageUrl} wrapped ui={false} />
+                    <Card.Content>
+                      <Card.Description textAlign='left'style={{wordWrap:'break-word'}}>{'Location: ' + item.imageLocation}</Card.Description>
+                      <br></br>
+                      <Card.Description textAlign='left' style={{wordWrap:'break-word'}}>{'File Name: ' + item.imageName}</Card.Description>
+                    </Card.Content>
+                  </Card>
+                )
+              })
             }
           </Card.Group>
         </div>

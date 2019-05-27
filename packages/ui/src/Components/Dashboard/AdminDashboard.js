@@ -7,7 +7,6 @@ import Moment from 'moment'
 import '../Stylesheets/AdminDashboard.css'
 import logo from '../../logoPhotos/bpdx_horizontallogo_white.png'
 import DashMenu from './DashMenu'
-import EditEventTemplate from './EventTemplate/EditEventTemplate'
 import AddEvent from './AddEvent'
 import UpcomingEvents from './UpcomingEvents'
 import VolunteerList from './VolunteerList'
@@ -18,6 +17,7 @@ import ViewStories from './Stories/ViewStories'
 import EditEvent from './EditEvent'
 import EditStory from './Stories/EditStory'
 import VolunteerSubmissions from './VolunteerSubmissions'
+import EventTemplateTable from './EventTemplate/EventTemplateTable'
 import EditContent from './EditContent'
 import EditCalendarFAQ from './EditCalendarFAQ'
 
@@ -183,7 +183,7 @@ export default class AdminDashboard extends Component {
             {/* Changed these to divs so we can work some CSS magic on them */}
             <div className="adminPageContent">
               <Route exact path="/" component={WelcomeMessage} />
-              <Route path="/EditEventTemplate" component={EditEventTemplate} />
+              <Route path="/EditEventTemplate" component={EventTemplateTable} />
               <Route path="/AddEvent" component={AddEvent} />
               <Route path="/ViewUpcomingEvents" component={this.viewEvents} />
               <Route path="/EditEvent" component={this.editEvent} />

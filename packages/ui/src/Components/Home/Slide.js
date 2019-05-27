@@ -5,7 +5,7 @@ const Slide = ({ slideNum, image }) => {
     opacity: 1,
   }
   const otherImageStyles = {
-    opacity: .4,
+    opacity: .5,
   }
   return (
     slideNum === 1 ? 
@@ -17,7 +17,6 @@ const Slide = ({ slideNum, image }) => {
         src={image}
         alt='beautiful portland homepage' 
         style={otherImageStyles}></img>
-    
   )
 }
 
