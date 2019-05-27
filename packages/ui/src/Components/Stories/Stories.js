@@ -33,8 +33,6 @@ export default class Stories extends Component {
 	      let tempCount = JSON.parse(res.data.count_info)
 	      await this.setState({pageCount: tempCount[0].publishCount})
 	      await this.setState({totalPages: Math.ceil(this.state.pageCount/12)})
-	      console.log(res)
-	      console.log(this.state)
 	    })
 
 	  if(!(((this.state.publishCount) / this.state.publishPage * 12) < 1)) {
@@ -49,7 +47,6 @@ export default class Stories extends Component {
 	    .then(res => {
 	      if(res.data.status !== 'FAILURE') {
 	        let tempPubStory = JSON.parse(res.data.published_info)
-	        console.log(tempPubStory)
 	        this.setState({
 	          publishStory : tempPubStory
 	        })
@@ -64,7 +61,6 @@ export default class Stories extends Component {
 	    siblingRange,
 	    totalPages,
 	  } = this.state
-
 	  return (
 	    <HomeLayout>
 	      <div style={{width: '80%', margin: 'auto'/*, display: 'flex', flexDirection: 'row'*/}}>
