@@ -113,8 +113,9 @@ app.get('/api/getImageForStory', visitorHandlers.getImageForStory.bind({amazon: 
 app.get('/api/event', visitorHandlers.volunteerFormGetEventInfo.bind({dbClient: client}))
 app.post('/api/form', visitorHandlers.volunteerFormSubmit.bind({dbClient: client}))
 app.get('/api/eventCalendar', visitorHandlers.eventCalendar.bind({dbClient: client}))
-app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client}))
-app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client}))
+app.get('/api/displayStory', visitorHandlers.displayStory.bind({dbClient: client, amazon: AWS}))
+app.get('/api/countStory', visitorHandlers.countStory.bind({dbClient: client}))
+app.get('/api/getOneStory', visitorHandlers.getOneStory.bind({dbClient: client, amazon: AWS}))
 app.get('/api/content', visitorHandlers.getContent.bind({dbClient: client}))
 app.get('/api/getCalendarFAQ', visitorHandlers.getCalendarFAQ.bind({dbClient: client}))
 
@@ -160,3 +161,4 @@ app.post('/api/getCalendarFAQEdit', ensureAuthenticated, adminHandlers.getCalend
 app.post('/api/addCalendarFAQ', ensureAuthenticated, adminHandlers.addCalendarFAQ.bind({dbClient: client}))
 app.post('/api/editCalendarFAQ', ensureAuthenticated, adminHandlers.editCalendarFAQ.bind({dbClient: client}))
 app.post('/api/deleteCalendarFAQ', ensureAuthenticated, adminHandlers.deleteCalendarFAQ.bind({dbClient: client}))
+app.post('/api/emergencyRefresh', ensureAuthenticated, adminHandlers.emergencyRefresh.bind({dbClient: client}))

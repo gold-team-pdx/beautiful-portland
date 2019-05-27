@@ -87,7 +87,7 @@ getVolunteerList = function(req, res) {
 postAddEvent = function(req, res){
   let client = this.dbClient
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER'}).toArray((err,docs) =>{
+  collection.find({date: 'MASTER2'}).toArray((err,docs) =>{
     if(err){
       console.log(err, 'Coudln\'t find MASTER document')
       res.send({
@@ -104,7 +104,7 @@ postAddEvent = function(req, res){
  	    docs[0].time = req.body.newTime
  	    docs[0].coordinator = req.body.newCoorName
  	    docs[0].coordinator_phone = req.body.newCoorPhone
-
+      console.log(docs[0])
 		 	collection.insertOne(docs[0])
 		 	res.send({
 				 status: 'SUCCESS'
@@ -670,7 +670,7 @@ getStoryCount = async function(req, res) {
   let pubResult = await collection.countDocuments({})
 		
   collection = client.db('stories_example1').collection('drafts')
-	    draftResult = await collection.countDocuments({})
+  let draftResult = await collection.countDocuments({})
   var countObj = new Object()
   countObj.draftCount = draftResult
   countObj.publishCount = pubResult
@@ -686,7 +686,6 @@ editEventTemplate = function (req, res) {
   let client = this.dbClient
   let categories = []
   req.body.data.forEach((category) => {
-    console.log(category.food)
     var isFood = category.food.toString() === 'true' ? true : false
     categories.push(
       {
@@ -694,7 +693,8 @@ editEventTemplate = function (req, res) {
         'max_signups': parseInt(category.max_signups,10),
         'min_servings': parseInt(category.min_servings,10),
         'food': isFood,
-        'min_vegan': parseInt(category.min_vegan,10)
+        'min_vegan': parseInt(category.min_vegan,10),
+        'submissions': req.body.submissions
       }
     )
   })
@@ -705,6 +705,8 @@ editEventTemplate = function (req, res) {
       'location' : req.body.location,
       'time' : '6:00 pm',
       'max_servings' : req.body.max_servings,
+      'coordinator': '',
+      'coordinator_phone': '',
       'categories': categories
     },{ upsert : true },
     function(err,doc) {
@@ -748,6 +750,7 @@ getEventTemplate = function(req, res) {
       masterObj.max_signups = category.max_signups
       masterObj.min_servings = category.min_servings
       masterObj.min_vegan = category.min_vegan
+      masterObj.submissions = category.submissions
       response_data.push(masterObj)
     })
 
@@ -788,6 +791,62 @@ deleteEventTemplate = function(req, res) {
         return
       }
     })
+}
+
+emergencyRefresh = function(req, res) {
+  let client = this.dbClient
+  let response_data = []
+  collection = client.db('events-form').collection('events')
+  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+    if(err) {
+      console.log(err, 'Error trying to get info from master template')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs[0] == null) {
+      console.log('Couldn\'t fulfill master template request')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+
+    // console.log(docs[0])
+    docs[0].categories.forEach(category => {
+      var masterObj = new Object()
+      masterObj.name = category.name
+      masterObj.food = category.food
+      masterObj.max_signups = category.max_signups
+      masterObj.min_servings = category.min_servings
+      masterObj.min_vegan = category.min_vegan
+      masterObj.submissions = category.submissions
+      response_data.push(masterObj)
+    })
+    
+    collection.replaceOne({ date: 'MASTER2' },
+      {
+        'date' : 'MASTER2',
+        'location' : docs[0].location,
+        'time' : docs[0].time,
+        'max_servings' : docs[0].max_servings,
+        'categories': response_data,
+        'coordinator': docs[0].coordinator,
+        'coordinator_phone': docs[0].coordinator_phone
+      },{ upsert : true },
+      function(err,doc) {
+        if(err){
+          console.log(err, 'Error trying to find master template to refresh')
+          res.send({
+            status: 'FAILURE'
+          })
+          return
+        }else{
+          console.log('SUCCESS! has been updated')
+          res.end('Template Updated')
+        }}
+    )
+  })
 }
 
 getVolunteerHistory = async function(req, res) {
@@ -944,4 +1003,5 @@ module.exports.getCalendarFAQEdit = getCalendarFAQEdit
 module.exports.addCalendarFAQ = addCalendarFAQ
 module.exports.editCalendarFAQ = editCalendarFAQ
 module.exports.deleteCalendarFAQ = deleteCalendarFAQ
+module.exports.emergencyRefresh = emergencyRefresh
 

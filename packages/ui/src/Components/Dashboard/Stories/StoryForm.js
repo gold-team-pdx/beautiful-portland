@@ -232,7 +232,7 @@ export default class StoryForm extends Component {
     // If the keys are different, push new file.
     if(fileName !== this.state.postPhotoName) {
       Axios.post('/api/addImageIntoStories', {
-        filesToAdd: this.state.postPhoto
+        fileToAdd: this.state.postPhoto
       })
         .then(res => {
           this.clearForm()
