@@ -214,9 +214,10 @@ eventCalendar = function(req, res) {
 }
 
 displayStory = function(req, res) {
+  let skips = (req.query.page - 1) * 12
   let client = this.dbClient
   collection = client.db('stories_example1').collection('published')
-  collection.find().sort({ _id: -1 }).limit(50).toArray((err, docs) => {
+  collection.find().sort({ _id: -1 }).skip(skips).limit(12).toArray((err, docs) => {
     if (err) {
       console.log(err, 'Error trying to find published Stories')
       res.send({
@@ -230,6 +231,14 @@ displayStory = function(req, res) {
       })
       return
     }
+    let AWS = this.amazon
+    const s3 = new AWS.S3({
+      endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+      s3ForcePathStyle: true,
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+    })
+    const bucket = 'beautiful-portland-carousel-photos'
     let response_data = []
     docs.map((pubStory) => {
       var publishObj = new Object()
@@ -238,13 +247,43 @@ displayStory = function(req, res) {
       publishObj.title = pubStory.title
       publishObj.hook = pubStory.hook
       publishObj.content = pubStory.content
-      publishObj.public_status = pubStory.public_status
-      response_data.push(pubStory)
+      if(pubStory.postPhotoName=== 'No Photo'){
+        publishObj.imageUrl = 'notFound'
+        response_data.push(publishObj)
+      }else{
+        let key = 'storyPhotos/' + pubStory.postPhotoName
+        try {
+          let url = s3.getSignedUrl('getObject', {Bucket: bucket, Key: key})
+          if(url.indexOf('undefined') === -1) {
+            publishObj.imageUrl = url
+          }
+          else {
+            console.log('File not found!')
+            publishObj.imageUrl = 'notFound'
+          }
+        } catch (err) {
+          console.log('ERROR could not locate file : ' + JSON.stringify(err))
+        }
+        response_data.push(publishObj)
+      }
     })
     res.send({
       status: 'SUCCESS',
       published_info: JSON.stringify(response_data)
     })
+  })
+}
+
+countStory = async function(req, res) {
+  let client = this.dbClient
+  collection = client.db('stories_example1').collection('published')
+  var countObj = new Object()
+  countObj.publishCount = await collection.countDocuments({})
+  let response_data = []
+  response_data.push(countObj)
+  res.send({
+    status: 'SUCESS',
+    count_info: JSON.stringify(response_data)
   })
 }
 
@@ -265,6 +304,14 @@ getOneStory = function(req, res) {
       })
       return
     }
+    let AWS = this.amazon
+    const s3 = new AWS.S3({
+      endpoint: new AWS.Endpoint(process.env.S3_BUCKET),
+      s3ForcePathStyle: true,
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+    })
+    const bucket = 'beautiful-portland-carousel-photos'
     let response_data = []
     docs.map((pubStory) => {
       var publishObj = new Object()
@@ -273,8 +320,24 @@ getOneStory = function(req, res) {
       publishObj.title = pubStory.title
       publishObj.hook = pubStory.hook
       publishObj.content = pubStory.content
-      publishObj.public_status = pubStory.public_status
-      response_data.push(pubStory)
+      if(pubStory.postPhotoName=== 'No Photo'){
+        publishObj.imageUrl = 'notFound'
+        response_data.push(publishObj)
+      }else{
+        let key = 'storyPhotos/' + pubStory.postPhotoName
+        try {
+          let url = s3.getSignedUrl('getObject', {Bucket: bucket, Key: key})
+          if(url.indexOf('undefined') === -1) {
+            publishObj.imageUrl = url
+          }
+          else {
+            publishObj.imageUrl = 'notFound'
+          }
+        } catch (err) {
+          console.log('ERROR could not locate file : ' + JSON.stringify(err))
+        }
+        response_data.push(publishObj)
+      }
     })
     res.send({
       status: 'SUCCESS',
@@ -368,6 +431,7 @@ module.exports.volunteerFormGetEventInfo = volunteerFormGetEventInfo
 module.exports.eventCalendar = eventCalendar
 module.exports.getImageForStory = getImageForStory
 module.exports.displayStory = displayStory
+module.exports.countStory = countStory
 module.exports.getOneStory = getOneStory
 module.exports.getContent = getContent
 module.exports.getCalendarFAQ = getCalendarFAQ

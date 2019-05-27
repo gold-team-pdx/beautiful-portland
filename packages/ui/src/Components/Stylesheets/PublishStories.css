@@ -1,77 +1,38 @@
-.card-header{
-    display: inline-block;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: "...";
-}
-
 .card-description{
     display: inline-block;
     white-space: nowrap;
-    max-width: 100%;
+    max-width: 95%;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.card-button {
+    position: 'absolute';
+    bottom: '10px';
+    box-shadow: '3px 3px #888888'
 }
 
 .capitalize {
     text-transform: capitalize;
 }
-.body{
-    padding:5px 10px;
-    display: inline-block;
-    max-height: 160px;
-    overflow: hidden;
-    text-overflow: "...";
-    /* max-width: 200px;
-    overflow: hidden;
-    white-space: nowrap; */
-    /* display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical; */
-}
-/* .body:hover{
-    text-overflow: inherit;
-    overflow: visible;
-} */
 
-.horizontalReadMore{
-    padding:5px 10px;
-    display: inline-block;
-    max-height: 160px;
+.outer-div
+{
+    max-height: 327px;
+    vertical-align: middle;
     overflow: hidden;
-    text-overflow: "...";
-    /* max-width: 200px;
-    overflow: hidden;
-    white-space: nowrap; */
-    /* display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical; */
 }
 
-.horizontalReadMore:hover{
-    text-overflow: inherit;
-    overflow: visible;
-}
-
-.storyContainer {
+.card-image {
     position: relative;
-    max-width: 800px; /* Maximum width */
-    margin: 0 auto; /* Center it */
+    overflow: hidden;
+    background-color: black;
+    background-position: center;
+    background-size: cover;
+    transition: all 0.7s ease;
 }
 
-.storyContainer .storyContent {
-    position: absolute; /* Position the background text */
-    bottom: 0; /* At the bottom. Use top:0 to append it to the top */
-    background: rgb(0, 0, 0); /* Fallback color */
-    background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
-    color: #f1f1f1; /* Grey text */
-    width: 100%; /* Full width */
-    padding: 20px; /* Some padding */
-}
-
-.storyText {
-    font-family: 'Quicksand';
-    font-size: calc(12px + (20 - 12) * ((100vw - 300px) / (1300)));
-    line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)));
+.card-image:hover
+{
+    transform: scale(1.1) rotate(2deg);
 }
