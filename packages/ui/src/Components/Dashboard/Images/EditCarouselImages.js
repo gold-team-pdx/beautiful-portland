@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Button, Icon, Modal, Header, Form } from 'semantic-ui-react'
 import Axios from 'axios'
+import '../../Stylesheets/ViewAllImages.css'
 
 export default class EditCarouselImages extends Component {
     state = {
@@ -304,7 +305,7 @@ export default class EditCarouselImages extends Component {
             <Header icon='trash' content='Remove Photos' />
             <Modal.Content>
               <p>
-                            Are you sure you want to remove these photos from the front page?
+                  Are you sure you want to remove these photos from the front page?
               </p>
             </Modal.Content>
             <Modal.Actions>
