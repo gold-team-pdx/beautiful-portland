@@ -1,22 +1,18 @@
 import React, { Component } from 'react'
-import { Card, Button, Pagination, Icon } from 'semantic-ui-react'
-import Header from '../Home/Header'
-import PublishStories from './PublishStories'
-import PublishStories2 from './PublishStories2'
-import PublishStories3 from './PublishStories3'
-import PublishStories4 from './PublishStories4'
+import { Card, Pagination, Icon } from 'semantic-ui-react'
+import HomeLayout from '../Layouts/HomeLayout'
+import Story from './Story'
 import Axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
 import '../Stylesheets/Home.css'
 import { Grid } from 'semantic-ui-react'
 
-export default class Home extends Component {
+export default class Stories extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       publishStory: [],
-      version: '1',
       activePage: 1,
       pageCount: 1,
       totalPages: 1,
@@ -28,6 +24,7 @@ export default class Home extends Component {
 	handlePaginationChange = async (e, { activePage }) => {
 	  await this.setState({ activePage })
 	  this.componentDidMount()
+	  window.scrollTo(0,0)
 	}
 
 	componentDidMount = async () => {
@@ -45,36 +42,19 @@ export default class Home extends Component {
 	  }
 	}
 
-  getStory = () => {
-    Axios.get('/api/displayStory', {
-      params: { page: this.state.activePage }
-    })
-      .then(res => {
-        if(res.data.status !== 'FAILURE') {
-          let tempPubStory = JSON.parse(res.data.published_info)
-          console.log(tempPubStory)
-          this.setState({
-            publishStory : tempPubStory
-          })
-        }
-      })
-  }
-
-	handleVersion = () => {
-	  // const newVersion = this.state.version === false ? true : false
-	  var newVersion = 0
-	  if (this.state.version === '1'){
-	    newVersion = '2'
-	  }else if (this.state.version === '2'){
-	    newVersion = '3'
-	  }else if (this.state.version === '3'){
-	    newVersion = '4'
-	  }else{
-	    newVersion = '1'
-	  }
-	  this.setState({
-	    version: newVersion
+	getStory = () => {
+	  Axios.get('/api/displayStory', {
+	    params: { page: this.state.activePage }
 	  })
+	    .then(res => {
+	      if(res.data.status !== 'FAILURE') {
+	        let tempPubStory = JSON.parse(res.data.published_info)
+	        console.log(tempPubStory)
+	        this.setState({
+	          publishStory : tempPubStory
+	        })
+	      }
+	    })
 	}
 
 	render() {
@@ -85,168 +65,42 @@ export default class Home extends Component {
 	    totalPages,
 	  } = this.state
 
-	  if(this.state.version==='1'){
-	    return (
-	      <div className="Story">
-	        <div style={{ flex: 1, top: 0, width: '100%', margin:'auto' }}>
-	          <Header />
-	        </div>
-
-	        <br/> <div style={{ float: 'left'}}><Button primary onClick={this.handleVersion}>Version {this.state.version}</Button></div>
-	        <div style={{width: '80%', margin: 'auto'}}>
-	          <Card.Group centered itemsPerRow={3}>
-	            {this.state.publishStory && this.state.publishStory.map((publish) =>{
-	              return(
-	                <PublishStories
-	                  key={publish.edited_timestamp}
-	                  publish={publish}
-	                  version={this.state.version}
-	                  url={publish.title}
-	                />
-	              )
-	            })}
-	          </Card.Group>
-	        </div>
-
-	        <br/>
-	        <div>
-	          <p style={{color:'white'}}>totalPages: {totalPages}, activePage: {activePage}</p>
-	          <Grid centered>
-	            <Pagination
-	              activePage={activePage}
-	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
-	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
-	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
-	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
-	              boundaryRange={boundaryRange}
-	              onPageChange={this.handlePaginationChange}
-	              siblingRange={siblingRange}
-	              totalPages={totalPages}
-	            />
-	          </Grid>
-	        </div>
-	      </div>
-	    )
-	  }
-	  else if(this.state.version==='2'){
-	    return (
-	      <div className="Story">
-	        <div style={{ flex: 1, top: 0, width: '100%', margin:'auto' }}>
-	          <Header />
-	        </div>
-
-	        <br/> <div style={{ float: 'left'}}><Button primary onClick={this.handleVersion}>Version {this.state.version}</Button></div>
-	        <div style={{width: '80%', margin: 'auto'}}>
+	  return (
+	    <HomeLayout>
+	      <div style={{width: '80%', margin: 'auto'/*, display: 'flex', flexDirection: 'row'*/}}>
+	        <Card.Group itemsPerRow={3}>
 	          {this.state.publishStory && this.state.publishStory.map((publish) =>{
 	            return(
-	              <PublishStories2
+	              <Story
 	                key={publish.edited_timestamp}
 	                publish={publish}
 	                version={this.state.version}
+	                url={publish.title}
+	                image={publish.imageUrl}
 	              />
 	            )
 	          })}
-	        </div>
-
-	        <br/>
-	        <div>
-	          <Grid centered>
-	            <Pagination
-	              activePage={activePage}
-	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
-	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
-	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
-	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
-	              boundaryRange={boundaryRange}
-	              onPageChange={this.handlePaginationChange}
-	              siblingRange={siblingRange}
-	              totalPages={totalPages}
-	            />
-	          </Grid>
-	        </div>
+	        </Card.Group>
 	      </div>
-	    )
-	  }
-	  else if(this.state.version==='3'){
-	    return (
-	      <div className="Story">
-	        <div style={{ flex: 1, top: 0, width: '100%', margin:'auto' }}>
-	          <Header />
-	        </div>
 
-	        <br/> <div style={{ float: 'left'}}><Button primary onClick={this.handleVersion}>Version {this.state.version}</Button></div>
-	        <div style={{width: '80%', margin: 'auto'}}>
-	          {this.state.publishStory && this.state.publishStory.map((publish) =>{
-	            return(
-	              <PublishStories3
-	                key={publish.edited_timestamp}
-	                publish={publish}
-	                version={this.state.version}
-	              />
-	            )
-	          })}
-	        </div>
-
-	        <br/>
-	        <div>
-	          <Grid centered>
-	            <Pagination
-	              activePage={activePage}
-	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
-	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
-	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
-	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
-	              boundaryRange={boundaryRange}
-	              onPageChange={this.handlePaginationChange}
-	              siblingRange={siblingRange}
-	              totalPages={totalPages}
-	            />
-	          </Grid>
-	        </div>
+	      <br/>
+	      <div>
+	        <Grid centered>
+	          <Pagination
+	            activePage={activePage}
+	            ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+	            firstItem={{ content: <Icon name='chevron left' />, icon: true }}
+	            lastItem={{ content: <Icon name='chevron right' />, icon: true }}
+	            prevItem={{ content: <Icon name='angle left' />, icon: true }}
+	            nextItem={{ content: <Icon name='angle right' />, icon: true }}
+	            boundaryRange={boundaryRange}
+	            onPageChange={this.handlePaginationChange}
+	            siblingRange={siblingRange}
+	            totalPages={totalPages}
+	          />
+	        </Grid>
 	      </div>
-	    )
-	  }
-	  else{
-	    return (
-	      <div className="Story">
-	        <div style={{ flex: 1, top: 0, width: '100%', margin:'auto' }}>
-	          <Header />
-	        </div>
-
-	        <br/> <div style={{ float: 'left'}}><Button primary onClick={this.handleVersion}>Version {this.state.version}</Button></div>
-	        <div style={{width: '80%', margin: 'auto'}}>
-	          {this.state.publishStory && this.state.publishStory.map((publish) =>{
-	            return(
-	              <PublishStories4
-	                key={publish.edited_timestamp}
-	                publish={publish}
-	                version={this.state.version}
-	              />
-	            )
-	          })}
-	        </div>
-	        <br/>
-	        <div>
-	          <Grid centered>
-	            <Pagination
-	              activePage={activePage}
-	              ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-	              firstItem={{ content: <Icon name='chevron left' />, icon: true }}
-	              lastItem={{ content: <Icon name='chevron right' />, icon: true }}
-	              prevItem={{ content: <Icon name='angle left' />, icon: true }}
-	              nextItem={{ content: <Icon name='angle right' />, icon: true }}
-	              boundaryRange={boundaryRange}
-	              onPageChange={this.handlePaginationChange}
-	              siblingRange={siblingRange}
-	              totalPages={totalPages}
-	            />
-	          </Grid>
-	        </div>
-	      </div>
-	    )
-	  }
+	    </HomeLayout>
+	  )
 	}
 }

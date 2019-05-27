@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Item from './Item'
-import { Header, Container } from 'semantic-ui-react'
+import { Header, Message, Container, Icon } from 'semantic-ui-react'
 import Axios from 'axios'
 import Moment from 'moment'
 
