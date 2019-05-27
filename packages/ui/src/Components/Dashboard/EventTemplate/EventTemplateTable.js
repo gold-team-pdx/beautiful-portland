@@ -19,6 +19,7 @@ export default class EventTemplateTable extends Component {
       food: '',
       location: '',
       max_servings: 0,
+      submissions: [],
       errors: {
         location: '',
         max_servings: '',
@@ -448,7 +449,7 @@ export default class EventTemplateTable extends Component {
             
             </Form.Group>
             <Modal trigger={
-              <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state,submitValid)}} disabled={(!(this.state.location && this.state.max_servings))}>Update</Button> }>
+              <Button color="teal" onClick={() => {this.onSubmitTemplate(this.state, submitValid)}} disabled={(!(this.state.location && this.state.max_servings))}>Update</Button> }>
               <Header icon="calendar alternate outline" content="Submit Template"/>
               <Modal.Content>  
                 <Modal.Description>

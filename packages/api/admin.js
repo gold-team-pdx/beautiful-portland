@@ -87,7 +87,7 @@ getVolunteerList = function(req, res) {
 postAddEvent = function(req, res){
   let client = this.dbClient
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER'}).toArray((err,docs) =>{
+  collection.find({date: 'MASTER2'}).toArray((err,docs) =>{
     if(err){
       console.log(err, 'Coudln\'t find MASTER document')
       res.send({
@@ -104,7 +104,7 @@ postAddEvent = function(req, res){
  	    docs[0].time = req.body.newTime
  	    docs[0].coordinator = req.body.newCoorName
  	    docs[0].coordinator_phone = req.body.newCoorPhone
-
+      console.log(docs[0])
 		 	collection.insertOne(docs[0])
 		 	res.send({
 				 status: 'SUCCESS'
@@ -693,7 +693,8 @@ editEventTemplate = function (req, res) {
         'max_signups': parseInt(category.max_signups,10),
         'min_servings': parseInt(category.min_servings,10),
         'food': isFood,
-        'min_vegan': parseInt(category.min_vegan,10)
+        'min_vegan': parseInt(category.min_vegan,10),
+        'submissions': req.body.submissions
       }
     )
   })
@@ -704,6 +705,8 @@ editEventTemplate = function (req, res) {
       'location' : req.body.location,
       'time' : '6:00 pm',
       'max_servings' : req.body.max_servings,
+      'coordinator': '',
+      'coordinator_phone': '',
       'categories': categories
     },{ upsert : true },
     function(err,doc) {
@@ -747,6 +750,7 @@ getEventTemplate = function(req, res) {
       masterObj.max_signups = category.max_signups
       masterObj.min_servings = category.min_servings
       masterObj.min_vegan = category.min_vegan
+      masterObj.submissions = category.submissions
       response_data.push(masterObj)
     })
 
@@ -816,6 +820,7 @@ emergencyRefresh = function(req, res) {
       masterObj.max_signups = category.max_signups
       masterObj.min_servings = category.min_servings
       masterObj.min_vegan = category.min_vegan
+      masterObj.submissions = category.submissions
       response_data.push(masterObj)
     })
     
@@ -825,7 +830,9 @@ emergencyRefresh = function(req, res) {
         'location' : docs[0].location,
         'time' : docs[0].time,
         'max_servings' : docs[0].max_servings,
-        'categories': response_data
+        'categories': response_data,
+        'coordinator': docs[0].coordinator,
+        'coordinator_phone': docs[0].coordinator_phone
       },{ upsert : true },
       function(err,doc) {
         if(err){
