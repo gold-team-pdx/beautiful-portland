@@ -3,11 +3,12 @@ provider "aws" {
 }
 
 resource "aws_launch_configuration" "bp_webserver_launch" {
-  image_id = "ami-005bdb005fb00e791"
+  image_id = "ami-084f960b15b503778"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.bp_sg.id}"]
+  key_name = "beautiful-portland-production"
 
-  user_data = "${file("configure_webserver.sh")}"
+  user_data = "${file("server_config/configure_webserver.sh")}"
 
   lifecycle {
     create_before_destroy = true
@@ -46,6 +47,12 @@ resource "aws_security_group" "bp_sg" {
     to_port         = 0
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   lifecycle {

@@ -1,5 +1,3 @@
-// sample nginx configuration
-
 server {
   listen 80;
   server_name beautiful-portland;

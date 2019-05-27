@@ -1,0 +1,58 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
+  },
+
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-west-2",
+    "source_ami": "ami-005bdb005fb00e791",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "beautiful-portland-ami"
+  }],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sleep 30",
+        "sudo apt update",
+        "sudo apt install -y nginx nodejs",
+        "mkdir /home/ubuntu/www && mkdir /home/ubuntu/www/bp && mkdir /home/ubuntu/packertemp"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "./server_config/bp_nginx_config",
+      "destination": "/home/ubuntu/packertemp/bp_nginx_config"
+    },
+    {
+      "type": "file",
+      "source": "./server_config/bp_api.service",
+      "destination": "/home/ubuntu/packertemp/bp_api.service"
+    },
+    {
+      "type": "file",
+      "source": "./packages/ui/build",
+      "destination": "/home/ubuntu/www/bp"
+    },
+    {
+      "type": "file",
+      "source": "./packages/api",
+      "destination": "/home/ubuntu/www/bp"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mv /home/ubuntu/packertemp/bp_nginx_config /etc/nginx/sites-available/beautiful-portland",
+        "sudo mv /home/ubuntu/packertemp/bp_api.service /lib/systemd/system/bp_api.service",
+        "sudo rm /etc/nginx/sites-enabled/default",
+        "sudo ln -s /etc/nginx/sites-available/beautiful-portland /etc/nginx/sites-enabled/"
+      ]
+    }
+  ]
+}
