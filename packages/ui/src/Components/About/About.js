@@ -24,7 +24,7 @@ class About extends Component {
     activeIndex: -1,
     about: RichTextEditor.createEmptyValue(),
     privacyPolicy: RichTextEditor.createEmptyValue(),
-    donationPolicy: RichTextEditor.createEmptyValue(),
+    antiDiscPolicy: RichTextEditor.createEmptyValue(),
     termsAndConditions : RichTextEditor.createEmptyValue()
   }
 
@@ -51,7 +51,7 @@ class About extends Component {
           let tempPrivPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
           temp = res.data.content.find(e => {
-            return e.type === 'Donation Policy'
+            return e.type === 'Anti-discrimination Policy'
           })
           let tempDonPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
@@ -63,12 +63,12 @@ class About extends Component {
           this.setState({
             about: tempAbout,
             privacyPolicy: tempPrivPol,
-            donationPolicy: tempDonPol,
+            antiDiscPolicy: tempDonPol,
             termsAndConditions: tempTaC
           })
         }
       }).catch(err => {
-        console.log('Couldn\'t retrieve data from server')
+
       })
     document.querySelector('div.public-DraftEditor-content').removeAttribute('aria-describedby')
   }
@@ -98,11 +98,11 @@ class About extends Component {
                 style={paragraphStyles}
               >
                 <Icon name="dropdown" />
-                Privacy Policy
+                Terms and Conditions
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
                 <RichTextEditor
-                  value={this.state.privacyPolicy}
+                  value={this.state.termsAndConditions}
                   readOnly
                   editorClassName='dropDownContent'
                 />
@@ -115,11 +115,11 @@ class About extends Component {
                 style={paragraphStyles}
               >
                 <Icon name="dropdown" />
-                Donation Policy
+                Privacy Policy
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 1}>
                 <RichTextEditor
-                  value={this.state.donationPolicy}
+                  value={this.state.privacyPolicy}
                   readOnly
                   editorClassName='dropDownContent'
                 />
@@ -132,15 +132,17 @@ class About extends Component {
                 style={paragraphStyles}
               >
                 <Icon name="dropdown" />
-                Terms and Conditions
+                Anti-discrimination Polcy
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 2}>
                 <RichTextEditor
-                  value={this.state.termsAndConditions}
+                  value={this.state.antiDiscPolicy}
                   readOnly
                   editorClassName='dropDownContent'
                 />
               </Accordion.Content>
+              
+              {/* UNCOMMENT WHEN FINANCIALS DROPBOX SETUP
               <Accordion.Title
                 active={activeIndex === 3}
                 index={3}
@@ -156,7 +158,7 @@ class About extends Component {
                   readOnly
                   editorClassName='dropDownContent'
                 />
-              </Accordion.Content>
+              </Accordion.Content> */}
             </Accordion>
           </Container>
         </div>
