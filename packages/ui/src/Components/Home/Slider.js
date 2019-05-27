@@ -3,17 +3,6 @@ import Slide from './Slide'
 import Axios from 'axios'
 import '../Stylesheets/Slider.css'
 
-const defaultImages = [
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/aurora.jpg',
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/canyon.jpg',
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/city.jpg',
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/desert.jpg',
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/mountains.jpg',
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/redsky.jpg',
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/sandy-shores.jpg',
-  'https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/tree-of-life.jpg'
-]
-
 export default class Slider extends Component {
   constructor(props) {
     super(props)
@@ -40,10 +29,6 @@ export default class Slider extends Component {
         .then((res) => {
           urls = res.data
           let isLessThan3 = false
-          // Else, set the urls to the default image urls given (TESTING ONLY)
-          if(urls.length === 0) {
-            urls = defaultImages
-          }
           if(urls.length < 3) {
             isLessThan3 = true
             if(urls[1] === undefined) {
@@ -57,7 +42,6 @@ export default class Slider extends Component {
           })
         })
         .catch((err) => {
-          // handle error
           console.log(err)
         })
     }
