@@ -26,10 +26,10 @@ export default class ContactUs extends Component {
               <Header as="h1" style={headerStyles}>CONTACT US</Header>
             </Grid.Row>
             <Grid.Row centered>
-              <Header as="h2" style={paragraphStyles}>Email: beautifulportland@gmail.com</Header>
+              <Header as="h2" style={paragraphStyles}>Email: adbeautifulpdx@gmail.com</Header>
             </Grid.Row>
             <Grid.Row centered>
-              <Header as="h2" style={paragraphStyles}>Phone: (530)444-4444</Header>
+              <Header as="h2" style={paragraphStyles}>Phone: (503) 673-2290 </Header>
             </Grid.Row>
           </Grid>
         </div>
