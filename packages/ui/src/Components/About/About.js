@@ -70,6 +70,7 @@ class About extends Component {
       }).catch(err => {
         console.log('Couldn\'t retrieve data from server')
       })
+    document.querySelector('div.public-DraftEditor-content').removeAttribute('aria-describedby')
   }
 
   render() {
