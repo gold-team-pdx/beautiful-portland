@@ -17,6 +17,15 @@ const headerStyles = {
   lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
 }
 
+const paragraphStyles = {
+  fontFamily: 'Quicksand',
+  margin: '40px 20px 10px 50px',
+  wordWrap: 'break-word',
+  justifyContent: 'center',
+  fontSize: 'calc(14px + (28 - 14) * ((100vw - 300px) / (1300)))',
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))'
+}
+
 export default class VolunteerCalendar extends Component {
   constructor() {
     super()
@@ -69,10 +78,20 @@ export default class VolunteerCalendar extends Component {
         <div>
           <Grid centered columns={1}>
             <Grid.Row>
+              <p style={paragraphStyles}>
+                Monday through Friday at 6pm, volunteers from grassroots groups such as Free
+                Hot Soup and Just Some Reggae Folk, gather in Director Park (815 SW Park Ave.
+                Portland, OR) to share food with Portland area residents experiencing food
+                insecurity. Beautiful Portland’s mission is to ease the burden of food insecurity for
+                Portland area residents by supporting and sustaining the efforts of food-sharing
+                volunteers.
+              </p>
+            </Grid.Row>
+            <Grid.Row>
               <Modal
                 trigger={
                   <Button style={{backgroundColor:'#a8efae'}} size='huge'>
-                    <p style={{color: '#FFF'}}>Volunteering Frequently Asked Questions</p>
+                    <p style={{color: '#FFF', textShadow: '0px 0px 4px black'}}>Volunteering Frequently Asked Questions</p>
                   </Button>
                 }
               >

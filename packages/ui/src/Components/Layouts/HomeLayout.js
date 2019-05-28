@@ -10,7 +10,9 @@ class HomeLayout extends Component {
         <div className="Header">
           <Header />
         </div>
-        <div className="Site-content">{this.props.children}</div>
+        <main>
+          <div className="Site-content">{this.props.children}</div>
+        </main>
         <div className="Footer">
           <Footer />
         </div>

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Form, Button, Header, Modal, Segment, Input, Icon, Confirm} from 'semantic-ui-react'
 import dompurify from 'dompurify'
 // Import React Table

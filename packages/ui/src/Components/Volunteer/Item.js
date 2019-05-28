@@ -297,6 +297,7 @@ export default class Item extends Component {
 	          <div className={`input-wrapper ${this.errorClass(this.state.errors.description)}`}>
 	            <Form.Group inline>
 	              <Form.Input
+	                  aria-label="description input"
 	                name="description"
 	                value={this.state.description}
 	                onChange={this.onChange}
@@ -315,6 +316,7 @@ export default class Item extends Component {
 	            <div>
 	              <Form.Group>
 	                <Form.Checkbox
+	                    aria-label="vegan checkbox"
 	                  onChange={this.updateCheckbox}
 	                  checked={this.state.vegan}
 	                  name="vegan"
@@ -322,6 +324,7 @@ export default class Item extends Component {
 	                  disabled={this.state.disableAll}
 	                />
 	                <Form.Checkbox
+	                    aria-label="vegetarian checkbox"
 	                  onChange={this.updateCheckbox}
 	                  checked={this.state.vegetarian}
 	                  name="vegetarian"
@@ -329,6 +332,7 @@ export default class Item extends Component {
 	                  disabled={this.state.disableAll}
 	                />
 	                <Form.Checkbox
+	                    aria-label="gluten free checkbox"
 	                  onChange={this.updateCheckbox}
 	                  checked={this.state.gluten_free}
 	                  name="gluten_free"
@@ -344,6 +348,7 @@ export default class Item extends Component {
 	            <div className={`input-wrapper ${this.errorClass(this.state.errors.servings)}`}>
 	              <Form.Group inline>
 	                <Form.Input
+	                    aria-label="# of servings"
 	                  name="servings"
 	                  value={this.state.servings}
 	                  onChange={this.onChange}
@@ -361,6 +366,7 @@ export default class Item extends Component {
 	          <Form.Group widths="equal">
 	            <div className={`input-wrapper ${this.errorClass(this.state.errors.volunteer_name)}`}>
 	              <Form.Input
+	                  aria-label="volunteer name"
 	                name="volunteer_name"
 	                value={this.state.volunteer_name}
 	                onChange={this.onChange}
@@ -373,6 +379,7 @@ export default class Item extends Component {
 
 	            <div className={`input-wrapper ${this.errorClass(this.state.errors.volunteer_email)}`}>
 	              <Form.Input
+	                  aria-label="volunteer email"
 	                name="volunteer_email"
 	                value={this.state.volunteer_email}
 	                onChange={this.onChange}
@@ -385,6 +392,7 @@ export default class Item extends Component {
 
 	            <div className={`input-wrapper ${this.errorClass(this.state.errors.volunteer_phone)}`}>
 	              <Form.Input
+	                  aria-label="volunteer phone #"
 	                name="volunteer_phone"
 	                value={this.state.volunteer_phone}
 	                onChange={this.onChange}
