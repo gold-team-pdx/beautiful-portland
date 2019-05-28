@@ -91,7 +91,7 @@ export default class VolunteerCalendar extends Component {
               <Modal
                 trigger={
                   <Button style={{backgroundColor:'#a8efae'}} size='huge'>
-                    <p style={{color: '#FFF', textShadow: '0px 0px 4px black'}}>Volunteering Frequently Asked Questions</p>
+                    <p style={{color: '#FFF', textShadow: '0px 0px 4px black'}}>Frequently Asked Questions</p>
                   </Button>
                 }
               >

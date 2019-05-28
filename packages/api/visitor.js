@@ -123,52 +123,107 @@ volunteerFormGetEventInfo = function(req, res) {
     })
   })
 }
-
 // Catch frontend POST request from volunteer signup form
 volunteerFormSubmit = function(req, res) {
+  //Server Side Validation
   let client = this.dbClient
-  //updates Document in mongodb
   collection = client.db('events-form').collection('events')
-  collection.updateOne(
-    {$and: [{date:req.body.date}, {'categories.name':req.body.type}]},
-    {$push: {'categories.$.submissions': {
-      'description' : req.body.description,
-      'servings' : JSON.parse(req.body.servings),
-      'vegetarian': req.body.vegetarian,
-      'vegan': req.body.vegan,
-      'gluten_free': req.body.gluten_free,
-      'volunteer_name': req.body.volunteer_name,
-      'volunteer_phone': req.body.volunteer_phone,
-      'volunteer_email': req.body.volunteer_email
-    }}}, //$push
-    function(err,resu){
-      if (err)
-        console.log(err,'Event Not Added')
-      else{
-        if(resu.result.nModified == 1){
-          console.log('Event Modified -- Added New Submission')
-          collection = client.db('volunteer_info').collection('volunteers')
-          collection.updateOne(
-            {'volunteer_email' : req.body.volunteer_email},
-            {$set: {'volunteer_email' : req.body.volunteer_email,
-              'volunteer_name' : req.body.volunteer_name,
-              'volunteer_phone' : req.body.volunteer_phone}},
-            {upsert : true},
-            function(err, result) {
-              if(err)
-                console.log(err, 'Volunteer Not Updated')
-              else{
-                console.log('Volunteer Added or Updated')
-                res.send('All Collections Updated')
-              }
-            }
-          )
-        }else{
-          console.log('Error: Event Not Updated -- No matching date or type found -- Volunteer also not updated')
-          res.send('No Collections Updated')
-        }
+  collection.find({date: req.body.date}).toArray((err, docs) => {
+    if(err) {
+      console.log(err, 'Error trying to find document for validation')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    } else if(docs.length === 0) {
+      console.log('Couldn\'t fulfill a document request for validation')
+      res.send({
+        status: 'FAILURE'
+      })
+      return
+    }
+    response_data = []
+    docs[0].categories.forEach(category => {
+      response_data.push({
+        type: category.name,
+        max_signups: category.max_signups,
+        min_servings: category.min_servings,
+        min_vegan_servings: Math.ceil(Math.floor(category.min_servings/3) / 10) * 10,
+        food: category.food,
+        min_vegan: category.min_vegan,
+      })
+    })
+
+    validInformation = true
+    foundType = false
+    servingMatch = false
+    response_data.forEach(data => {
+      if(req.body.type.match(data.type)){
+        foundType = true
+        if(req.body.servings >= data.min_servings && req.body.servings <= docs[0].max_servings)
+          servingMatch = true
       }
     })
+    if(!servingMatch)
+      validInformation = false
+    if(!foundType)
+      validInformation = false
+    if(!req.body.volunteer_email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i))
+      validInformation = false
+    if(!req.body.volunteer_phone.match(/^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/i))
+      validInformation = false
+    if(!req.body.volunteer_name.length > 2)
+      validInformation = false
+    if(!req.body.description.length >= 5)
+      validInformation = false
+
+    if(validInformation){
+      //updates Document in mongodb
+      collection = client.db('events-form').collection('events')
+      collection.updateOne(
+        {$and: [{date:req.body.date}, {'categories.name':req.body.type}]},
+        {$push: {'categories.$.submissions': {
+          'description' : req.body.description,
+          'servings' : JSON.parse(req.body.servings),
+          'vegetarian': req.body.vegetarian,
+          'vegan': req.body.vegan,
+          'gluten_free': req.body.gluten_free,
+          'volunteer_name': req.body.volunteer_name,
+          'volunteer_phone': req.body.volunteer_phone,
+          'volunteer_email': req.body.volunteer_email
+        }}}, //$push
+        function(err,resu){
+          if (err)
+            console.log(err,'Event Not Added')
+          else{
+            if(resu.result.nModified == 1){
+              console.log('Event Modified -- Added New Submission')
+              collection = client.db('volunteer_info').collection('volunteers')
+              collection.updateOne(
+                {'volunteer_email' : req.body.volunteer_email},
+                {$set: {'volunteer_email' : req.body.volunteer_email,
+                  'volunteer_name' : req.body.volunteer_name,
+                  'volunteer_phone' : req.body.volunteer_phone}},
+                {upsert : true},
+                function(err, result) {
+                  if(err)
+                    console.log(err, 'Volunteer Not Updated')
+                  else{
+                    console.log('Volunteer Added or Updated')
+                    res.send('All Collections Updated')
+                  }
+                }
+              )
+            }else{
+              console.log('Error: Event Not Updated -- No matching date or type found -- Volunteer also not updated')
+              res.send('No Collections Updated')
+            }
+          }
+        })
+    }else{
+      res.send('Information doesn\'t meet validation')
+    }
+  })
 }
 
 eventCalendar = function(req, res) {
