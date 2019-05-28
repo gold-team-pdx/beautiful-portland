@@ -152,7 +152,7 @@ class About extends Component {
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 3}>
                 <RichTextEditor
-                  value={RichTextEditor.createValueFromString('<p>Beautiful Portland\'s tax documents can be found <a href=\'https://www.dropbox.com/sh/clo8zr7n85ayj22/AACTpxmOQtO_v8xqPGORfaeXa?dl=0\'> here</a></p>', 'html')}
+                  value={RichTextEditor.createValueFromString('<p>Beautiful Portland\'s tax documents can be found <a href=\'https://www.dropbox.com/sh/clo8zr7n85ayj22/AACTpxmOQtO_v8xqPGORfaeXa?dl=0\'> <u>here</u></a></p>', 'html')}
                   readOnly
                   editorClassName='dropDownContent'
                 />
