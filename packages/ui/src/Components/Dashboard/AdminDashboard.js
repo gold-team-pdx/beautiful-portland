@@ -47,7 +47,14 @@ export default class AdminDashboard extends Component {
       })
   }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleItemClick = (e, { name }) => {
+	  Axios.get('/api/logout')
+	    .then((res) => {
+        this.setState({authenticated: res.data.authenticated})
+	    })
+	    .catch((err) => {
+	    })	
+  }
 
   updateActiveDate = date => {
     this.setState({

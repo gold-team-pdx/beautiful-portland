@@ -100,11 +100,12 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-// Logging out
+// Logs the admin out
 app.get('/api/logout', function(req, res) {
-  req.logout()
-  req.session = null
-  res.redirect(`${process.env.UI_SERVER}/`)
+  req.session.destroy(function(e){
+    req.logOut()
+    res.redirect(`${process.env.UI_SERVER}/`)
+  })
 })
 
 // Visitor request handlers
