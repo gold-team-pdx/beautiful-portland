@@ -51,7 +51,7 @@ class About extends Component {
           let tempPrivPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
           temp = res.data.content.find(e => {
-            return e.type === 'Anti-discrimination Policy'
+            return e.type === 'Anti-Discrimination Policy'
           })
           let tempDonPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
@@ -132,7 +132,7 @@ class About extends Component {
                 style={paragraphStyles}
               >
                 <Icon name="dropdown" />
-                Anti-discrimination Policy
+                Anti-Discrimination Policy
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 2}>
                 <RichTextEditor
