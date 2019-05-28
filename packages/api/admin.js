@@ -233,7 +233,7 @@ addPhotos = function(req, res) {
   })
   let file = req.body.filesToAdd
   let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   if (req.body.isFrontPage === true) {
     file.fileName = 'frontPage/' + file.fileName
   }
@@ -259,7 +259,7 @@ removeImageFromBucket = function(req, res) {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
   })
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   // Get presigned url and parse for file name
   const urls = req.body.urlsToRemove
   let files = []
@@ -309,7 +309,7 @@ removeImagesFromFrontPage = function(req, res) {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
   })
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   // Get presigned url and parse for file name
   const urls = req.body.urlsToRemove
   urls.forEach((url) => {
@@ -358,7 +358,7 @@ addImageIntoStories = function(req, res) {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
   })
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   let file = req.body.fileToAdd
   let buf = new Buffer(file.fileData.replace(/^data:image\/\w+;base64,/, ''), 'base64')
   file.fileName = 'storyPhotos/' + file.fileName
@@ -382,7 +382,7 @@ removeImageFromStories = function(req, res) {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
   })
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   let fileToDelete = 'storyPhotos/' + req.body.fileToRemove
   console.log(fileToDelete)
   const params = {
@@ -420,7 +420,7 @@ addFromUploaded = function(req, res) {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
   })
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   // Get presigned url and parse for file name
   const urls = req.body.urlsToRemove
   urls.forEach((url) => {
@@ -1004,4 +1004,3 @@ module.exports.addCalendarFAQ = addCalendarFAQ
 module.exports.editCalendarFAQ = editCalendarFAQ
 module.exports.deleteCalendarFAQ = deleteCalendarFAQ
 module.exports.emergencyRefresh = emergencyRefresh
-
