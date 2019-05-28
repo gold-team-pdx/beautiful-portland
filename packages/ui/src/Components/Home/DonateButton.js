@@ -13,9 +13,13 @@ const buttonStyles={
 const DonateButton = () => {
   return (
     <div className='donateButton'>
-      <Button  raised size='massive' fluid style={buttonStyles}>
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick" />
+        <input type="hidden" name="hosted_button_id" value="92PZHZTR7VJQ4" />
+        <Button  raised size='massive' fluid style={buttonStyles}>
                 DONATE NOW
-      </Button>
+        </Button>
+      </form>
     </div>
   )
 }
