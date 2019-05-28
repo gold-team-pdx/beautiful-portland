@@ -2,8 +2,18 @@ provider "aws" {
   region = "us-west-2"
 }
 
+data "aws_ami" "bp_ami" {
+  most_recent      = true
+  owners           = ["self"]
+
+  filter {
+    name = "name"
+    values = ["beautiful-portland-ami-*"]
+  }
+}
+
 resource "aws_launch_configuration" "bp_webserver_launch" {
-  image_id = "ami-084f960b15b503778"
+  image_id = "${data.aws_ami.bp_ami.id}"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.bp_sg.id}"]
   key_name = "beautiful-portland-production"
@@ -79,6 +89,7 @@ resource "aws_elb" "bp_elb" {
     instance_port = "80"
     instance_protocol = "http"
   }
+  # uncomment this once we have an ssl cert
   # listener {
   #   lb_port = 443
   #   lb_protocol = "https"
