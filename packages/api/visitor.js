@@ -7,7 +7,7 @@ getImageForStory = function(req, res) {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
   })
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   let key = 'storyPhotos/' + req.query.fileName
   try {
     let url = s3.getSignedUrl('getObject', {Bucket: bucket, Key: key})
@@ -35,7 +35,7 @@ homeImages = function(req, res) {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
   })
-  const bucket = 'beautiful-portland-carousel-photos'
+  const bucket = process.env.S3_BUCKET_NAME
   let imageUrls = []
   // Checks for if on front page (or editing front page images)
   let isFront = req.query.isFrontPage
@@ -238,7 +238,7 @@ displayStory = function(req, res) {
       accessKeyId: process.env.S3_ACCESS_KEY,
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
     })
-    const bucket = 'beautiful-portland-carousel-photos'
+    const bucket = process.env.S3_BUCKET_NAME
     let response_data = []
     docs.map((pubStory) => {
       var publishObj = new Object()
@@ -311,7 +311,7 @@ getOneStory = function(req, res) {
       accessKeyId: process.env.S3_ACCESS_KEY,
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
     })
-    const bucket = 'beautiful-portland-carousel-photos'
+    const bucket = process.env.S3_BUCKET_NAME
     let response_data = []
     docs.map((pubStory) => {
       var publishObj = new Object()

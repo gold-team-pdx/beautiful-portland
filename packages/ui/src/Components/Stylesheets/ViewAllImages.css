@@ -20,10 +20,17 @@
     position: static;
 }
 .ui.card.clicked {
-    border-style: solid;
-    border-color: red;
-    border-width: 3%;
+    background-color: red;
     box-shadow: none !important;
     animation: none !important;
 
+}
+
+.ui.card>.image, .ui.cards>.card>.image {
+    position: relative;
+    margin: auto;
+    display: block;
+    flex: 0 0 auto;
+    width: 75%;
+    background: rgba(0,0,0,.05);
 }

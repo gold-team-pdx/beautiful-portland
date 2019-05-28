@@ -24,6 +24,7 @@ export default class Home extends Component {
       }).catch(err => {
         console.log(err, 'Couldn\'t get data from server')
       })
+    document.querySelector('div.public-DraftEditor-content').removeAttribute('aria-describedby')
   }
 
   render() {

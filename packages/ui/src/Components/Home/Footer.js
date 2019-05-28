@@ -16,32 +16,25 @@ class Footer extends Component {
         >
           <Segment.Group>
             <a
-              href="https://www.facebook.com/groups/fhsmobile/"
+              href="https://www.facebook.com/BeautifulPortland/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button circular color="facebook" icon="facebook" />
+              <Button circular color="facebook" icon="facebook" aria-label="Facebook"/>
             </a>
             <a
-              href="https://google.com"
+              href="https://www.instagram.com/beautifulportlandnonprofit/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button circular color="instagram" icon="instagram" />
+              <Button circular color="instagram" icon="instagram" aria-label="Instagram"/>
             </a>
             <a
-              href="https://google.com"
+              href="https://twitter.com/BeautifulPortl3"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button circular color="twitter" icon="twitter" />
-            </a>
-            <a
-              href="https://google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button circular color="google plus" icon="google plus" />
+              <Button circular color="twitter" icon="twitter" aria-label="Twitter"/>
             </a>
           </Segment.Group>
           <Segment.Group>

@@ -10,7 +10,8 @@ const buttonStyles = {
   fontFamily: 'Quicksand',
   textWrap: 'break-word',
   fontSize: 'calc(18px + (24 - 18) * ((100vw - 300px) / (1300)))',
-  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}'
+  lineHeight: 'calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1300)))}',
+  textShadow: '0px 0px 3px black'
 }
 
 export default class Header extends Component {
