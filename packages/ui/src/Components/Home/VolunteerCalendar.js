@@ -79,26 +79,31 @@ export default class VolunteerCalendar extends Component {
           <Grid centered columns={1}>
             <Grid.Row>
               <p style={paragraphStyles}>
-                Monday through Friday at 6pm, volunteers from grassroots groups such as Free
-                Hot Soup and Just Some Reggae Folk, gather in Director Park (815 SW Park Ave.
-                Portland, OR) to share food with Portland area residents experiencing food
-                insecurity. Beautiful Portland’s mission is to ease the burden of food insecurity for
-                Portland area residents by supporting and sustaining the efforts of food-sharing
-                volunteers.
+                Monday through Friday at 6pm, volunteers from grassroots groups
+                such as Free Hot Soup and Just Some Reggae Folk, gather in
+                Director Park (815 SW Park Ave. Portland, OR) to share food with
+                Portland area residents experiencing food insecurity. Beautiful
+                Portland’s mission is to ease the burden of food insecurity for
+                Portland area residents by supporting and sustaining the efforts
+                of food-sharing volunteers.
               </p>
             </Grid.Row>
             <Grid.Row>
               <Modal
                 trigger={
-                  <Button style={{backgroundColor:'#a8efae'}} size='huge'>
-                    <p style={{color: '#FFF', textShadow: '0px 0px 4px black'}}>Volunteering Frequently Asked Questions</p>
+                  <Button style={{ backgroundColor: '#a8efae' }} size="huge">
+                    <p
+                      style={{ color: '#FFF', textShadow: '0px 0px 4px black' }}
+                    >
+                      Frequently Asked Questions
+                    </p>
                   </Button>
                 }
               >
-                <Modal.Header style={headerStyles}>Frequently Asked Questions</Modal.Header>
-                <Modal.Content>
-                  <CalendarFAQ />
-                </Modal.Content>
+                <Modal.Header style={headerStyles}>
+                  Frequently Asked Questions
+                </Modal.Header>
+                <CalendarFAQ />
               </Modal>
             </Grid.Row>
             <Grid.Row>

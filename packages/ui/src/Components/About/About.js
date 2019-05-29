@@ -51,7 +51,7 @@ class About extends Component {
           let tempPrivPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
           temp = res.data.content.find(e => {
-            return e.type === 'Anti-discrimination Policy'
+            return e.type === 'Anti-Discrimination Policy'
           })
           let tempDonPol = RichTextEditor.createValueFromString(temp.content, 'html')
 
@@ -132,7 +132,7 @@ class About extends Component {
                 style={paragraphStyles}
               >
                 <Icon name="dropdown" />
-                Anti-discrimination Polcy
+                Anti-Discrimination Policy
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 2}>
                 <RichTextEditor
@@ -141,8 +141,6 @@ class About extends Component {
                   editorClassName='dropDownContent'
                 />
               </Accordion.Content>
-              
-              {/* UNCOMMENT WHEN FINANCIALS DROPBOX SETUP
               <Accordion.Title
                 active={activeIndex === 3}
                 index={3}
@@ -154,11 +152,11 @@ class About extends Component {
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 3}>
                 <RichTextEditor
-                  value={RichTextEditor.createValueFromString('<p>Beautiful Portland\'s tax documents can be found <a href=\'https://www.dropbox.com/sh/4v1zrrwu3bnlzmx/AAD-x1bog72OGLef7ID28eAMa?dl=0\'> here</a></p>', 'html')}
+                  value={RichTextEditor.createValueFromString('<p>Beautiful Portland\'s tax documents can be found <a href=\'https://www.dropbox.com/sh/clo8zr7n85ayj22/AACTpxmOQtO_v8xqPGORfaeXa?dl=0\'> <u>here</u></a></p>', 'html')}
                   readOnly
                   editorClassName='dropDownContent'
                 />
-              </Accordion.Content> */}
+              </Accordion.Content>
             </Accordion>
           </Container>
         </div>
