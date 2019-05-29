@@ -415,7 +415,7 @@ export default class StoryForm extends Component {
                 disabled={!this.state.title || !this.state.hook || !this.state.content}
                 onClick={this.handleOpenSave}>Save</Button>
               <Confirm open={this.state.openSave}
-                content='Your Story will be saved as a draft'
+                content='Your story will be saved'
                 onCancel={this.handleCloseSave}
                 onConfirm={this.handleSave}
               />
@@ -427,7 +427,7 @@ export default class StoryForm extends Component {
                   disabled={!this.state.title || !this.state.hook || !this.state.content}
                   onClick={this.handleOpenPublish}>Publish</Button>
                 <Confirm open={this.state.openPublish}
-                  content='Your Story will be published'
+                  content='Your story will be published'
                   onCancel={this.handleClosePublish}
                   onConfirm={this.handlePublish}
                 />
