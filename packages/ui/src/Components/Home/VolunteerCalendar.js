@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import BigCalendar from 'react-big-calendar'
 import Axios from 'axios'
-import { Grid, Modal, Button, Message } from 'semantic-ui-react'
+import { Grid, Modal, Button, Message, Container } from 'semantic-ui-react'
 import VolunteerForm from '../Volunteer/VolunteerForm'
 import HomeLayout from '../Layouts/HomeLayout'
 import CalendarFAQ from '../Home/CalendarFAQ'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { Container } from 'semantic-ui-react'
+
 
 moment.locale('en-GB')
 const localizer = BigCalendar.momentLocalizer(moment)
