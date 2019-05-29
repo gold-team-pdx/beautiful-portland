@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import BigCalendar from 'react-big-calendar'
 import Axios from 'axios'
-import { Grid, Modal, Button } from 'semantic-ui-react'
+import { Grid, Modal, Button, Message, Container } from 'semantic-ui-react'
 import VolunteerForm from '../Volunteer/VolunteerForm'
 import HomeLayout from '../Layouts/HomeLayout'
 import CalendarFAQ from '../Home/CalendarFAQ'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+
 
 moment.locale('en-GB')
 const localizer = BigCalendar.momentLocalizer(moment)
@@ -19,7 +20,7 @@ const headerStyles = {
 
 const paragraphStyles = {
   fontFamily: 'Quicksand',
-  margin: '40px 20px 10px 50px',
+  margin: '0px 20px 10px 50px',
   wordWrap: 'break-word',
   justifyContent: 'center',
   fontSize: 'calc(14px + (28 - 14) * ((100vw - 300px) / (1300)))',
@@ -78,7 +79,9 @@ export default class VolunteerCalendar extends Component {
         <div>
           <Grid centered columns={1}>
             <Grid.Row>
-              <p style={paragraphStyles}>
+              <Container>
+                <Message info>
+                  <p style={paragraphStyles}>
                 Monday through Friday at 6pm, volunteers from grassroots groups
                 such as Free Hot Soup and Just Some Reggae Folk, gather in
                 Director Park (815 SW Park Ave. Portland, OR) to share food with
@@ -86,7 +89,9 @@ export default class VolunteerCalendar extends Component {
                 Portland’s mission is to ease the burden of food insecurity for
                 Portland area residents by supporting and sustaining the efforts
                 of food-sharing volunteers.
-              </p>
+                  </p>
+                </Message>
+              </Container>
             </Grid.Row>
             <Grid.Row>
               <Modal
