@@ -28,7 +28,8 @@
     "semantic-ui-react": "^0.85.0"
   },
   "resolutions": {
-    "semanti-ui-css/jquery": "^3.4.0"
+    "semanti-ui-css/jquery": "^3.4.0",
+    "react-scripts/**/braces": "2.3.1"
   },
   "proxy": "http://localhost:5000",
   "browserslist": [
