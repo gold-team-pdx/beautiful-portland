@@ -797,7 +797,7 @@ emergencyRefresh = function(req, res) {
   let client = this.dbClient
   let response_data = []
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+  collection.find({date: 'MASTER2'}, {projection:{ _id: 0}}).toArray((err, docs) => {
     if(err) {
       console.log(err, 'Error trying to get info from master template')
       res.send({
