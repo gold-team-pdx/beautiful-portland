@@ -75,7 +75,7 @@ export default class Story extends Component {
               render={(props)=><ReadMore title={this.props.publish.title}/>}
             />
             <Modal.Actions>
-              <Link to='Stories'>
+              <Link to='/Stories'>
                 <Button size='large' onClick={this.close} style={{backgroundColor: '#a8efae'}}>Close</Button>
               </Link>
             </Modal.Actions>
