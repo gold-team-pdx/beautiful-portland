@@ -71,7 +71,7 @@ export default class Stories extends Component {
 	                key={publish.edited_timestamp}
 	                publish={publish}
 	                version={this.state.version}
-	                url={publish.title}
+	                url={publish.edited_timestamp}
 	                image={publish.imageUrl}
 	              />
 	            )
