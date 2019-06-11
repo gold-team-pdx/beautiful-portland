@@ -58,12 +58,13 @@ resource "aws_security_group" "bp_sg" {
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
   }
-  ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # uncomment and run terraform apply if we need to access instance directly
+  # ingress {
+  #   from_port = 22
+  #   to_port = 22
+  #   protocol = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
   lifecycle {
     create_before_destroy = true
@@ -80,7 +81,7 @@ resource "aws_elb" "bp_elb" {
     unhealthy_threshold = 2
     timeout = 3
     interval = 30
-    target = "HTTP:80/"
+    target = "TCP:80"
   }
 
   listener {
@@ -89,13 +90,14 @@ resource "aws_elb" "bp_elb" {
     instance_port = "80"
     instance_protocol = "http"
   }
-  # uncomment this once we have an ssl cert
-  # listener {
-  #   lb_port = 443
-  #   lb_protocol = "https"
-  #   instance_port = "443"
-  #   instance_protocol = "https"
-  # }
+  
+  listener {
+    lb_port = 443
+    lb_protocol = "https"
+    instance_port = "80"
+    instance_protocol = "http"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:623174353635:certificate/34e448dc-3206-47d9-9b95-8da3e2c9cc57"
+  }
 
 }
 
