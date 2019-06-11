@@ -87,7 +87,7 @@ getVolunteerList = function(req, res) {
 postAddEvent = function(req, res){
   let client = this.dbClient
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER2'}).toArray((err,docs) =>{
+  collection.find({date: 'MASTER'}).toArray((err,docs) =>{
     if(err){
       console.log(err, 'Coudln\'t find MASTER document')
       res.send({
@@ -699,9 +699,9 @@ editEventTemplate = function (req, res) {
     )
   })
   collection = client.db('events-form').collection('events')
-  collection.replaceOne({ date: 'MASTER2' },
+  collection.replaceOne({ date: 'MASTER' },
     {
-      'date' : 'MASTER2',
+      'date' : 'MASTER',
       'location' : req.body.location,
       'time' : '6:00 pm',
       'max_servings' : req.body.max_servings,
@@ -726,7 +726,7 @@ editEventTemplate = function (req, res) {
 getEventTemplate = function(req, res) {
   let client = this.dbClient
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER2'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
     if(err) {
       console.log(err, 'Error trying to get info from master template')
       res.send({
@@ -768,7 +768,7 @@ deleteEventTemplate = function(req, res) {
   client = this.dbClient
   console.log(req.body.category)
   collection = client.db('events-form').collection('events')
-  collection.findOneAndUpdate({ date: 'MASTER2'},
+  collection.findOneAndUpdate({ date: 'MASTER'},
     {$pull:{
       'categories':{
         'name' : req.body.category
@@ -797,7 +797,7 @@ emergencyRefresh = function(req, res) {
   let client = this.dbClient
   let response_data = []
   collection = client.db('events-form').collection('events')
-  collection.find({date: 'MASTER'}, {projection:{ _id: 0}}).toArray((err, docs) => {
+  collection.find({date: 'MASTER2'}, {projection:{ _id: 0}}).toArray((err, docs) => {
     if(err) {
       console.log(err, 'Error trying to get info from master template')
       res.send({
@@ -824,9 +824,9 @@ emergencyRefresh = function(req, res) {
       response_data.push(masterObj)
     })
     
-    collection.replaceOne({ date: 'MASTER2' },
+    collection.replaceOne({ date: 'MASTER' },
       {
-        'date' : 'MASTER2',
+        'date' : 'MASTER',
         'location' : docs[0].location,
         'time' : docs[0].time,
         'max_servings' : docs[0].max_servings,
