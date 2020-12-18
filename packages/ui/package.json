@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "dompurify": "^1.0.10",
+    "dompurify": "^2.0.17",
     "lodash": "^4.17.11",
     "react": "^16.8.3",
     "react-big-calendar": "^0.20.4",
